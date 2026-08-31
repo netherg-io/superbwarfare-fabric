@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.network.message.receive.TDMSyncMessage
 import com.atsuishio.superbwarfare.tools.sendPacketTo
 import com.atsuishio.superbwarfare.tools.sendPacketToAll
 import com.google.common.collect.Sets
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -14,9 +15,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.saveddata.SavedData
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.player.PlayerEvent
 
 class TDMSavedData : SavedData {
     val entities: MutableSet<String> = Sets.newHashSet<String>()
@@ -63,9 +61,12 @@ class TDMSavedData : SavedData {
         sendPacketToAll(TDMSyncMessage(this.entities))
     }
 
-    @EventBusSubscriber
     companion object {
         const val FILE_ID: String = "superbwarfare_tdm"
+
+        fun init() {
+            ServerPlayConnectionEvents.JOIN.register { handler, _, _ -> onPlayerLoggedIn(handler.player) }
+        }
 
         fun load(pCompoundTag: CompoundTag): TDMSavedData {
             val tdmSavedData = TDMSavedData()
@@ -91,9 +92,7 @@ class TDMSavedData : SavedData {
             }
         }
 
-        @SubscribeEvent
-        fun onPlayerLoggedIn(event: PlayerEvent.PlayerLoggedInEvent) {
-            val player = event.entity as? ServerPlayer ?: return
+        private fun onPlayerLoggedIn(player: ServerPlayer) {
             val level = player.level()
             if (level !is ServerLevel) return
 

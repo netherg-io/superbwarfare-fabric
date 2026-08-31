@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.event
 
+import com.atsuishio.superbwarfare.fabric.ModEventBus
+
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent
 import com.atsuishio.superbwarfare.api.event.ReloadEvent
 import com.atsuishio.superbwarfare.config.server.ProjectileConfig
@@ -16,13 +18,16 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.block.BellBlock
 import net.minecraft.world.level.block.TargetBlock
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
 
-@EventBusSubscriber
 object CustomEventHandler {
-    @SubscribeEvent
-    fun onPreReload(event: ReloadEvent.Pre) {
+    fun init() {
+        ModEventBus.register<ReloadEvent.Pre> { onPreReload(it) }
+        ModEventBus.register<ReloadEvent.Post> { onPostReload(it) }
+        ModEventBus.register<ProjectileHitEvent.HitEntity> { onProjectileHitEntity(it) }
+        ModEventBus.register<ProjectileHitEvent.HitBlock> { onProjectileHitBlock(it) }
+    }
+
+    private fun onPreReload(event: ReloadEvent.Pre) {
         val shooter = event.entity ?: return
         val stack = event.stack
         if (stack.item !is GunItem || shooter.level().isClientSide) return
@@ -34,8 +39,7 @@ object CustomEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onPostReload(event: ReloadEvent.Post) {
+    private fun onPostReload(event: ReloadEvent.Post) {
         val shooter = event.entity ?: return
         val stack = event.stack
         if (stack.item !is GunItem || shooter.level().isClientSide) return
@@ -47,8 +51,7 @@ object CustomEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onProjectileHitEntity(event: ProjectileHitEvent.HitEntity) {
+    private fun onProjectileHitEntity(event: ProjectileHitEvent.HitEntity) {
         val entity = event.owner
         if (entity !is LivingEntity) return
 
@@ -67,8 +70,7 @@ object CustomEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onProjectileHitBlock(event: ProjectileHitEvent.HitBlock) {
+    private fun onProjectileHitBlock(event: ProjectileHitEvent.HitBlock) {
         val projectile = event.projectile
         val state = event.state
         val pos = event.pos

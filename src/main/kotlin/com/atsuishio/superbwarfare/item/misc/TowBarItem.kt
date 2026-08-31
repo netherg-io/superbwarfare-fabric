@@ -20,10 +20,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.entity.PartEntity
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerInteractEvent
+import com.atsuishio.superbwarfare.fabric.MultipartEntities
 
 open class TowBarItem : Item(Properties().stacksTo(1)), IVehicleInteract {
     override fun appendHoverText(
@@ -295,16 +293,19 @@ open class TowBarItem : Item(Properties().stacksTo(1)), IVehicleInteract {
         }
     }
 
-    @EventBusSubscriber
     companion object {
         private const val TAG_TOW_TARGET = "TowTarget"
 
-        @SubscribeEvent
-        fun onTowBarEntityInteract(event: PlayerInteractEvent.EntityInteract) {
+        /** Общий. */
+        fun init() {
+            PlayerInteractEvent.EntityInteract.EVENT.register { onTowBarEntityInteract(it) }
+        }
+
+        private fun onTowBarEntityInteract(event: PlayerInteractEvent.EntityInteract) {
             val player = event.entity
             val stack = event.itemStack
             val originalTarget = event.target
-            val target = if (originalTarget is PartEntity<*>) originalTarget.parent else originalTarget
+            val target = MultipartEntities.parentOf(originalTarget) ?: originalTarget
 
             if (player.level().isClientSide) return
 

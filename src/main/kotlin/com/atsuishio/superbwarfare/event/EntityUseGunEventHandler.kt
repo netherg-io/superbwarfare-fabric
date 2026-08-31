@@ -3,16 +3,16 @@ package com.atsuishio.superbwarfare.event
 import com.atsuishio.superbwarfare.config.server.SpawnConfig
 import com.atsuishio.superbwarfare.data.mob_guns.MobGunData
 import com.atsuishio.superbwarfare.entity.goal.GunShootGoal
+import io.github.fabricators_of_create.porting_lib.entity.events.EntityJoinLevelEvent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Mob
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent
 
-@EventBusSubscriber(modid = com.atsuishio.superbwarfare.Mod.MODID)
 object EntityUseGunEventHandler {
-    @SubscribeEvent
-    fun entityJoin(event: EntityJoinLevelEvent) {
+    fun init() {
+        EntityJoinLevelEvent.EVENT.register { entityJoin(it) }
+    }
+
+    private fun entityJoin(event: EntityJoinLevelEvent) {
         if (event.loadedFromDisk() || !SpawnConfig.SPAWN_MOB_WITH_GUNS.get()) return
 
         val entity = event.entity

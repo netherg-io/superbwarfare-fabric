@@ -1,24 +1,25 @@
 package com.atsuishio.superbwarfare.event
 
 import com.atsuishio.superbwarfare.tools.HitboxHelper
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
+import io.github.fabricators_of_create.porting_lib.entity.events.tick.PlayerTickEvent
 import net.fabricmc.api.EnvType
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.neoforged.neoforge.event.entity.player.PlayerEvent
-import net.neoforged.neoforge.event.tick.PlayerTickEvent
+import net.minecraft.server.level.ServerPlayer
 
-@EventBusSubscriber
 object HitboxHelperEventHandler {
-    @SubscribeEvent(receiveCanceled = true)
-    fun onPlayerTick(event: PlayerTickEvent.Post) {
+    fun init() {
+        PlayerTickEvent.Post.EVENT.register { onPlayerTick(it) }
+        ServerPlayConnectionEvents.DISCONNECT.register { handler, _ -> onPlayerLoggedOut(handler.player) }
+    }
+
+    private fun onPlayerTick(event: PlayerTickEvent.Post) {
         if (FabricLoader.getInstance().environmentType == EnvType.SERVER) {
             HitboxHelper.onPlayerTick(event.entity)
         }
     }
 
-    @SubscribeEvent(receiveCanceled = true)
-    fun onPlayerLoggedOut(event: PlayerEvent.PlayerLoggedOutEvent) {
-        HitboxHelper.onPlayerLoggedOut(event.entity)
+    private fun onPlayerLoggedOut(player: ServerPlayer) {
+        HitboxHelper.onPlayerLoggedOut(player)
     }
 }

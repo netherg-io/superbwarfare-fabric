@@ -11,9 +11,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.tick.ServerTickEvent
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.minecraft.server.MinecraftServer
 import top.theillusivec4.curios.api.CuriosApi
 import top.theillusivec4.curios.api.SlotContext
 import top.theillusivec4.curios.api.type.capability.ICurioItem
@@ -34,11 +33,13 @@ open class IffItem : Item(Properties().stacksTo(1)), ICurioItem {
         tooltipComponents.add(Component.translatable("des.superbwarfare.iff_1").withStyle(ChatFormatting.GRAY))
     }
 
-    @EventBusSubscriber
     companion object {
-        @SubscribeEvent
-        fun onServerTick(event: ServerTickEvent.Post) {
-            val server = event.server
+        /** Общий. */
+        fun init() {
+            ServerTickEvents.END_SERVER_TICK.register { onServerTick(it) }
+        }
+
+        private fun onServerTick(server: MinecraftServer) {
             if (server.tickCount % SyncConfig.SYNC_ENTITY_INTERVAL.get() != 0) return
 
             for (player in server.playerList.players) {

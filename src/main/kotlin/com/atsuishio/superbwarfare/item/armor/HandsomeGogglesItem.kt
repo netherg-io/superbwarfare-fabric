@@ -9,8 +9,12 @@ import com.atsuishio.superbwarfare.resource.model.ArmorModelReloadListener
 import com.atsuishio.superbwarfare.tiers.ModArmorMaterial
 import com.atsuishio.superbwarfare.tools.ParticleTool
 import com.atsuishio.superbwarfare.tools.TraceTool
+import io.github.fabricators_of_create.porting_lib.item.extensions.DamageableItem
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer
 import net.minecraft.ChatFormatting
-import net.minecraft.client.model.HumanoidModel
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.network.chat.Component
@@ -18,7 +22,6 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.monster.Ghast
 import net.minecraft.world.entity.player.Player
@@ -28,10 +31,6 @@ import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.component.Unbreakable
 import net.minecraft.world.level.Level
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -40,32 +39,25 @@ class HandsomeGogglesItem :
         ModArmorMaterial.STEEL,
         Type.HELMET,
         Properties().rarity(Rarity.EPIC).fireResistant().component(DataComponents.UNBREAKABLE, Unbreakable(false))
-    ) {
+    ), DamageableItem {
     override fun isDamageable(stack: ItemStack) = false
 
-    @EventBusSubscriber
     companion object {
         val MODEL = loc("models/bedrock/armor/handsome_goggles.geo.json")
 
-        @SubscribeEvent
-        fun registerRender(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: HandsomeGogglesRenderer? = null
+        /** Клиент: аналога IClientItemExtensions#getHumanoidArmorModel на Fabric нет, модель брони отдаётся через ArmorRenderer. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: HandsomeGogglesRenderer? = null
 
-                override fun getHumanoidArmorModel(
-                    livingEntity: LivingEntity,
-                    itemStack: ItemStack,
-                    equipmentSlot: EquipmentSlot,
-                    original: HumanoidModel<*>
-                ): HumanoidModel<*> {
-                    if (this.renderer == null) {
-                        this.renderer = HandsomeGogglesRenderer(ArmorModelReloadListener.getModel(MODEL)!!, equipmentSlot)
-                    }
-
-                    this.renderer!!.preparePose(livingEntity, itemStack, equipmentSlot, original)
-                    return this.renderer!!
+            ArmorRenderer.register({ poseStack, buffer, stack, entity, slot, light, contextModel ->
+                if (renderer == null) {
+                    renderer = HandsomeGogglesRenderer(ArmorModelReloadListener.getModel(MODEL)!!, slot)
                 }
-            }, ModItems.HANDSOME_GOGGLES)
+
+                renderer!!.preparePose(entity, stack, slot, contextModel)
+                renderer!!.renderArmorToBuffer(poseStack, buffer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f)
+            }, ModItems.HANDSOME_GOGGLES.get())
         }
 
         private fun findGhastInSight(player: Player): Ghast? {

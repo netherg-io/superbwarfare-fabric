@@ -15,14 +15,18 @@ import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
 import net.minecraft.world.entity.LivingEntity
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent
-import net.neoforged.neoforge.event.tick.EntityTickEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.MobEffectEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.tick.EntityTickEvent
 
-@EventBusSubscriber
 object BurnMobEffect : MobEffect(MobEffectCategory.HARMFUL, -12708330) {
     const val TAG_ATTACKER = "BurnAttacker"
+
+    fun init() {
+        MobEffectEvent.Added.EVENT.register { onEffectAdded(it) }
+        MobEffectEvent.Expired.EVENT.register { onEffectExpired(it) }
+        MobEffectEvent.Remove.EVENT.register { onEffectRemoved(it) }
+        EntityTickEvent.Post.EVENT.register { onLivingTick(it) }
+    }
 
     override fun applyEffectTick(entity: LivingEntity, amplifier: Int): Boolean {
         val attacker = if (!entity.persistentData.contains(TAG_ATTACKER)) {
@@ -51,8 +55,7 @@ object BurnMobEffect : MobEffect(MobEffectCategory.HARMFUL, -12708330) {
         return pDuration % 20 == 0
     }
 
-    @SubscribeEvent
-    fun onEffectAdded(event: MobEffectEvent.Added) {
+    private fun onEffectAdded(event: MobEffectEvent.Added) {
         val living = event.entity
         val instance = event.effectInstance ?: return
         if (instance.effect.value() != ModMobEffects.BURN.value()) {
@@ -74,8 +77,7 @@ object BurnMobEffect : MobEffect(MobEffectCategory.HARMFUL, -12708330) {
         }
     }
 
-    @SubscribeEvent
-    fun onEffectExpired(event: MobEffectEvent.Expired) {
+    private fun onEffectExpired(event: MobEffectEvent.Expired) {
         val living = event.entity
         val instance = event.effectInstance ?: return
 
@@ -84,8 +86,7 @@ object BurnMobEffect : MobEffect(MobEffectCategory.HARMFUL, -12708330) {
         }
     }
 
-    @SubscribeEvent
-    fun onEffectRemoved(event: MobEffectEvent.Remove) {
+    private fun onEffectRemoved(event: MobEffectEvent.Remove) {
         val living = event.entity
         val instance = event.effectInstance ?: return
 
@@ -94,8 +95,7 @@ object BurnMobEffect : MobEffect(MobEffectCategory.HARMFUL, -12708330) {
         }
     }
 
-    @SubscribeEvent
-    fun onLivingTick(event: EntityTickEvent.Post) {
+    private fun onLivingTick(event: EntityTickEvent.Post) {
         val living = event.entity as? LivingEntity ?: return
         if (living.hasEffect(ModMobEffects.BURN)) {
             living.remainingFireTicks = 2

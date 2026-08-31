@@ -11,17 +11,18 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 
-@EventBusSubscriber(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object ContainerBlockPreview {
-    @SubscribeEvent
-    fun render(event: RenderLevelStageEvent) {
-        if (event.stage != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return
+    fun init() {
+        WorldRenderEvents.AFTER_TRANSLUCENT.register { render(it) }
+    }
 
+    private fun render(context: WorldRenderContext) {
         val player = localPlayer ?: return
         // 仅在手持撬棍时检测
         val item = player.mainHandItem
@@ -60,7 +61,7 @@ object ContainerBlockPreview {
         }
         if (w == 0 || h == 0) return
 
-        val poseStack = event.poseStack
+        val poseStack = context.matrixStack()
         poseStack.pushPose()
         val pos = blockEntity.blockPos
         val view = mc.gameRenderer.mainCamera.position

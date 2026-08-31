@@ -12,11 +12,8 @@ import com.google.common.collect.Lists
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.DataSlot
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.MenuType
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent.Close
-import net.neoforged.neoforge.event.entity.player.PlayerContainerEvent.Open
 
 abstract class EnergyMenu(pMenuType: MenuType<*>?, id: Int, containerData: ContainerEnergyData) :
     AbstractContainerMenu(pMenuType, id) {
@@ -55,12 +52,13 @@ abstract class EnergyMenu(pMenuType: MenuType<*>?, id: Int, containerData: Conta
         this.containerEnergyDataSlots[id].set(data.toLong())
     }
 
-    @EventBusSubscriber
+    /**
+     * Аналога PlayerContainerEvent.Open/Close на Fabric нет: ни Fabric API, ни Porting Lib
+     * не публикуют открытие и закрытие контейнера. Логика сохранена как приватные функции,
+     * остаётся вызвать их из миксина на Player#openMenu и Player#closeContainer.
+     */
     companion object {
-        @SubscribeEvent
-        fun onContainerOpened(event: Open) {
-            val menu = event.container
-            val player = event.entity
+        private fun onContainerOpened(menu: AbstractContainerMenu, player: Player) {
             if (menu is EnergyMenu && player is ServerPlayer) {
                 menu.usingPlayers.add(player)
 
@@ -72,20 +70,14 @@ abstract class EnergyMenu(pMenuType: MenuType<*>?, id: Int, containerData: Conta
             }
         }
 
-        @SubscribeEvent
-        fun onContainerClosed(event: Close) {
-            val menu = event.container
-            val player = event.entity
+        private fun onContainerClosed(menu: AbstractContainerMenu, player: Player) {
             if (menu is EnergyMenu && player is ServerPlayer) {
                 menu.usingPlayers.remove(player)
             }
         }
 
 
-        @SubscribeEvent
-        fun onFuMO25Opened(event: Open) {
-            val menu = event.container
-            val player = event.entity
+        private fun onFuMO25Opened(menu: AbstractContainerMenu, player: Player) {
             if (menu is FuMO25Menu && player is ServerPlayer) {
                 menu.selfPos.ifPresent { pos ->
                     player.sendPacket(RadarMenuOpenMessage(pos))
@@ -93,10 +85,7 @@ abstract class EnergyMenu(pMenuType: MenuType<*>?, id: Int, containerData: Conta
             }
         }
 
-        @SubscribeEvent
-        fun onFuMO25Closed(event: Close) {
-            val menu = event.container
-            val player = event.entity
+        private fun onFuMO25Closed(menu: AbstractContainerMenu, player: Player) {
             if (menu is FuMO25Menu && player is ServerPlayer) {
                 player.sendPacket(RadarMenuCloseMessage)
             }

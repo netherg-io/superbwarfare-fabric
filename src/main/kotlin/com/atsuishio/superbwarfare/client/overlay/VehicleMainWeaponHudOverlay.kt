@@ -25,18 +25,14 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 
 /**
  * 控制载具主武器的玩家显示的HUD
  */
 @Environment(EnvType.CLIENT)
-@EventBusSubscriber(Dist.CLIENT)
 object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
     const val EMPTY = "@Empty"
 
@@ -62,8 +58,11 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
 
     override fun shouldRender() = super.shouldRender() && !ClientEventHandler.isEditing
 
-    @SubscribeEvent
-    fun onVehicleMainWeaponHudOverlayClientTick(event: ClientTickEvent.Post) {
+    fun init() {
+        ClientTickEvents.END_CLIENT_TICK.register { onVehicleMainWeaponHudOverlayClientTick() }
+    }
+
+    private fun onVehicleMainWeaponHudOverlayClientTick() {
         val player = localPlayer ?: return
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return

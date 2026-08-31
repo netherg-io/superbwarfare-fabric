@@ -15,12 +15,15 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.ServerChatEvent
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 
-@EventBusSubscriber
 object BattleOfWits : Perk("battle_of_wits", Type.DAMAGE) {
+    fun init() {
+        ServerMessageEvents.CHAT_MESSAGE.register { message, sender, _ ->
+            onChatEvent(sender, message.signedContent())
+        }
+    }
+
     override fun modifyProperty(modifier: PMC<GunData, DefaultGunData>) {
         super.modifyProperty(modifier)
         val tag = modifier.data.perk.getTag(this) ?: return
@@ -61,13 +64,10 @@ object BattleOfWits : Perk("battle_of_wits", Type.DAMAGE) {
         }
     }
 
-    @SubscribeEvent
-    fun onChatEvent(event: ServerChatEvent) {
-        val player = event.player
+    private fun onChatEvent(player: ServerPlayer, text: String) {
         val stack = player.mainHandItem
         if (stack.item !is GunItem) return
 
-        val text = event.rawText
         if (text.isEmpty()) return
 
         val data = GunData.from(stack)

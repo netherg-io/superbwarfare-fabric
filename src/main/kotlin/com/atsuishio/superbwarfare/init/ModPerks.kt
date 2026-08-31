@@ -15,19 +15,16 @@ import com.mojang.serialization.JsonOps
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.effect.MobEffects
-import net.neoforged.bus.api.IEventBus
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.ModList
-import net.neoforged.fml.common.EventBusSubscriber
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute
+import net.fabricmc.loader.api.FabricLoader
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
-import net.neoforged.neoforge.registries.NewRegistryEvent
-import net.neoforged.neoforge.registries.RegistryBuilder
 import java.nio.file.Files
 
 private typealias PERK = DeferredHolder<Perk, Perk>
 
-@EventBusSubscriber
+/** Общая сторона: вызывать из ModInitializer. */
 @Suppress("unused")
 object ModPerks {
     @JvmField
@@ -36,20 +33,18 @@ object ModPerks {
     @JvmField
     val PERK_KEY: ResourceKey<Registry<Perk>> = ResourceKey.createRegistryKey(LOCATION)
 
+    // buildAndRegister сразу кладёт реестр в корневой BuiltInRegistries.REGISTRY,
+    // отдельного события регистрации реестров у Fabric нет.
     @JvmField
-    val PERK_REGISTRY: Registry<Perk> = RegistryBuilder<Perk>(ResourceKey.createRegistryKey(LOCATION))
-        .sync(true).defaultKey(loc("ap_bullet")).create()
-
-    @SubscribeEvent
-    fun registry(event: NewRegistryEvent) {
-        event.register(PERK_REGISTRY)
-    }
+    val PERK_REGISTRY: Registry<Perk> = FabricRegistryBuilder.createDefaulted(PERK_KEY, loc("ap_bullet"))
+        .attribute(RegistryAttribute.SYNCED)
+        .buildAndRegister()
 
     /**
      * Ammo Perks
      */
     @JvmField
-    val AMMO_PERKS: DeferredRegister<Perk> = DeferredRegister.create(LOCATION, Mod.MODID)
+    val AMMO_PERKS: DeferredRegister<Perk> = DeferredRegister.create(PERK_REGISTRY, Mod.MODID)
     private val registeredIds = mutableSetOf<String>()
     private val autoRegistryObjects = mutableMapOf<String, PERK>()
     private fun registerAmmoPerk(id: String, perk: () -> Perk): PERK {
@@ -79,7 +74,7 @@ object ModPerks {
      * Functional Perks
      */
     @JvmField
-    val FUNC_PERKS: DeferredRegister<Perk> = DeferredRegister.create(LOCATION, Mod.MODID)
+    val FUNC_PERKS: DeferredRegister<Perk> = DeferredRegister.create(PERK_REGISTRY, Mod.MODID)
     private fun registerFuncPerk(id: String, perk: () -> Perk): PERK {
         registeredIds.add(id)
         return FUNC_PERKS.register(id, perk)
@@ -104,7 +99,7 @@ object ModPerks {
      * Damage Perks
      */
     @JvmField
-    val DAMAGE_PERKS: DeferredRegister<Perk> = DeferredRegister.create(LOCATION, Mod.MODID)
+    val DAMAGE_PERKS: DeferredRegister<Perk> = DeferredRegister.create(PERK_REGISTRY, Mod.MODID)
     private fun registerDamagePerk(id: String, perk: () -> Perk): PERK {
         registeredIds.add(id)
         return DAMAGE_PERKS.register(id, perk)
@@ -129,18 +124,19 @@ object ModPerks {
     lateinit var TARGET_LOCK: PERK
     // @formatter:on
 
-    fun register(bus: IEventBus) {
+    fun init() {
         autoRegisterFromJsons()
         registerHardcoded()
-        AMMO_PERKS.register(bus)
-        FUNC_PERKS.register(bus)
-        DAMAGE_PERKS.register(bus)
+        AMMO_PERKS.register(null)
+        FUNC_PERKS.register(null)
+        DAMAGE_PERKS.register(null)
     }
 
     private fun autoRegisterFromJsons() {
         try {
-            val modFile = ModList.get().getModFileById(Mod.MODID).file
-            val perksDir = modFile.findResource("data/${Mod.MODID}/sbw/perks")
+            val perksDir = FabricLoader.getInstance().getModContainer(Mod.MODID)
+                .flatMap { it.findPath("data/${Mod.MODID}/sbw/perks") }
+                .orElse(null) ?: return
             Files.list(perksDir).use { stream ->
                 stream.filter { it.fileName.toString().endsWith(".json") }
                     .forEach { path ->

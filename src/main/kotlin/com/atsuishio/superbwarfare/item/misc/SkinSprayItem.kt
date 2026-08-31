@@ -13,10 +13,9 @@ import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 
 class SkinSprayItem : Item(Properties().stacksTo(1)), IVehicleInteract {
     override fun onInteractVehicle(
@@ -32,20 +31,21 @@ class SkinSprayItem : Item(Properties().stacksTo(1)), IVehicleInteract {
         return InteractionResult.CONSUME
     }
 
-    @EventBusSubscriber
     companion object {
-        @SubscribeEvent
-        fun registerSkinSprayRenderer(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.SKIN_SPRAY.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = SkinSprayRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.SKIN_SPRAY.get())
+            )
         }
     }
 }

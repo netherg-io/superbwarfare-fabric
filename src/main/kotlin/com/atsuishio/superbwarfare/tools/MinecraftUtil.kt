@@ -2,6 +2,8 @@
 
 package com.atsuishio.superbwarfare.tools
 
+import com.atsuishio.superbwarfare.fabric.ModEventBus
+
 import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.tools.FormatTool.format0D
 import com.mojang.blaze3d.vertex.PoseStack
@@ -27,8 +29,6 @@ import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.phys.Vec3
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.bus.api.Event
-import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.network.PacketDistributor
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import org.joml.Matrix4f
@@ -130,7 +130,7 @@ fun Entity.sendPacketToTrackingThis(packet: CustomPacketPayload) {
     sendPacketToTrackingEntity(this, packet)
 }
 
-fun <T : Event> postEvent(event: T): T = NeoForge.EVENT_BUS.post(event)
+fun <T : Any> postEvent(event: T): T = ModEventBus.post(event)
 
 inline fun queueClientWorkIfDelayed(delay: Int, crossinline block: () -> Unit) {
     if (delay > 0) {

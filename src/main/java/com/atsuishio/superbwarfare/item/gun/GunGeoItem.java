@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item.gun;
 
-import com.atsuishio.superbwarfare.Mod;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.data.gun.GunData;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -17,11 +16,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import org.jetbrains.annotations.NotNull;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -29,9 +24,6 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@EventBusSubscriber(modid = Mod.MODID)
 public abstract class GunGeoItem extends GunItem implements GeoItem, CustomRendererItem {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -124,24 +116,19 @@ public abstract class GunGeoItem extends GunItem implements GeoItem, CustomRende
         controllers.add(new AnimationController<>(this, "animationController", 1, this::animationPredicate));
     }
 
-    @SubscribeEvent
-    private static void registerGunExtensions(RegisterClientExtensionsEvent event) {
+    /**
+     * Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API.
+     * <p>
+     * Второй половине расширения -- IClientItemExtensions#getArmPose -- аналога на Fabric нет,
+     * поэтому {@link #getArmPose} осталась методом предмета без регистрации.
+     */
+    @Environment(EnvType.CLIENT)
+    public static void init() {
         for (var item : BuiltInRegistries.ITEM) {
             if (item instanceof GunGeoItem gun) {
-                event.registerItem(new IClientItemExtensions() {
-                    private final BlockEntityWithoutLevelRenderer renderer = gun.getRenderer().get();
-
-                    @Override
-                    public @NotNull BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                        return renderer;
-                    }
-
-                    @Override
-                    @ParametersAreNonnullByDefault
-                    public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack stack) {
-                        return gun.getArmPose(entityLiving, hand, stack);
-                    }
-                }, item);
+                BlockEntityWithoutLevelRenderer renderer = gun.getRenderer().get();
+                BuiltinItemRendererRegistry.DynamicItemRenderer dynamicRenderer = renderer::renderByItem;
+                BuiltinItemRendererRegistry.INSTANCE.register(item, dynamicRenderer);
             }
         }
     }

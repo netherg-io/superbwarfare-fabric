@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.entity.PartEntity
+import com.atsuishio.superbwarfare.fabric.MultipartEntities
 import kotlin.math.min
 
 open class SuperStarProjectileEntity(type: EntityType<out SuperStarProjectileEntity>, world: Level) :
@@ -53,8 +53,8 @@ open class SuperStarProjectileEntity(type: EntityType<out SuperStarProjectileEnt
         val entity = result.entity
         if (entity === this.owner?.vehicle) return
 
-        if (entity is PartEntity<*>) {
-            this.currentTarget = entity.getParent()
+        if (MultipartEntities.isPart(entity)) {
+            this.currentTarget = MultipartEntities.parentOf(entity)
         } else {
             this.currentTarget = entity
         }

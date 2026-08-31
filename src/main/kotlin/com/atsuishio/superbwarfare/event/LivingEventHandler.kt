@@ -14,6 +14,7 @@ import com.atsuishio.superbwarfare.entity.living.TargetEntity
 import com.atsuishio.superbwarfare.entity.mixin.ICustomKnockback
 import com.atsuishio.superbwarfare.entity.vehicle.base.AutoAimableEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.fabric.ModEventBus
 import com.atsuishio.superbwarfare.init.*
 import com.atsuishio.superbwarfare.item.ammo.ammoBoxData
 import com.atsuishio.superbwarfare.item.gun.GunItem
@@ -27,6 +28,14 @@ import com.atsuishio.superbwarfare.tools.DamageTypeTool.isHeadshotDamage
 import com.atsuishio.superbwarfare.tools.DamageTypeTool.isModDamage
 import com.atsuishio.superbwarfare.tools.FormatTool.format1D
 import com.atsuishio.superbwarfare.tools.FormatTool.format2D
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingChangeTargetEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingDeathEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingDropsEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingExperienceDropEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingFallEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingHurtEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingKnockBackEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.MobEffectEvent.Applicable
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
 import net.minecraft.resources.ResourceLocation
@@ -35,6 +44,7 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.effect.MobEffectCategory
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Mob
@@ -45,37 +55,41 @@ import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Explosion
 import net.minecraft.world.phys.Vec3
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.common.util.TriState
-import net.neoforged.neoforge.event.entity.living.*
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent.Applicable
-import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent
-import net.neoforged.neoforge.event.level.ExplosionEvent
-import net.neoforged.neoforge.event.level.ExplosionKnockbackEvent
 import java.util.*
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-@EventBusSubscriber
 object LivingEventHandler {
-    @SubscribeEvent
-    fun onLivingChangeTargetEvent(event: LivingChangeTargetEvent) {
+    fun init() {
+        LivingChangeTargetEvent.EVENT.register { onLivingChangeTargetEvent(it) }
+        LivingHurtEvent.EVENT.register { onEntityAttacked(it) }
+        LivingHurtEvent.EVENT.register { onEntityHurt(it) }
+        LivingDeathEvent.EVENT.register { onEntityDeath(it) }
+        LivingDropsEvent.EVENT.register { onLivingDrops(it) }
+        LivingExperienceDropEvent.EVENT.register { onLivingExperienceDrop(it) }
+        LivingKnockBackEvent.EVENT.register { onKnockback(it) }
+        LivingFallEvent.EVENT.register { onEntityFall(it) }
+        Applicable.EVENT.register { onEffectApply(it) }
+        ModEventBus.register<SendKillMessage> { onPreSendKillMessage(it) }
+        ModEventBus.register<Indicator> { onPreIndicator(it) }
+    }
+
+    private fun onLivingChangeTargetEvent(event: LivingChangeTargetEvent) {
         val entity = event.entity
         val vehicle = entity.vehicle
         if (entity is Mob && vehicle is VehicleEntity) {
             if (entity === vehicle.getNthEntity(vehicle.turretControllerIndex)) {
-                if (event.newAboutToBeSetTarget != null) {
-                    vehicle.aiTurretTargetUUID = event.newAboutToBeSetTarget!!.getStringUUID()
+                if (event.newTarget != null) {
+                    vehicle.aiTurretTargetUUID = event.newTarget!!.getStringUUID()
                 } else {
                     vehicle.aiTurretTargetUUID = "undefined"
                 }
             }
 
             if (entity === vehicle.getNthEntity(vehicle.passengerWeaponStationControllerIndex)) {
-                if (event.newAboutToBeSetTarget != null) {
-                    vehicle.aiPassengerWeaponTargetUUID = event.newAboutToBeSetTarget!!.getStringUUID()
+                if (event.newTarget != null) {
+                    vehicle.aiPassengerWeaponTargetUUID = event.newTarget!!.getStringUUID()
                 } else {
                     vehicle.aiPassengerWeaponTargetUUID = "undefined"
                 }
@@ -83,8 +97,7 @@ object LivingEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onEntityAttacked(event: LivingIncomingDamageEvent) {
+    private fun onEntityAttacked(event: LivingHurtEvent) {
         val source = event.source
         val entity = event.entity ?: return
         val vehicle = entity.vehicle
@@ -99,8 +112,7 @@ object LivingEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onEntityHurt(event: LivingIncomingDamageEvent?) {
+    private fun onEntityHurt(event: LivingHurtEvent?) {
         if (event == null) return
 
         handleVehicleHurt(event)
@@ -111,8 +123,7 @@ object LivingEventHandler {
         handleGunLevels(event)
     }
 
-    @SubscribeEvent
-    fun onEntityDeath(event: LivingDeathEvent) {
+    private fun onEntityDeath(event: LivingDeathEvent) {
         if (event.entity == null) return
 
         killIndication(event)
@@ -121,7 +132,7 @@ object LivingEventHandler {
         giveKillExpToWeapon(event)
     }
 
-    fun handleVehicleHurt(event: LivingIncomingDamageEvent) {
+    private fun handleVehicleHurt(event: LivingHurtEvent) {
         val entity = event.entity
         val vehicle = entity.vehicle
         if (vehicle is VehicleEntity) {
@@ -146,7 +157,7 @@ object LivingEventHandler {
     /**
      * 计算伤害减免
      */
-    private fun reduceDamage(event: LivingIncomingDamageEvent) {
+    private fun reduceDamage(event: LivingHurtEvent) {
         val source = event.source
         val entity = event.entity
         val sourceEntity = source.entity ?: return
@@ -216,7 +227,7 @@ object LivingEventHandler {
     /**
      * 根据造成的伤害，提供武器经验
      */
-    private fun giveExpToWeapon(event: LivingIncomingDamageEvent) {
+    private fun giveExpToWeapon(event: LivingHurtEvent) {
         val source = event.source ?: return
         val sourceEntity = source.entity as? LivingEntity ?: return
         val stack = sourceEntity.mainHandItem
@@ -278,7 +289,7 @@ object LivingEventHandler {
         data.save()
     }
 
-    private fun handleGunLevels(event: LivingIncomingDamageEvent) {
+    private fun handleGunLevels(event: LivingHurtEvent) {
         val source = event.source ?: return
         val sourceEntity = source.entity as? LivingEntity ?: return
         val stack = sourceEntity.mainHandItem
@@ -322,7 +333,7 @@ object LivingEventHandler {
         }
     }
 
-    private fun renderDamageIndicator(event: LivingIncomingDamageEvent?) {
+    private fun renderDamageIndicator(event: LivingHurtEvent?) {
         if (event == null) return
 
         val damagesource = event.source
@@ -338,15 +349,13 @@ object LivingEventHandler {
 
     /**
      * 换弹时切换枪械，取消换弹音效播放
+     *
+     * ponytail: LivingEquipmentChangeEvent аналога нет ни в Fabric API, ни в Porting Lib.
+     * Логика цела, но не зарегистрирована -- звать из миксина на LivingEntity.collectEquipmentChanges.
      */
-    @SubscribeEvent
-    fun handleChangeSlot(event: LivingEquipmentChangeEvent) {
-        val entity = event.entity
-        if (entity is Player && event.slot == EquipmentSlot.MAINHAND) {
+    private fun handleChangeSlot(entity: LivingEntity, slot: EquipmentSlot, oldStack: ItemStack, newStack: ItemStack) {
+        if (entity is Player && slot == EquipmentSlot.MAINHAND) {
             if (entity.level().isClientSide) return
-
-            val oldStack = event.from
-            val newStack = event.to
 
             if (entity is ServerPlayer) {
                 if (newStack.item is GunItem) {
@@ -526,7 +535,7 @@ object LivingEventHandler {
         }
     }
 
-    private fun handleGunPerksWhenHurt(event: LivingIncomingDamageEvent) {
+    private fun handleGunPerksWhenHurt(event: LivingHurtEvent) {
         val source = event.source
         if (!isGunDamage(source) && !source.`is`(DamageTypes.PLAYER_ATTACK)) return
 
@@ -604,12 +613,15 @@ object LivingEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onPickup(event: ItemEntityPickupEvent.Pre) {
-        if (!VehicleConfig.VEHICLE_ITEM_PICKUP.get()) return
-        val entity = event.player
-        val vehicle = entity.vehicle as? VehicleEntity ?: return
-        val pickUp = event.itemEntity
+    /**
+     * ponytail: ItemEntityPickupEvent аналога нет. Логика цела, но не зарегистрирована --
+     * звать из миксина на ItemEntity.playerTouch.
+     *
+     * @return true, если предмет забрало транспортное средство и ванильный подбор надо отменить
+     */
+    private fun onPickup(entity: Player, pickUp: ItemEntity): Boolean {
+        if (!VehicleConfig.VEHICLE_ITEM_PICKUP.get()) return false
+        val vehicle = entity.vehicle as? VehicleEntity ?: return false
         if (!vehicle.level().isClientSide) {
             val stack = pickUp.item.copy()
             val oldCount = stack.count
@@ -618,7 +630,7 @@ object LivingEventHandler {
 
             pickUp.discard()
 
-            if (oldCount > count && entity is Player) {
+            if (oldCount > count) {
                 val item = stack.copy()
                 item.count = oldCount - count
                 if (!entity.addItem(item)) {
@@ -626,11 +638,10 @@ object LivingEventHandler {
                 }
             }
         }
-        event.setCanPickup(TriState.FALSE)
+        return true
     }
 
-    @SubscribeEvent
-    fun onLivingDrops(event: LivingDropsEvent) {
+    private fun onLivingDrops(event: LivingDropsEvent) {
         playerDropAmmoBox(event)
         vehicleCollectDrops(event)
     }
@@ -690,8 +701,7 @@ object LivingEventHandler {
         drops -= removed.toSet()
     }
 
-    @SubscribeEvent
-    fun onLivingExperienceDrop(event: LivingExperienceDropEvent) {
+    private fun onLivingExperienceDrop(event: LivingExperienceDropEvent) {
         val player = event.attackingPlayer ?: return
 
         if (player.vehicle is VehicleEntity) {
@@ -700,38 +710,33 @@ object LivingEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onKnockback(event: LivingKnockBackEvent) {
+    private fun onKnockback(event: LivingKnockBackEvent) {
         val knockback = ICustomKnockback.getInstance(event.entity)
         if (knockback.`superbWarfare$getKnockbackStrength`() >= 0) {
             event.setStrength(knockback.`superbWarfare$getKnockbackStrength`().toFloat())
         }
     }
 
-    @SubscribeEvent
-    fun onEntityFall(event: LivingFallEvent) {
+    private fun onEntityFall(event: LivingFallEvent) {
         val living = event.entity
         if (living.vehicle is VehicleEntity) {
             event.setCanceled(true)
         }
     }
 
-    @SubscribeEvent
-    fun onPreSendKillMessage(event: SendKillMessage) {
+    private fun onPreSendKillMessage(event: SendKillMessage) {
         if (event.source.directEntity is AutoAimableEntity && event.target !is Player) {
             event.setCanceled(true)
         }
     }
 
-    @SubscribeEvent
-    fun onPreIndicator(event: Indicator) {
+    private fun onPreIndicator(event: Indicator) {
         if (event.source.directEntity is AutoAimableEntity && event.target !is Player) {
             event.setCanceled(true)
         }
     }
 
-    @SubscribeEvent
-    fun onEffectApply(event: Applicable) {
+    private fun onEffectApply(event: Applicable) {
         val entity = event.entity
         val vehicle = entity.vehicle
         if (event.effectInstance?.effect?.value()?.category == MobEffectCategory.HARMFUL
@@ -742,11 +747,14 @@ object LivingEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onExplosionDetonate(event: ExplosionEvent.Detonate) {
-        val explosion = event.explosion as? CustomExplosion ?: return
+    /**
+     * ponytail: ExplosionEvent.Detonate аналога нет. Логика цела, но не зарегистрирована --
+     * звать из CustomExplosion.explode вместо EventHooks.onExplosionDetonate.
+     */
+    private fun onExplosionDetonate(rawExplosion: Explosion, affectedEntities: MutableList<Entity>) {
+        val explosion = rawExplosion as? CustomExplosion ?: return
 
-        val iterator = event.affectedEntities.iterator()
+        val iterator = affectedEntities.iterator()
         while (iterator.hasNext()) {
             val entity = iterator.next() as? VehicleEntity ?: continue
 
@@ -775,10 +783,7 @@ object LivingEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onExplosionKnockback(event: ExplosionKnockbackEvent) {
-        if (event.affectedEntity is VehicleEntity) {
-            event.knockbackVelocity = Vec3.ZERO
-        }
-    }
+    /** ponytail: ExplosionKnockbackEvent аналога нет; звать из CustomExplosion при расчёте отброса. */
+    private fun explosionKnockbackVelocity(affectedEntity: Entity, knockbackVelocity: Vec3): Vec3 =
+        if (affectedEntity is VehicleEntity) Vec3.ZERO else knockbackVelocity
 }

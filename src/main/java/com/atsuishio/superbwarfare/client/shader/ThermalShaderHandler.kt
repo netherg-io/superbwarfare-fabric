@@ -10,8 +10,8 @@ import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 
 /**
  * Code based on YWZJ Team
@@ -53,17 +53,27 @@ class ThermalShaderHandler : ResourceManagerReloadListener {
             return isActive
         }
 
-        @SubscribeEvent
-        fun onRenderLevel(event: RenderLevelStageEvent) {
-            RenderSystem.setShaderGameTime(0, event.partialTick.getGameTimeDeltaPartialTick(true))
+        fun init() {
+            WorldRenderEvents.AFTER_ENTITIES.register { onAfterEntities(it) }
+            WorldRenderEvents.END.register { onLevelEnd(it) }
+        }
+
+        private fun onAfterEntities(context: WorldRenderContext) {
+            val partialTick = context.tickCounter().getGameTimeDeltaPartialTick(true)
+            RenderSystem.setShaderGameTime(0, partialTick)
 
             if (!isActive) return
 
-            if (event.stage === RenderLevelStageEvent.Stage.AFTER_ENTITIES) {
-                prepareAndRenderEntities(event.poseStack, event.partialTick.getGameTimeDeltaPartialTick(true))
-            } else if (event.stage === RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-                applyPostProcess(event.partialTick.getGameTimeDeltaPartialTick(true))
-            }
+            prepareAndRenderEntities(context.matrixStack(), partialTick)
+        }
+
+        private fun onLevelEnd(context: WorldRenderContext) {
+            val partialTick = context.tickCounter().getGameTimeDeltaPartialTick(true)
+            RenderSystem.setShaderGameTime(0, partialTick)
+
+            if (!isActive) return
+
+            applyPostProcess(partialTick)
         }
 
         private fun ensureChain(mc: Minecraft): Boolean {

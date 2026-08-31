@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item.container
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.client.renderer.item.LuckyContainerBlockItemRenderer
 import com.atsuishio.superbwarfare.init.ModBlockEntities
@@ -24,10 +23,9 @@ import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 
 class LuckyContainerBlockItem :
     BlockItem(ModBlocks.LUCKY_CONTAINER.get(), Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()) {
@@ -51,7 +49,6 @@ class LuckyContainerBlockItem :
     }
 
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
         @JvmField
         val LUCKY_CONTAINERS: MutableList<() -> ItemStack> = mutableListOf(
@@ -74,18 +71,20 @@ class LuckyContainerBlockItem :
         }
 
 
-        @SubscribeEvent
-        private fun registerItemExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.LUCKY_CONTAINER.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = LuckyContainerBlockItemRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.LUCKY_CONTAINER)
+            )
         }
     }
 }

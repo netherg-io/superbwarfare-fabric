@@ -18,11 +18,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent
-import net.neoforged.neoforge.client.event.RenderLivingEvent
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import top.theillusivec4.curios.api.SlotContext
 import top.theillusivec4.curios.api.client.ICurioRenderer
 
@@ -65,22 +62,22 @@ class ParachuteRenderer : ICurioRenderer {
         matrixStack.popPose()
     }
 
-    @EventBusSubscriber(Dist.CLIENT)
     companion object {
         private var parachuteModel: ParachuteModel? = null
         private val TEXTURE = loc("textures/curio/parachute.png")
 
-        @SubscribeEvent
-        fun onRenderLevelStage(event: RenderLevelStageEvent) {
+        fun init() {
+            WorldRenderEvents.AFTER_TRANSLUCENT.register { onRenderLevelStage(it) }
+        }
+
+        private fun onRenderLevelStage(context: WorldRenderContext) {
             val buffers = mc.renderBuffers()
             val player = localPlayer ?: return
             if (!ParachuteItem.isParachuteOpen(player)) return
             if (!ParachuteItem.isParachuteVisible(player)) return
-            val stack = event.poseStack
+            val stack = context.matrixStack()
 
-            if (event.stage === RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS
-                && mc.options.cameraType == CameraType.FIRST_PERSON
-            ) {
+            if (mc.options.cameraType == CameraType.FIRST_PERSON) {
                 stack.pushPose()
 
                 if (parachuteModel == null) {
@@ -93,7 +90,12 @@ class ParachuteRenderer : ICurioRenderer {
                 stack.mulPose(Axis.YP.rotationDegrees(player.getViewYRot(1f)))
                 stack.translate(0.0, 1.5, 0.0)
 
-                parachuteModel!!.prepareMobModel(player, 0f, 0f, event.partialTick.getGameTimeDeltaPartialTick(true))
+                parachuteModel!!.prepareMobModel(
+                    player,
+                    0f,
+                    0f,
+                    context.tickCounter().getGameTimeDeltaPartialTick(true)
+                )
                 parachuteModel!!.setupAnim(player, 0f, 0f, player.tickCount.toFloat(), 0f, 0f)
                 parachuteModel!!.renderToBuffer(
                     stack, buffers.bufferSource().getBuffer(
@@ -107,14 +109,14 @@ class ParachuteRenderer : ICurioRenderer {
             }
         }
 
-        @SubscribeEvent
-        fun onRenderLiving(event: RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>>) {
-            val entity = event.entity ?: return
+        // ponytail: у Fabric API нет аналога RenderLivingEvent.Post, поэтому вызывать пока некому.
+        // Подключить, когда появится миксин на LivingEntityRenderer.render или свой RenderLayer.
+        @Suppress("unused")
+        private fun onRenderLiving(entity: LivingEntity, stack: PoseStack, partialTick: Float) {
             if (entity is Player) return
             if (!ParachuteItem.isParachuteOpen(entity)) return
             if (!ParachuteItem.isParachuteVisible(entity)) return
 
-            val stack = event.poseStack
             stack.pushPose()
 
             if (parachuteModel == null) {
@@ -130,7 +132,7 @@ class ParachuteRenderer : ICurioRenderer {
             stack.mulPose(Axis.YP.rotationDegrees(entity.getViewYRot(1f)))
             stack.translate(0.0, -1.5, 0.0)
 
-            parachuteModel!!.prepareMobModel(entity, 0f, 0f, event.partialTick)
+            parachuteModel!!.prepareMobModel(entity, 0f, 0f, partialTick)
             parachuteModel!!.setupAnim(entity, 0f, 0f, entity.tickCount.toFloat(), 0f, 0f)
             parachuteModel!!.renderToBuffer(
                 stack, buffers.bufferSource().getBuffer(

@@ -24,10 +24,9 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.LevelEvent
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.gameevent.GameEvent
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 import net.neoforged.neoforge.common.ItemAbilities
 import net.neoforged.neoforge.common.ItemAbility
 
@@ -150,20 +149,21 @@ open class MilitaryShovelItem :
         return ModItemTier.CEMENTED_CARBIDE.enchantmentValue
     }
 
-    @EventBusSubscriber
     companion object {
-        @SubscribeEvent
-        fun registerRenderer(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.MILITARY_SHOVEL.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = MilitaryShovelRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.MILITARY_SHOVEL.get())
+            )
         }
 
         private val TOOL_ACTIONS = buildSet {

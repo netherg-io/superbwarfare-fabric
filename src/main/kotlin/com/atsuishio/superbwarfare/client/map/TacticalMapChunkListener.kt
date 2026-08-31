@@ -1,16 +1,19 @@
 package com.atsuishio.superbwarfare.client.map
 
 import com.atsuishio.superbwarfare.config.server.MapConfig
+import io.github.fabricators_of_create.porting_lib.level.events.LevelEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents
 import net.minecraft.client.multiplayer.ClientLevel
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.chunk.LevelChunk
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.level.ChunkEvent
-import net.neoforged.neoforge.event.level.LevelEvent
 
-@EventBusSubscriber(value = [Dist.CLIENT])
 object TacticalMapChunkListener {
+
+    fun init() {
+        ClientChunkEvents.CHUNK_LOAD.register { _, chunk -> onChunkLoad(chunk) }
+        LevelEvent.Load.EVENT.register { event -> onLevelLoad(event.level) }
+        LevelEvent.Unload.EVENT.register { event -> onLevelUnload(event.level) }
+    }
 
     fun isEnabled(): Boolean {
         return try {
@@ -20,31 +23,24 @@ object TacticalMapChunkListener {
         }
     }
 
-    @SubscribeEvent
-    fun onChunkLoad(event: ChunkEvent.Load) {
+    private fun onChunkLoad(chunk: LevelChunk) {
         if (!isEnabled()) return
-        if (event.level !is ClientLevel) return
-        val chunk = event.chunk
-        if (chunk is LevelChunk) {
-            TacticalMapCache.queueChunkUpdate(chunk)
-        }
+        TacticalMapCache.queueChunkUpdate(chunk)
     }
 
-    @SubscribeEvent
-    fun onLevelLoad(event: LevelEvent.Load) {
+    private fun onLevelLoad(level: LevelAccessor) {
         if (!isEnabled()) return
-        if (event.level is ClientLevel) {
+        if (level is ClientLevel) {
             val worldId = TacticalMapCache.getWorldIdentifier()
-            val dim = (event.level as ClientLevel).dimension().location().toString()
+            val dim = level.dimension().location().toString()
             TacticalMapCache.initForDimension(dim, worldId)
         }
     }
 
-    @SubscribeEvent
-    fun onLevelUnload(event: LevelEvent.Unload) {
+    private fun onLevelUnload(level: LevelAccessor) {
         // Always clear — config may already be inaccessible during world
         // teardown, and stale data bleeds into the next world otherwise.
-        if (event.level is ClientLevel) {
+        if (level is ClientLevel) {
             TacticalMapCache.clear()
         }
     }

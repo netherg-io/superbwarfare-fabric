@@ -4,11 +4,10 @@ import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.gun.ShootParameters
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
-import net.neoforged.bus.api.Event
 import org.jetbrains.annotations.ApiStatus
 
 @ApiStatus.AvailableSince("0.8.9")
-open class ShootEvent private constructor(val parameters: ShootParameters) : Event() {
+open class ShootEvent private constructor(val parameters: ShootParameters) {
     val shooter: Entity? = parameters.shooter
     val level: ServerLevel = parameters.level
     val data: GunData = parameters.data

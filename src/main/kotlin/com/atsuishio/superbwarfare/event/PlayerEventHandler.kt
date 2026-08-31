@@ -11,6 +11,10 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.init.ModTags
 import com.atsuishio.superbwarfare.item.gun.GunItem
 import com.atsuishio.superbwarfare.tools.*
+import io.github.fabricators_of_create.porting_lib.entity.events.player.AttackEntityEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.tick.PlayerTickEvent
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -19,20 +23,17 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.AnvilUpdateEvent
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent
-import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
-import net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerRespawnEvent
-import net.neoforged.neoforge.event.tick.PlayerTickEvent
 import kotlin.math.ceil
 
-@EventBusSubscriber
 object PlayerEventHandler {
-    @SubscribeEvent
-    fun onPlayerLoggedIn(event: PlayerLoggedInEvent) {
-        val player = event.entity
+    fun init() {
+        ServerPlayConnectionEvents.JOIN.register { handler, _, _ -> onPlayerLoggedIn(handler.player) }
+        ServerPlayerEvents.AFTER_RESPAWN.register { _, newPlayer, _ -> onPlayerRespawned(newPlayer) }
+        PlayerTickEvent.Post.EVENT.register { onPlayerTick(it) }
+        AttackEntityEvent.EVENT.register { onAttackEntity(it) }
+    }
+
+    private fun onPlayerLoggedIn(player: Player) {
         val mainStack = player.mainHandItem
         val tag = NBTTool.getTag(mainStack)
         if (mainStack.`is`(ModItems.MONITOR.get()) && tag.getBoolean("Using")) {
@@ -41,16 +42,12 @@ object PlayerEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onPlayerRespawned(event: PlayerRespawnEvent) {
-        val player = event.entity
-
+    private fun onPlayerRespawned(player: Player) {
         handleRespawnReload(player)
         handleRespawnAutoArmor(player)
     }
 
-    @SubscribeEvent
-    fun onPlayerTick(event: PlayerTickEvent.Post) {
+    private fun onPlayerTick(event: PlayerTickEvent.Post) {
         val player = event.entity
         val stack = player.mainHandItem
 
@@ -133,11 +130,14 @@ object PlayerEventHandler {
         NBTTool.saveTag(armor, tag)
     }
 
-    @SubscribeEvent
-    fun onAnvilUpdate(event: AnvilUpdateEvent) {
-        val left = event.left
-        val right = event.right
-
+    /**
+     * ponytail: AnvilUpdateEvent аналога нет ни в Fabric API, ни в Porting Lib.
+     * Логика сохранена целиком, но нигде не зарегистрирована -- подключить из миксина
+     * на AnvilMenu.createResult, когда он появится.
+     *
+     * @return output, cost, materialCost -- либо null, если пара предметов не подходит
+     */
+    private fun onAnvilUpdate(left: ItemStack, right: ItemStack): Triple<ItemStack, Int, Int>? {
         if (left.item is GunItem && right.item == ModItems.SHORTCUT_PACK.get()) {
             val output = left.copy()
 
@@ -145,14 +145,12 @@ object PlayerEventHandler {
             data.level.add(1)
             data.save()
 
-            event.output = output
-            event.cost = 10
-            event.materialCost = 1
+            return Triple(output, 10, 1)
         }
+        return null
     }
 
-    @SubscribeEvent
-    fun onAttackEntity(event: AttackEntityEvent) {
+    private fun onAttackEntity(event: AttackEntityEvent) {
         val target = event.target
         if (target is VehicleEntity) {
             val position =

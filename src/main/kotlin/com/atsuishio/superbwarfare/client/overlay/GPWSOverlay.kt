@@ -14,12 +14,9 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.HitResult
-import net.neoforged.api.distmarker.Dist
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import kotlin.math.max
 
 /**
@@ -30,7 +27,6 @@ import kotlin.math.max
  * 警告触发条件针对MC短视距特点进行了合理调整。
  */
 @Environment(EnvType.CLIENT)
-@EventBusSubscriber(Dist.CLIENT)
 object GPWSOverlay : CommonOverlay("gpws") {
 
     /** 起飞后警告抑制时间 (tick) */
@@ -76,8 +72,11 @@ object GPWSOverlay : CommonOverlay("gpws") {
     // 前方碰撞距离缓存（供渲染使用）
     private var forwardCollisionDistance = -1.0
 
-    @SubscribeEvent
-    fun onClientTick(event: ClientTickEvent.Post) {
+    fun init() {
+        ClientTickEvents.END_CLIENT_TICK.register { onClientTick() }
+    }
+
+    private fun onClientTick() {
         blinkTick++
 
         val player = localPlayer ?: return

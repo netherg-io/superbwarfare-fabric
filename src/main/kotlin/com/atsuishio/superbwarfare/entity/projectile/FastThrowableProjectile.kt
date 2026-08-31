@@ -51,7 +51,7 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn
-import net.neoforged.neoforge.entity.PartEntity
+import com.atsuishio.superbwarfare.fabric.MultipartEntities
 import java.util.function.Consumer
 import java.util.function.Predicate
 
@@ -425,9 +425,7 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
 
         if (postEvent(HitEntity(this.owner, this, result)).isCanceled) return
 
-        if (entity is PartEntity<*>) {
-            entity = entity.getParent()
-        }
+        MultipartEntities.parentOf(entity)?.let { entity = it }
 
         if (entity is LivingEntity) {
             if (isBeast()) {

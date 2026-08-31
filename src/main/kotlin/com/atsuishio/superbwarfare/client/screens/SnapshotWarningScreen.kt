@@ -9,15 +9,11 @@ import net.minecraft.client.gui.components.MultiLineLabel
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.network.chat.Component
-import net.neoforged.api.distmarker.Dist
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.bus.api.EventPriority
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.loader.api.FabricLoader
 import net.neoforged.fml.loading.LoadingModList
-import net.neoforged.neoforge.client.event.ScreenEvent
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 
 @Environment(EnvType.CLIENT)
@@ -89,18 +85,20 @@ class SnapshotWarningScreen(val lastScreen: Screen) : Screen(
         mc.setScreen(this.lastScreen)
     }
 
-    @EventBusSubscriber(Dist.CLIENT)
     companion object {
         var firstTimeStart = false
 
-        @SubscribeEvent(priority = EventPriority.HIGH)
-        fun onTitleScreenOpen(event: ScreenEvent.Init.Post) {
+        fun init() {
+            ScreenEvents.AFTER_INIT.register { _, screen, _, _ -> onTitleScreenOpen(screen) }
+        }
+
+        private fun onTitleScreenOpen(screen: Screen) {
             if (!!FabricLoader.getInstance().isDevelopmentEnvironment) return
-            if (firstTimeStart || event.screen !is TitleScreen) return
+            if (firstTimeStart || screen !is TitleScreen) return
             val version = getVersion() ?: return
             if (!version.toString().lowercase().contains("snapshot")) return
 
-            mc.setScreen(SnapshotWarningScreen(event.screen))
+            mc.setScreen(SnapshotWarningScreen(screen))
             firstTimeStart = true
         }
 

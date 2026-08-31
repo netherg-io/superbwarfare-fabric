@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.client.renderer.item.HandGrenadeRenderer
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig
 import com.atsuishio.superbwarfare.entity.projectile.HandGrenadeEntity
@@ -27,27 +26,27 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.UseAnim
 import net.minecraft.world.level.Level
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 import kotlin.math.min
 
 open class HandGrenade : Item(Properties().rarity(Rarity.UNCOMMON)), DispenserLaunchable {
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
-        @SubscribeEvent
-        private fun registerItemExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.HAND_GRENADE.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = HandGrenadeRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.HAND_GRENADE)
+            )
         }
     }
 

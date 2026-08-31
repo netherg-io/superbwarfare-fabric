@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item.projectile
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.client.renderer.item.Tm62ItemRenderer
 import com.atsuishio.superbwarfare.entity.projectile.Tm62Entity
 import com.atsuishio.superbwarfare.init.ModEntities
@@ -19,27 +18,27 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.DispenserBlock
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 import org.joml.Math
 
 open class Tm62Item : Item(Properties().stacksTo(8)), DispenserLaunchable {
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
-        @SubscribeEvent
-        private fun registerItemExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.TM_62.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = Tm62ItemRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.TM_62)
+            )
         }
     }
 

@@ -30,9 +30,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingDeathEvent
 
 open class TargetEntity(type: EntityType<TargetEntity>, level: Level) : LivingEntity(type, level) {
     open val animationInstance: TargetAnimationInstance? =
@@ -163,8 +161,11 @@ open class TargetEntity(type: EntityType<TargetEntity>, level: Level) : LivingEn
         return ItemStack(ModItems.TARGET_DEPLOYER.get())
     }
 
-    @EventBusSubscriber
     companion object {
+        fun init() {
+            LivingDeathEvent.EVENT.register { onTargetDown(it) }
+        }
+
         @JvmField
         val DOWN_TIME: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(TargetEntity::class.java, EntityDataSerializers.INT)
@@ -176,8 +177,7 @@ open class TargetEntity(type: EntityType<TargetEntity>, level: Level) : LivingEn
             .immuneTo(DamageTypes.FALLING_ANVIL)
             .immuneTo(DamageTypes.MAGIC)
 
-        @SubscribeEvent
-        fun onTargetDown(event: LivingDeathEvent) {
+        private fun onTargetDown(event: LivingDeathEvent) {
             val entity = event.entity
             // 不处理/kill伤害
             if (event.source.`is`(DamageTypes.GENERIC_KILL)) return

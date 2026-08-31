@@ -16,9 +16,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.Vec3
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.tick.ServerTickEvent
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -31,8 +29,11 @@ import java.util.concurrent.ConcurrentHashMap
  * @author superbwarfare contributors
  * @since 0.8.9.1
  */
-@EventBusSubscriber
 object ServerSyncedEntityHandler {
+    fun init() {
+        ServerTickEvents.END_SERVER_TICK.register { tick(it) }
+    }
+
     /**
     * How often (in ticks) to broadcast full BVR position updates.
     * Removals are sent immediately every tick for responsive cleanup.
@@ -206,10 +207,7 @@ object ServerSyncedEntityHandler {
         }
     }
 
-    @SubscribeEvent
-    fun tick(event: ServerTickEvent.Post) {
-        val server = event.server
-
+    private fun tick(server: MinecraftServer) {
         // Periodic cleanup of expired entries
         if (server.tickCount % SyncConfig.SERVER_SYNC_CLEAN_INTERVAL.get() == 0) {
             cleanAll(server)

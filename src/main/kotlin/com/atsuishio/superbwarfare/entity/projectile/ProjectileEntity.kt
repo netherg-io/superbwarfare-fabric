@@ -65,7 +65,7 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.entity.PartEntity
+import com.atsuishio.superbwarfare.fabric.MultipartEntities
 import net.neoforged.neoforge.event.EventHooks
 import java.util.function.Predicate
 import java.util.function.Supplier
@@ -651,9 +651,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
 
         if (postEvent(HitEntity(this.owner, this, result)).isCanceled) return
 
-        if (entity is PartEntity<*>) {
-            entity = entity.getParent()
-        }
+        MultipartEntities.parentOf(entity)?.let { entity = it }
 
         if (entity is LivingEntity) {
             entity.level().playSound(

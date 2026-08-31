@@ -1,18 +1,18 @@
 package com.atsuishio.superbwarfare.command
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.command.builder.buildCommand
+import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.RegisterCommandsEvent
 
-@EventBusSubscriber(modid = Mod.MODID)
 object CommandRegister {
-    @SubscribeEvent
-    fun registerCommand(event: RegisterCommandsEvent) {
+    fun init() {
+        CommandRegistrationCallback.EVENT.register { dispatcher, _, _ -> registerCommand(dispatcher) }
+    }
+
+    private fun registerCommand(dispatcher: CommandDispatcher<CommandSourceStack>) {
         val command = buildCommand("sbw") {
             add(AMMO_COMMAND)
             add(CONFIG_COMMAND)
@@ -23,7 +23,7 @@ object CommandRegister {
             add(LOITER_COMMAND)
         }
 
-        val result = event.dispatcher.register(command as LiteralArgumentBuilder<CommandSourceStack>)
-        event.dispatcher.register(Commands.literal("superbwarfare").redirect(result))
+        val result = dispatcher.register(command as LiteralArgumentBuilder<CommandSourceStack>)
+        dispatcher.register(Commands.literal("superbwarfare").redirect(result))
     }
 }

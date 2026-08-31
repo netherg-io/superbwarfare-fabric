@@ -7,18 +7,15 @@ import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.resource.model.ArmorModelReloadListener
 import com.atsuishio.superbwarfare.tiers.ModArmorMaterial
 import com.github.mcmodderanchor.simplebedrockmodel.v2.client.renderer.GeoArmorRendererV2
-import net.minecraft.client.model.HumanoidModel
-import net.minecraft.world.entity.EquipmentSlot
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer
+import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.world.entity.EquipmentSlotGroup
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
 import kotlin.math.max
 
 class RuChest6b43Item : ArmorItem(
@@ -26,34 +23,27 @@ class RuChest6b43Item : ArmorItem(
     Type.CHESTPLATE,
     Properties().durability(Type.CHESTPLATE.getDurability(50))
 ) {
-    @EventBusSubscriber
     companion object {
         val TEXTURE = loc("textures/bedrock/armor/ru_chest_6b43.png")
         val MODEL = loc("models/bedrock/armor/ru_chest_6b43.geo.json")
 
-        @SubscribeEvent
-        fun registerRender(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: GeoArmorRendererV2? = null
+        /** Клиент: аналога IClientItemExtensions#getHumanoidArmorModel на Fabric нет, модель брони отдаётся через ArmorRenderer. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: GeoArmorRendererV2? = null
 
-                override fun getHumanoidArmorModel(
-                    livingEntity: LivingEntity,
-                    itemStack: ItemStack,
-                    equipmentSlot: EquipmentSlot,
-                    original: HumanoidModel<*>
-                ): HumanoidModel<*> {
-                    if (this.renderer == null) {
-                        this.renderer = GeoArmorRendererV2(
-                            ArmorModelReloadListener.getModel(MODEL),
-                            equipmentSlot,
-                            TEXTURE
-                        )
-                    }
-
-                    this.renderer!!.preparePose(livingEntity, itemStack, equipmentSlot, original)
-                    return this.renderer!!
+            ArmorRenderer.register({ poseStack, buffer, stack, entity, slot, light, contextModel ->
+                if (renderer == null) {
+                    renderer = GeoArmorRendererV2(
+                        ArmorModelReloadListener.getModel(MODEL),
+                        slot,
+                        TEXTURE
+                    )
                 }
-            }, ModItems.RU_CHEST_6B43)
+
+                renderer!!.preparePose(entity, stack, slot, contextModel)
+                renderer!!.renderArmorToBuffer(poseStack, buffer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f)
+            }, ModItems.RU_CHEST_6B43.get())
         }
     }
 

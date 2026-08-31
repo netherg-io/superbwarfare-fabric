@@ -16,22 +16,27 @@ import com.atsuishio.superbwarfare.init.ModBlockEntities
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.tools.localPlayer
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
-import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterLayerDefinitions
-import net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers
-import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent
-import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import top.theillusivec4.curios.api.client.CuriosRendererRegistry
 import kotlin.math.min
 
-@EventBusSubscriber(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object ClientRenderHandler {
+    fun init() {
+        registerTooltip()
+        registerRenderers()
+        registerOverlays()
+        registerLayer()
+    }
+
     // TODO 正确赋值该变量
     @JvmStatic
     var bulletRenderOffset: Vec3? = null
@@ -51,75 +56,104 @@ object ClientRenderHandler {
         stack.translate(offset.x, offset.y, offset.z)
     }
 
-    @SubscribeEvent
-    fun registerTooltip(event: RegisterClientTooltipComponentFactoriesEvent) {
-        event.register(GunImageComponent::class.java) { ClientGunImageTooltip(it) }
-        event.register(BocekImageComponent::class.java) { ClientBocekImageTooltip(it) }
-        event.register(CellImageComponent::class.java) { ClientCellImageTooltip(it) }
-        event.register(SentinelImageComponent::class.java) { ClientSentinelImageTooltip(it) }
-        event.register(ChargingStationImageComponent::class.java) { ClientChargingStationImageTooltip(it) }
-        event.register(DogTagImageComponent::class.java) { ClientDogTagImageTooltip(it) }
+    // TooltipComponentCallback -- один слушатель на все типы вместо реестра по классу,
+    // поэтому подклассы GunImageComponent обязаны стоять выше самого GunImageComponent.
+    private fun registerTooltip() {
+        TooltipComponentCallback.EVENT.register { data ->
+            when (data) {
+                is BocekImageComponent -> ClientBocekImageTooltip(data)
+                is SentinelImageComponent -> ClientSentinelImageTooltip(data)
+                is ChargingStationImageComponent -> ClientChargingStationImageTooltip(data)
+                is GunImageComponent -> ClientGunImageTooltip(data)
+                is CellImageComponent -> ClientCellImageTooltip(data)
+                is DogTagImageComponent -> ClientDogTagImageTooltip(data)
+                else -> null
+            }
+        }
     }
 
-    @SubscribeEvent
-    fun registerRenderers(event: RegisterRenderers) {
-        event.registerBlockEntityRenderer(ModBlockEntities.CONTAINER.get()) { _ -> ContainerBlockEntityRenderer() }
-        event.registerBlockEntityRenderer(ModBlockEntities.FUMO_25.get()) { _ -> FuMO25BlockEntityRenderer() }
-        event.registerBlockEntityRenderer(ModBlockEntities.CHARGING_STATION.get()) { _ -> ChargingStationBlockEntityRenderer() }
-        event.registerBlockEntityRenderer(ModBlockEntities.SMALL_CONTAINER.get()) { _ -> SmallContainerBlockEntityRenderer() }
-        event.registerBlockEntityRenderer(ModBlockEntities.LUCKY_CONTAINER.get()) { _ -> LuckyContainerBlockEntityRenderer() }
-        event.registerBlockEntityRenderer(ModBlockEntities.VEHICLE_ASSEMBLING_TABLE.get()) { _ -> VehicleAssemblingTableBlockEntityRenderer() }
-        event.registerBlockEntityRenderer(ModBlockEntities.BLUEPRINT_RESEARCH_TABLE.get()) { _ -> BlueprintResearchTableBlockEntityRenderer() }
+    private fun registerRenderers() {
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.CONTAINER.get(),
+            BlockEntityRendererProvider { ContainerBlockEntityRenderer() })
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.FUMO_25.get(),
+            BlockEntityRendererProvider { FuMO25BlockEntityRenderer() })
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.CHARGING_STATION.get(),
+            BlockEntityRendererProvider { ChargingStationBlockEntityRenderer() })
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.SMALL_CONTAINER.get(),
+            BlockEntityRendererProvider { SmallContainerBlockEntityRenderer() })
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.LUCKY_CONTAINER.get(),
+            BlockEntityRendererProvider { LuckyContainerBlockEntityRenderer() })
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.VEHICLE_ASSEMBLING_TABLE.get(),
+            BlockEntityRendererProvider { VehicleAssemblingTableBlockEntityRenderer() })
+        BlockEntityRendererRegistry.register(
+            ModBlockEntities.BLUEPRINT_RESEARCH_TABLE.get(),
+            BlockEntityRendererProvider { BlueprintResearchTableBlockEntityRenderer() })
     }
 
-    @SubscribeEvent
-    fun registerOverlays(event: RegisterGuiLayersEvent) {
-        event.registerBelowAll(KillMessageOverlay.ID, KillMessageOverlay)
-        event.registerBelow(KillMessageOverlay.ID, ArmorPlateOverlay.ID, ArmorPlateOverlay)
-        event.registerBelow(ArmorPlateOverlay.ID, AmmoBarOverlay.ID, AmmoBarOverlay)
-        event.registerBelow(AmmoBarOverlay.ID, IFFOverlay.ID, IFFOverlay)
-        event.registerBelow(IFFOverlay.ID, VehicleTeamOverlay.ID, VehicleTeamOverlay)
-        event.registerBelow(VehicleTeamOverlay.ID, JavelinHudOverlay.ID, JavelinHudOverlay)
-        event.registerBelow(JavelinHudOverlay.ID, IglaHudOverlay.ID, IglaHudOverlay)
-        event.registerBelow(IglaHudOverlay.ID, VehicleHudOverlay.ID, VehicleHudOverlay)
-        event.registerBelow(VehicleHudOverlay.ID, VehicleMainWeaponHudOverlay.ID, VehicleMainWeaponHudOverlay)
-        event.registerBelow(
-            VehicleMainWeaponHudOverlay.ID,
-            GPWSOverlay.ID,
-            GPWSOverlay
+    // У Fabric API 1.21.1 нет аналога RegisterGuiLayersEvent: HudRenderCallback рисует
+    // строго поверх ванильного HUD, а порядок слоёв задаётся только порядком регистрации.
+    // Цепочка registerBelow/registerBelowAll в NeoForge давала порядок отрисовки, обратный
+    // порядку вызовов, поэтому здесь слои перечислены в обратном порядке.
+    private fun registerOverlays() {
+        val layers = listOf(
+            SodayoRocketInfoOverlay,
+            Type63InfoOverlay,
+            MortarInfoOverlay,
+            TowOverlay,
+            SpyglassRangeOverlay,
+            HandsomeFrameOverlay,
+            RedTriangleOverlay,
+            DroneHudOverlay,
+            HeatBarOverlay,
+            CrossHairOverlay,
+            ItemRendererFixOverlay,
+            AmmoCountOverlay,
+            StaminaOverlay,
+            VehicleCrosshairOverlay,
+            GPWSOverlay,
+            VehicleMainWeaponHudOverlay,
+            VehicleHudOverlay,
+            IglaHudOverlay,
+            JavelinHudOverlay,
+            VehicleTeamOverlay,
+            IFFOverlay,
+            AmmoBarOverlay,
+            ArmorPlateOverlay,
+            KillMessageOverlay,
         )
-        event.registerBelow(GPWSOverlay.ID, VehicleCrosshairOverlay.ID, VehicleCrosshairOverlay)
-        event.registerBelowAll(StaminaOverlay.ID, StaminaOverlay)
-        event.registerBelowAll(AmmoCountOverlay.ID, AmmoCountOverlay)
-        event.registerBelowAll(ItemRendererFixOverlay.ID, ItemRendererFixOverlay)
-        event.registerBelowAll(CrossHairOverlay.ID, CrossHairOverlay)
-        event.registerBelowAll(HeatBarOverlay.ID, HeatBarOverlay)
-        event.registerBelowAll(DroneHudOverlay.ID, DroneHudOverlay)
-        event.registerBelowAll(RedTriangleOverlay.ID, RedTriangleOverlay)
-        event.registerBelowAll(HandsomeFrameOverlay.ID, HandsomeFrameOverlay)
-        event.registerBelowAll(SpyglassRangeOverlay.ID, SpyglassRangeOverlay)
-        event.registerBelowAll(TowOverlay.ID, TowOverlay)
-        event.registerBelowAll(MortarInfoOverlay.ID, MortarInfoOverlay)
-        event.registerBelowAll(Type63InfoOverlay.ID, Type63InfoOverlay)
-        event.registerBelowAll(SodayoRocketInfoOverlay.ID, SodayoRocketInfoOverlay)
+        layers.forEach { layer ->
+            HudRenderCallback.EVENT.register { guiGraphics, deltaTracker ->
+                layer.render(guiGraphics, deltaTracker)
+            }
+        }
     }
 
-    @SubscribeEvent
-    fun registerItemDecorations(event: RegisterItemDecorationsEvent) {
-        event.register(ModItems.CONTAINER.get(), ContainerItemDecorator())
-        event.register(ModItems.LUCKY_CONTAINER.get(), LuckyContainerItemDecorator())
-        event.register(ModItems.VEHICLE_KEY.get(), VehicleKeyItemDecorator())
-    }
+    // ponytail: у Fabric API 1.21.1 нет аналога RegisterItemDecorationsEvent, регистрировать негде.
+    // Пары «предмет -> декоратор» сохранены дословно; подключить миксином на
+    // GuiGraphics.renderItemDecorations и удалить эту заглушку.
+    @Suppress("unused")
+    private fun registerItemDecorations() = listOf(
+        ModItems.CONTAINER.get() to ContainerItemDecorator(),
+        ModItems.LUCKY_CONTAINER.get() to LuckyContainerItemDecorator(),
+        ModItems.VEHICLE_KEY.get() to VehicleKeyItemDecorator(),
+    )
 
-    @SubscribeEvent
-    fun onClientSetup(event: FMLClientSetupEvent) {
+    // ponytail: Curios под Fabric не портирован, зависимости в build.gradle.kts нет.
+    // Подключить, когда появится замена CuriosRendererRegistry (Trinkets или свой слой).
+    @Suppress("unused")
+    private fun onClientSetup() {
         CuriosRendererRegistry.register(ModItems.PARACHUTE.get()) { ParachuteRenderer() }
         CuriosRendererRegistry.register(ModItems.THERMAL_IMAGING_GOGGLES.get()) { ThermalImagingGogglesRenderer() }
     }
 
-    @SubscribeEvent
-    fun registerLayer(event: RegisterLayerDefinitions) {
-        event.registerLayerDefinition(ParachuteModel.LAYER_LOCATION) { ParachuteModel.createBodyLayer() }
-        event.registerLayerDefinition(ThermalImagingGogglesModel.LAYER_LOCATION) { ThermalImagingGogglesModel.createBodyLayer() }
+    private fun registerLayer() {
+        EntityModelLayerRegistry.registerModelLayer(ParachuteModel.LAYER_LOCATION) { ParachuteModel.createBodyLayer() }
+        EntityModelLayerRegistry.registerModelLayer(ThermalImagingGogglesModel.LAYER_LOCATION) { ThermalImagingGogglesModel.createBodyLayer() }
     }
 }

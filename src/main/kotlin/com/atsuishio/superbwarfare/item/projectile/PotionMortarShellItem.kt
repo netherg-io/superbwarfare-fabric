@@ -7,6 +7,10 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.item.DispenserLaunchable
 import net.minecraft.core.Position
 import net.minecraft.core.component.DataComponents
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
+import net.minecraft.client.color.item.ItemColor
 import net.minecraft.core.dispenser.BlockSource
 import net.minecraft.core.dispenser.DispenseItemBehavior
 import net.minecraft.network.chat.Component
@@ -18,10 +22,6 @@ import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.level.Level
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 
 class PotionMortarShellItem : MortarShellItem(), DispenserLaunchable {
     override fun getDefaultInstance(): ItemStack {
@@ -69,12 +69,12 @@ class PotionMortarShellItem : MortarShellItem(), DispenserLaunchable {
         }
     }
 
-    @EventBusSubscriber(Dist.CLIENT)
     companion object {
-        @SubscribeEvent
-        fun onRegisterColorHandlers(event: RegisterColorHandlersEvent.Item) {
-            event.register(
-                { stack, layer ->
+        /** Клиент: RegisterColorHandlersEvent.Item заменён на ColorProviderRegistry.ITEM из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            ColorProviderRegistry.ITEM.register(
+                ItemColor { stack, layer ->
                     if (layer == 1) FastColor.ARGB32.opaque(
                         stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).color
                     ) else -1

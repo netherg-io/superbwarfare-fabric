@@ -78,6 +78,10 @@ dependencies {
     // поэтому весь пакет config едет без правок: ModConfigBuilder там -- typealias на его Builder.
     modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.3")
 
+    // Энергии нет ни в Fabric API, ни в Porting Lib. teamreborn:energy -- стандарт для Fabric;
+    // 4.1.0 -- последняя, чья нижняя граница (1.21) накрывает 1.21.1, дальше требуют 1.21.5+.
+    modImplementation("teamreborn:energy:4.1.0") { isTransitive = false }
+
     // Porting Lib даёт события в форме Forge/NeoForge поверх Fabric: LivingFallEvent,
     // LivingKnockBackEvent, LivingDropsEvent, MobEffectEvent и прочие, которых в Fabric API нет.
     // Иначе под каждое пришлось бы писать свой миксин -- три десятка штук.

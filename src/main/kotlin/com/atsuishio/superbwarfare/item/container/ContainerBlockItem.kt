@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.item.container
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.api.event.RegisterContainersEvent
+import com.atsuishio.superbwarfare.fabric.ModEventBus
 import com.atsuishio.superbwarfare.client.renderer.item.ContainerBlockItemRenderer
 import com.atsuishio.superbwarfare.init.ModBlockEntities
 import com.atsuishio.superbwarfare.init.ModBlocks
@@ -28,11 +28,9 @@ import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.HitResult
-import net.neoforged.bus.api.EventPriority
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 
 class ContainerBlockItem : BlockItem(ModBlocks.CONTAINER.get(), Properties().stacksTo(1).fireResistant()) {
 
@@ -88,10 +86,15 @@ class ContainerBlockItem : BlockItem(ModBlocks.CONTAINER.get(), Properties().sta
     }
 
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
-        @SubscribeEvent(priority = EventPriority.HIGH)
-        fun registerContainers(event: RegisterContainersEvent) {
+        /** Общий. */
+        fun init() {
+            ModEventBus.register<RegisterContainersEvent> { registerContainers(it) }
+        }
+
+        // ponytail: приоритета HIGH из NeoForge нет -- ModEventBus зовёт подписчиков в порядке регистрации.
+        // Если аддонам понадобится встать после этого списка, добавлять приоритет в ModEventBus.
+        private fun registerContainers(event: RegisterContainersEvent) {
             event.add(ModEntities.WHEEL_CHAIR)
             event.add(ModEntities.SODAYO_PICK_UP)
             event.add(ModEntities.SODAYO_PICK_UP_HMG)
@@ -133,18 +136,20 @@ class ContainerBlockItem : BlockItem(ModBlocks.CONTAINER.get(), Properties().sta
             event.add(ModEntities.KIROV)
         }
 
-        @SubscribeEvent
-        private fun registerArmorExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun initClient() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.CONTAINER.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = ContainerBlockItemRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.CONTAINER)
+            )
         }
 
         @JvmStatic

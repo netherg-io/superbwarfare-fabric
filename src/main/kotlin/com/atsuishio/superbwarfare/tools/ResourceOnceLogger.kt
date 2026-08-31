@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.Mod
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.ResourceManager
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
 import org.apache.logging.log4j.Logger
 import java.util.function.Consumer
 
@@ -25,20 +25,20 @@ class ResourceOnceLogger {
         logger.accept(Mod.LOGGER)
     }
 
-    internal class ReloadListener : ResourceManagerReloadListener {
+    internal class ReloadListener : SimpleSynchronousResourceReloadListener {
+        override fun getFabricId(): ResourceLocation = Mod.loc("resource_once_logger")
+
         override fun onResourceManagerReload(resourceManager: ResourceManager) {
             LOGGERS.forEach { it?.logged?.clear() }
         }
     }
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
         private val INSTANCE = ReloadListener()
         private val LOGGERS = ArrayList<ResourceOnceLogger?>()
 
-        @SubscribeEvent
-        fun onRegisterReloadListeners(event: RegisterClientReloadListenersEvent) {
-            event.registerReloadListener(INSTANCE)
+        fun init() {
+            ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(INSTANCE)
         }
     }
 }

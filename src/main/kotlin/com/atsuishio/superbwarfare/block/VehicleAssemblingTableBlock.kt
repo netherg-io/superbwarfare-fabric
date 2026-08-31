@@ -33,9 +33,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock
+import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerInteractEvent.RightClickBlock
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 open class VehicleAssemblingTableBlock : BaseEntityBlock(
@@ -185,8 +183,11 @@ open class VehicleAssemblingTableBlock : BaseEntityBlock(
 
     override fun codec() = CODEC
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
+        fun init() {
+            RightClickBlock.EVENT.register { onInteractVehicleBlock(it) }
+        }
+
         @JvmField
         val FACING: DirectionProperty = HorizontalDirectionalBlock.FACING
 
@@ -196,8 +197,7 @@ open class VehicleAssemblingTableBlock : BaseEntityBlock(
         @JvmField
         val CODEC: MapCodec<VehicleAssemblingTableBlock> = simpleCodec { _ -> VehicleAssemblingTableBlock() }
 
-        @SubscribeEvent
-        fun onInteractVehicleBlock(event: RightClickBlock) {
+        private fun onInteractVehicleBlock(event: RightClickBlock) {
             val level = event.level
             if (level is ServerLevel && event.entity.mainHandItem.`is`(ModTags.Items.TOOLS_CROWBAR)) {
                 val pos = event.hitVec.blockPos

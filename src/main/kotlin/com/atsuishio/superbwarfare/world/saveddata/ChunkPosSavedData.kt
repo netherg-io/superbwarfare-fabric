@@ -2,18 +2,16 @@ package com.atsuishio.superbwarfare.world.saveddata
 
 import com.atsuishio.superbwarfare.config.server.VehicleConfig
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.TicketType
 import net.minecraft.util.Unit
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.saveddata.SavedData
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.server.ServerStartedEvent
-import net.neoforged.neoforge.event.server.ServerStoppingEvent
 
 class ChunkPosSavedData : SavedData() {
     val chunkPositions = mutableSetOf<ChunkPos>()
@@ -47,9 +45,13 @@ class ChunkPosSavedData : SavedData() {
         this.chunkPositions.clear()
     }
 
-    @EventBusSubscriber
     companion object {
         const val FILE_ID: String = "superbwarfare_chunk_pos"
+
+        fun init() {
+            ServerLifecycleEvents.SERVER_STARTED.register { posSavedDataOnServerStarted(it) }
+            ServerLifecycleEvents.SERVER_STOPPING.register { posSavedDataOnServerStopping(it) }
+        }
 
         fun load(tag: CompoundTag): ChunkPosSavedData {
             val savedData = ChunkPosSavedData()
@@ -59,9 +61,7 @@ class ChunkPosSavedData : SavedData() {
             return savedData
         }
 
-        @SubscribeEvent
-        fun posSavedDataOnServerStarted(event: ServerStartedEvent) {
-            val server = event.server
+        private fun posSavedDataOnServerStarted(server: MinecraftServer) {
             if (!VehicleConfig.VEHICLE_CHUNK_LOADING.get()) return
 
             for (level in server.allLevels) {
@@ -84,9 +84,7 @@ class ChunkPosSavedData : SavedData() {
             }
         }
 
-        @SubscribeEvent
-        fun posSavedDataOnServerStopping(event: ServerStoppingEvent) {
-            val server = event.server
+        private fun posSavedDataOnServerStopping(server: MinecraftServer) {
             if (!VehicleConfig.VEHICLE_CHUNK_LOADING.get()) return
 
             for (level in server.allLevels) {

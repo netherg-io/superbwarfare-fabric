@@ -2,15 +2,10 @@ package com.atsuishio.superbwarfare.init
 
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.KeyMapping
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent
-import net.neoforged.neoforge.client.settings.KeyConflictContext
-import net.neoforged.neoforge.client.settings.KeyModifier
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import org.lwjgl.glfw.GLFW
 
-@EventBusSubscriber(Dist.CLIENT)
+/** Клиентская сторона: вызывать из ClientModInitializer. */
 object ModKeyMappings {
     const val CATEGORY = "key.categories.superbwarfare"
     private val KEYS = mutableListOf<KeyMapping>()
@@ -61,12 +56,7 @@ object ModKeyMappings {
     val CHANGE_SEAT = registerKey("change_seat", GLFW.GLFW_KEY_LEFT_SHIFT)
 
     @JvmField
-    val CONFIG = registerKey(
-        "config",
-        GLFW.GLFW_KEY_O,
-        KeyConflictContext.IN_GAME,
-        KeyModifier.ALT
-    )
+    val CONFIG = registerKey("config", GLFW.GLFW_KEY_O)
 
     @JvmField
     val EDIT_MODE = registerKey("edit_mode", GLFW.GLFW_KEY_H)
@@ -128,24 +118,14 @@ object ModKeyMappings {
     private fun registerKey(
         name: String,
         code: Int,
-        conflictContext: KeyConflictContext = KeyConflictContext.IN_GAME,
-        modifier: KeyModifier = KeyModifier.NONE,
         type: InputConstants.Type = InputConstants.Type.KEYSYM
     ): KeyMapping {
-        val key = KeyMapping(
-            "key.superbwarfare.$name",
-            conflictContext,
-            modifier,
-            type,
-            code,
-            CATEGORY
-        )
+        val key = KeyMapping("key.superbwarfare.$name", type, code, CATEGORY)
         KEYS.add(key)
         return key
     }
 
-    @SubscribeEvent
-    fun registerKeyMappings(event: RegisterKeyMappingsEvent) {
-        KEYS.forEach { event.register(it) }
+    fun init() {
+        KEYS.forEach { KeyBindingHelper.registerKeyBinding(it) }
     }
 }

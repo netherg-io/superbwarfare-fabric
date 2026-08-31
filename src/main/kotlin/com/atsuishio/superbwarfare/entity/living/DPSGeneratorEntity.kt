@@ -34,10 +34,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingDeathEvent
 import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -309,8 +307,11 @@ open class DPSGeneratorEntity(type: EntityType<DPSGeneratorEntity>, level: Level
 
     override fun getPickResult() = ItemStack(ModItems.DPS_GENERATOR_DEPLOYER.get())
 
-    @EventBusSubscriber
     companion object {
+        fun init() {
+            LivingDeathEvent.EVENT.register { onDPSGeneratorDown(it) }
+        }
+
         @JvmField
         val DOWN_TIME: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(DPSGeneratorEntity::class.java, EntityDataSerializers.INT)
@@ -325,8 +326,7 @@ open class DPSGeneratorEntity(type: EntityType<DPSGeneratorEntity>, level: Level
 
         val MODEL = loc("models/bedrock/entity/dps_generator.geo.json")
 
-        @SubscribeEvent
-        fun onDPSGeneratorDown(event: LivingDeathEvent) {
+        private fun onDPSGeneratorDown(event: LivingDeathEvent) {
             val entity = event.entity as? DPSGeneratorEntity ?: return
             // 不处理/kill伤害
             if (event.source.`is`(DamageTypes.GENERIC_KILL)) return

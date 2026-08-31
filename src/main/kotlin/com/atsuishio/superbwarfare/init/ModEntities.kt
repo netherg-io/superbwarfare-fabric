@@ -17,14 +17,11 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.Heightmap
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent
-import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
 
-@EventBusSubscriber
+/** Общая сторона: вызывать из ModInitializer. */
 object ModEntities {
     val REGISTRY: DeferredRegister<EntityType<*>> = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, Mod.MODID)
 
@@ -394,35 +391,35 @@ object ModEntities {
         .setTrackingRange(64)
         .setUpdateInterval(1)
 
-    @SubscribeEvent
-    fun onRegisterSpawnPlacement(event: RegisterSpawnPlacementsEvent) {
-        event.register(
-            SENPAI.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-            { entityType, world, reason, pos, random ->
-                world.difficulty != Difficulty.PEACEFUL
-                        && SpawnConfig.SPAWN_SENPAI.get()
-                        && Monster.isDarkEnoughToSpawn(world, pos, random)
-                        && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)
-            },
-            RegisterSpawnPlacementsEvent.Operation.OR
-        )
-        event.register(
-            STEEL_COIL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-            { entityType, world, reason, pos, random ->
-                world.difficulty != Difficulty.PEACEFUL
-                        && SpawnConfig.SPAWN_STEEL_COIL.get()
-                        && Monster.isDarkEnoughToSpawn(world, pos, random)
-                        && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)
-            },
-            RegisterSpawnPlacementsEvent.Operation.OR
-        )
+    fun init() {
+        REGISTRY.register(null)
+        registerSpawnPlacements()
+        registerAttributes()
     }
 
-    @SubscribeEvent
-    fun registerAttributes(event: EntityAttributeCreationEvent) {
-        event.put(TARGET.get(), TargetEntity.createAttributes().build())
-        event.put(DPS_GENERATOR.get(), DPSGeneratorEntity.createAttributes().build())
-        event.put(SENPAI.get(), SenpaiEntity.createAttributes().build())
-        event.put(STEEL_COIL.get(), SteelCoilEntity.createAttributes().build())
+    private fun registerSpawnPlacements() {
+        SpawnPlacements.register(
+            SENPAI.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES
+        ) { entityType, world, reason, pos, random ->
+            world.difficulty != Difficulty.PEACEFUL
+                    && SpawnConfig.SPAWN_SENPAI.get()
+                    && Monster.isDarkEnoughToSpawn(world, pos, random)
+                    && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)
+        }
+        SpawnPlacements.register(
+            STEEL_COIL.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES
+        ) { entityType, world, reason, pos, random ->
+            world.difficulty != Difficulty.PEACEFUL
+                    && SpawnConfig.SPAWN_STEEL_COIL.get()
+                    && Monster.isDarkEnoughToSpawn(world, pos, random)
+                    && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)
+        }
+    }
+
+    private fun registerAttributes() {
+        FabricDefaultAttributeRegistry.register(TARGET.get(), TargetEntity.createAttributes().build())
+        FabricDefaultAttributeRegistry.register(DPS_GENERATOR.get(), DPSGeneratorEntity.createAttributes().build())
+        FabricDefaultAttributeRegistry.register(SENPAI.get(), SenpaiEntity.createAttributes().build())
+        FabricDefaultAttributeRegistry.register(STEEL_COIL.get(), SteelCoilEntity.createAttributes().build())
     }
 }

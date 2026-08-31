@@ -18,18 +18,23 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import io.github.fabricators_of_create.porting_lib.entity.events.OnDatapackSyncCallback
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.packs.PackType
+import net.minecraft.server.packs.resources.PreparableReloadListener
+import net.minecraft.server.packs.resources.ResourceManager
+import net.minecraft.server.players.PlayerList
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent
-import net.neoforged.neoforge.event.AddReloadListenerEvent
-import net.neoforged.neoforge.event.OnDatapackSyncEvent
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executor
 import java.util.function.Consumer
 
-@EventBusSubscriber(modid = Mod.MODID)
 object DataLoader {
 
     @JvmField
@@ -59,9 +64,10 @@ object DataLoader {
     val SERVER_LISTENER: ComplexJsonResourceReloadListener = ComplexJsonResourceReloadListener(LOADED_DATA)
     val CLIENT_LISTENER: ComplexJsonResourceReloadListener = ComplexJsonResourceReloadListener(LOADED_RESOURCE)
 
-    @SubscribeEvent
-    fun addDataReloadListener(event: AddReloadListenerEvent) {
-        event.addListener(SERVER_LISTENER)
+    fun init() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA)
+            .registerReloadListener(Identified("data", SERVER_LISTENER))
+        OnDatapackSyncCallback.EVENT.register { playerList, player -> onDataPackSync(playerList, player) }
     }
 
     @Suppress("unchecked_cast")
@@ -155,26 +161,48 @@ object DataLoader {
         }
     }
 
-    @SubscribeEvent
-    fun onDataPackSync(event: OnDatapackSyncEvent) {
-        val server = event.playerList.server
+    /** player == null означает перезагрузку датапаков: рассылаем всем, как делал NeoForge. */
+    private fun onDataPackSync(playerList: PlayerList, player: ServerPlayer?) {
+        val server = playerList.server
+        val relevantPlayers: List<ServerPlayer> = player?.let { listOf(it) } ?: playerList.players
 
         LOADED_DATA.filter { it.value.synced }.forEach { (key, data) ->
             val packet = DataSyncMessage(key, data.serializeToString())
 
-            for (player in event.relevantPlayers) {
-                if (server.isSingleplayerOwner(player.gameProfile)) continue
+            for (p in relevantPlayers) {
+                if (server.isSingleplayerOwner(p.gameProfile)) continue
 
-                player.sendPacket(packet)
+                p.sendPacket(packet)
             }
         }
     }
 
-    @EventBusSubscriber(modid = Mod.MODID)
     internal object ClientReloadListener {
-        @SubscribeEvent
-        fun addResourceReloadListener(event: RegisterClientReloadListenersEvent) {
-            event.registerReloadListener(CLIENT_LISTENER)
+        fun init() {
+            ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
+                .registerReloadListener(Identified("resource", CLIENT_LISTENER))
         }
+    }
+
+    /**
+     * ResourceManagerHelper принимает только IdentifiableResourceReloadListener, а
+     * ComplexJsonResourceReloadListener наследуется от ванильного SimplePreparableReloadListener.
+     * Обёртка добавляет недостающий id, не трогая сам слушатель.
+     */
+    private class Identified(name: String, private val delegate: PreparableReloadListener) :
+        IdentifiableResourceReloadListener {
+        private val id: ResourceLocation = Mod.loc(name)
+
+        override fun getFabricId(): ResourceLocation = id
+
+        override fun reload(
+            barrier: PreparableReloadListener.PreparationBarrier,
+            manager: ResourceManager,
+            prepareProfiler: ProfilerFiller,
+            applyProfiler: ProfilerFiller,
+            prepareExecutor: Executor,
+            applyExecutor: Executor
+        ): CompletableFuture<Void> =
+            delegate.reload(barrier, manager, prepareProfiler, applyProfiler, prepareExecutor, applyExecutor)
     }
 }

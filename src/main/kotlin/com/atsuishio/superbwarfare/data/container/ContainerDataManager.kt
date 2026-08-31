@@ -7,13 +7,19 @@ import it.unimi.dsi.fastutil.Pair
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
+import net.minecraft.server.packs.PackType
 import net.minecraft.util.profiling.ProfilerFiller
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.AddReloadListenerEvent
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 
-@EventBusSubscriber
-object ContainerDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/containers") {
+object ContainerDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/containers"),
+    IdentifiableResourceReloadListener {
+    override fun getFabricId(): ResourceLocation = Mod.loc("container_data")
+
+    fun init() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(this)
+    }
+
     private val containerData: MutableMap<ResourceLocation, MutableList<Pair<String, Int>>> = hashMapOf()
 
     override fun apply(
@@ -46,10 +52,5 @@ object ContainerDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/cont
 
     fun getEntityTypes(id: ResourceLocation): MutableList<Pair<String, Int>> {
         return containerData[id] ?: mutableListOf()
-    }
-
-    @SubscribeEvent
-    fun onAddReloadListeners(event: AddReloadListenerEvent) {
-        event.addListener(this)
     }
 }

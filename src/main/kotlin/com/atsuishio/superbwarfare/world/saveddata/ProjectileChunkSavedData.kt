@@ -15,10 +15,8 @@ import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.chunk.LevelChunk
 import net.minecraft.world.level.chunk.ProtoChunk
 import net.minecraft.world.level.chunk.status.ChunkStatus
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.world.level.saveddata.SavedData
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.tick.LevelTickEvent
 
 /**
  * Per-dimension chunk manager that force-loads chunks for fast-moving projectiles.
@@ -199,9 +197,13 @@ class ProjectileChunkSavedData private constructor(private val chunks: LongOpenH
         return access is LevelChunk
     }
 
-    @EventBusSubscriber
     companion object {
         private const val FILE_ID = "superbwarfare_projectile_chunks"
+
+        fun init() {
+            ServerTickEvents.END_WORLD_TICK.register { onChunkLoadLevelTick(it) }
+        }
+
         private const val KEY_LOADED_CHUNKS = "LoadedChunks"
 
         /**
@@ -240,10 +242,8 @@ class ProjectileChunkSavedData private constructor(private val chunks: LongOpenH
             return ProjectileChunkSavedData(set)
         }
 
-        @SubscribeEvent
-        fun onChunkLoadLevelTick(event: LevelTickEvent.Post) {
+        private fun onChunkLoadLevelTick(level: ServerLevel) {
             if (!ProjectileConfig.PROJECTILE_CHUNK_LOADING.get()) return
-            val level = event.level as? ServerLevel ?: return
             tickLevel(level)
         }
     }

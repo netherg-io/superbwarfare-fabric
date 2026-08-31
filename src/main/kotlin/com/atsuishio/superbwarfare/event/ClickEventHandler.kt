@@ -24,6 +24,7 @@ import com.atsuishio.superbwarfare.network.message.send.*
 import com.atsuishio.superbwarfare.resource.gun.GunResource
 import com.atsuishio.superbwarfare.tools.*
 import com.mojang.blaze3d.platform.InputConstants
+import io.github.fabricators_of_create.porting_lib.client_events.event.client.InputEvent
 import net.minecraft.ChatFormatting
 import net.minecraft.client.KeyMapping
 import net.minecraft.client.Minecraft
@@ -36,22 +37,24 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModList
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.InputEvent
 import net.neoforged.neoforge.client.settings.KeyConflictContext
 import org.lwjgl.glfw.GLFW
 import top.theillusivec4.curios.api.CuriosApi
 
-@EventBusSubscriber(Dist.CLIENT)
 object ClickEventHandler {
     @JvmField
     var switchZoom: Boolean = false
 
-    @SubscribeEvent
-    fun onButtonReleased(event: InputEvent.MouseButton.Pre) {
+    fun init() {
+        InputEvent.MouseButton.Pre.EVENT.register { onButtonReleased(it) }
+        InputEvent.MouseButton.Pre.EVENT.register { onButtonPressed(it) }
+        InputEvent.InteractionKeyMappingTriggered.EVENT.register { stopSwing(it) }
+        InputEvent.MouseScrollingEvent.EVENT.register { onMouseScrolling(it) }
+        InputEvent.Key.EVENT.register { onKeyPressed(it) }
+    }
+
+    private fun onButtonReleased(event: InputEvent.MouseButton.Pre) {
         if (notInGame) return
         if (event.action != InputConstants.RELEASE) return
 
@@ -82,8 +85,7 @@ object ClickEventHandler {
         return stack.item is GunItem || (vehicle is VehicleEntity && vehicle.banHand(player) && !stack.isEdible)
     }
 
-    @SubscribeEvent
-    fun onButtonPressed(event: InputEvent.MouseButton.Pre) {
+    private fun onButtonPressed(event: InputEvent.MouseButton.Pre) {
         if (notInGame) return
         if (event.action != InputConstants.PRESS) return
 
@@ -170,16 +172,14 @@ object ClickEventHandler {
     /**
      * 枪械交互时禁止挥舞手臂
      */
-    @SubscribeEvent
-    fun stopSwing(event: InputEvent.InteractionKeyMappingTriggered) {
+    private fun stopSwing(event: InputEvent.InteractionKeyMappingTriggered) {
         val player = localPlayer ?: return
         if (player.getItemInHand(event.hand).item is GunItem) {
             event.setSwingHand(false)
         }
     }
 
-    @SubscribeEvent
-    fun onMouseScrolling(event: InputEvent.MouseScrollingEvent) {
+    private fun onMouseScrolling(event: InputEvent.MouseScrollingEvent) {
         val player = localPlayer ?: return
         if (notInGame) return
         if (player.hasEffect(ModMobEffects.SHOCK)) {
@@ -244,8 +244,7 @@ object ClickEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onKeyPressed(event: InputEvent.Key) {
+    private fun onKeyPressed(event: InputEvent.Key) {
         if (notInGame) return
 
         val player = localPlayer ?: return

@@ -1,18 +1,17 @@
 package com.atsuishio.superbwarfare.event
 
 import com.atsuishio.superbwarfare.tools.LivingKillRecord
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import java.util.*
 
-@EventBusSubscriber(Dist.CLIENT)
 object KillMessageHandler {
     val QUEUE: Queue<LivingKillRecord> = ArrayDeque()
 
-    @SubscribeEvent
-    fun onClientTick(event: ClientTickEvent.Post) {
+    fun init() {
+        ClientTickEvents.END_CLIENT_TICK.register { onClientTick() }
+    }
+
+    private fun onClientTick() {
         for (record in QUEUE) {
             if (record.freeze && record.tick >= 3) {
                 continue

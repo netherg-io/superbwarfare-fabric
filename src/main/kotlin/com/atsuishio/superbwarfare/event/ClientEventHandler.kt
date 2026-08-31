@@ -17,6 +17,7 @@ import com.atsuishio.superbwarfare.data.gun.*
 import com.atsuishio.superbwarfare.data.gun.value.AttachmentType
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineType
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.fabric.ModEventBus
 import com.atsuishio.superbwarfare.init.*
 import com.atsuishio.superbwarfare.item.gun.GunItem
 import com.atsuishio.superbwarfare.item.gun.launcher.SuperStarShooterItem
@@ -27,6 +28,11 @@ import com.atsuishio.superbwarfare.resource.gun.GunResource
 import com.atsuishio.superbwarfare.tools.*
 import com.atsuishio.superbwarfare.world.saveddata.TDMSavedData
 import com.mojang.blaze3d.vertex.PoseStack
+import io.github.fabricators_of_create.porting_lib.client_events.event.client.RenderHandEvent
+import io.github.fabricators_of_create.porting_lib.client_events.event.client.ViewportEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
@@ -49,15 +55,7 @@ import net.minecraft.world.level.block.CrossCollisionBlock
 import net.minecraft.world.level.block.DoorBlock
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.EventPriority
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.client.event.*
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers
-import net.neoforged.neoforge.common.util.TriState
-import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import org.joml.Matrix4f
 import org.lwjgl.glfw.GLFW
 import software.bernie.geckolib.animation.AnimationProcessor
@@ -67,7 +65,6 @@ import java.util.*
 import kotlin.experimental.or
 import kotlin.math.*
 
-@EventBusSubscriber(Dist.CLIENT)
 object ClientEventHandler {
     @JvmField
     var zoomTime: Double = 0.0
@@ -480,8 +477,26 @@ object ClientEventHandler {
     @JvmField
     var missileLockingPos: BlockPos? = null
 
-    @SubscribeEvent
-    fun handleWeaponTurn(event: RenderHandEvent) {
+    /**
+     * Порядок регистрации заменяет EventPriority: у Fabric Event приоритетов нет,
+     * слушатели вызываются в порядке register(). Поэтому бывший HIGHEST (onRenderHand)
+     * зарегистрирован раньше обычного handleWeaponTurn, а бывший LOWEST (captureFov) -- позже onFovUpdate.
+     */
+    fun init() {
+        RenderHandEvent.EVENT.register { onRenderHand(it) }
+        RenderHandEvent.EVENT.register { handleWeaponTurn(it) }
+        ClientTickEvents.END_CLIENT_TICK.register { handleClientTick() }
+        WorldRenderEvents.START.register { handleWeaponFire() }
+        WorldRenderEvents.START.register { handleWeaponBreathSway() }
+        ViewportEvent.ComputeCameraAngles.EVENT.register { computeCameraAngles(it) }
+        ViewportEvent.ComputeFov.EVENT.register { onFovUpdate(it) }
+        ViewportEvent.ComputeFov.EVENT.register { captureFov(it) }
+        ViewportEvent.ComputeFogColor.EVENT.register { onFogColor(it) }
+        ClientPlayConnectionEvents.JOIN.register { _, _, client -> client.player?.let { onPlayerLoggedIn(it) } }
+        ModEventBus.register<ClientVehicleFireEvent> { onClientVehicleFire(it) }
+    }
+
+    private fun handleWeaponTurn(event: RenderHandEvent) {
         val player = localPlayer ?: return
         val xRotOffset = Mth.lerp(event.partialTick, player.xBobO, player.xBob)
         val yRotOffset = Mth.lerp(event.partialTick, player.yBobO, player.yBob)
@@ -521,8 +536,7 @@ object ClientEventHandler {
                 || player.isSprinting
     }
 
-    @SubscribeEvent
-    fun handleClientTick(event: ClientTickEvent.Post) {
+    private fun handleClientTick() {
         val player = localPlayer ?: return
 
         if (mc.fps <= 20) {
@@ -1514,8 +1528,7 @@ object ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun handleWeaponFire(@Suppress("unused") event: RenderFrameEvent.Pre) {
+    private fun handleWeaponFire() {
         if (mc.fps > 20) {
             handleVehicleGunShoot()
             handleGunShoot()
@@ -1948,8 +1961,7 @@ object ClientEventHandler {
         player.playSound(sound, 1f, pitch)
     }
 
-    @SubscribeEvent
-    fun handleWeaponBreathSway(@Suppress("unused") event: RenderFrameEvent.Pre) {
+    private fun handleWeaponBreathSway() {
         val player = localPlayer ?: return
         val stack = player.mainHandItem
         val item = stack.item as? GunItem ?: return
@@ -2005,8 +2017,7 @@ object ClientEventHandler {
         return mc.deltaFrameTime
     }
 
-    @SubscribeEvent
-    fun computeCameraAngles(event: ViewportEvent.ComputeCameraAngles) {
+    private fun computeCameraAngles(event: ViewportEvent.ComputeCameraAngles) {
         if (clientLevel == null) return
         val entity = event.camera.entity as? LivingEntity ?: return
         val player = localPlayer ?: return
@@ -2082,8 +2093,7 @@ object ClientEventHandler {
             drone.getRoll(event.partialTick.toFloat() * (1 - (drone.getPitch(event.partialTick.toFloat()) / 90)))
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    fun onRenderHand(event: RenderHandEvent) {
+    private fun onRenderHand(event: RenderHandEvent) {
         // Pop only the stack that actually received the push in bobHurt.
         if (vehiclePoseStack === event.poseStack) {
             event.poseStack.popPose()
@@ -2755,15 +2765,13 @@ object ClientEventHandler {
         bowPullPos = 0.5 * cos(PI * (bowPullTimer.coerceIn(0.0, 1.0).pow(2) - 1).pow(2)) + 0.5
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    fun captureFov(event: ViewportEvent.ComputeFov) {
+    private fun captureFov(event: ViewportEvent.ComputeFov) {
         if (event.usedConfiguredFov()) {
             fov = event.fov
         }
     }
 
-    @SubscribeEvent
-    fun onFovUpdate(event: ViewportEvent.ComputeFov) {
+    private fun onFovUpdate(event: ViewportEvent.ComputeFov) {
         val player = localPlayer ?: return
         val times = getDelta().coerceAtMost(1.6f)
 
@@ -2893,72 +2901,74 @@ object ClientEventHandler {
         player.yRot = Mth.wrapDegrees(finalY)
     }
 
-    @SubscribeEvent
-    fun setPlayerInvisible(event: RenderPlayerEvent.Pre) {
-        val otherPlayer = event.entity
+    /**
+     * ponytail: RenderPlayerEvent.Pre аналога нет ни в Fabric API, ни в Porting Lib.
+     * Логика цела, но не зарегистрирована -- звать из миксина на PlayerRenderer.render.
+     */
+    private fun shouldHidePlayer(otherPlayer: Player): Boolean {
         val vehicle = otherPlayer.vehicle
-        if (vehicle is VehicleEntity && vehicle.hidePassenger(otherPlayer)) {
-            event.isCanceled = true
-        }
+        return vehicle is VehicleEntity && vehicle.hidePassenger(otherPlayer)
     }
 
-    @SubscribeEvent
-    fun handleRenderCrossHair(event: RenderGuiLayerEvent.Pre) {
-        if (event.name != VanillaGuiLayers.CROSSHAIR) return
-        val player = localPlayer ?: return
+    /**
+     * ponytail: RenderGuiLayerEvent.Pre аналога нет -- HudRenderCallback у Fabric не даёт
+     * отменять отдельный ванильный слой. Логика цела, но не зарегистрирована --
+     * звать из миксина на Gui.renderCrosshair.
+     */
+    private fun shouldHideCrossHair(): Boolean {
+        val player = localPlayer ?: return false
 
         // When combat HUD is hidden by server, suppress vanilla crosshair in ALL views
         if (MiscConfig.HIDE_COMBAT_HUD.get()) {
             val stack = player.mainHandItem
             if (stack.item is GunItem) {
-                event.isCanceled = true
-                return
+                return true
             }
             val vehicle = player.vehicle
             if (vehicle is VehicleEntity && vehicle.hasWeapon(vehicle.getSeatIndex(player))) {
-                event.isCanceled = true
-                return
+                return true
             }
         }
 
-        if (!mc.options.cameraType.isFirstPerson) return
+        if (!mc.options.cameraType.isFirstPerson) return false
 
         if (player.isUsingItem && player.useItem.`is`(ModItems.ARTILLERY_INDICATOR.get())) {
-            event.isCanceled = true
+            return true
         }
 
         val stack = player.mainHandItem
         if (stack.item is GunItem) {
-            event.isCanceled = true
+            return true
         }
 
         val vehicle = player.vehicle
         if (vehicle is VehicleEntity && vehicle.hasWeapon(vehicle.getSeatIndex(player))) {
-            event.isCanceled = true
+            return true
         }
 
         if (vehicle is VehicleEntity && vehicle.banHand(player)) {
-            event.isCanceled = true
+            return true
         }
 
         if (stack.`is`(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")
             && stack.getOrCreateTag().getBoolean("Linked")
         ) {
-            event.isCanceled = true
+            return true
         }
+
+        return false
     }
 
     /**
      * 载具banHand时，禁用快捷栏渲染
+     *
+     * ponytail: как и shouldHideCrossHair -- аналога RenderGuiLayerEvent.Pre нет,
+     * звать из миксина на Gui.renderItemHotbar.
      */
-    @SubscribeEvent
-    fun handleAvoidRenderingHotbar(event: RenderGuiLayerEvent.Pre) {
-        if (event.name != VanillaGuiLayers.HOTBAR) return
-        val player = localPlayer ?: return
+    private fun shouldHideHotbar(): Boolean {
+        val player = localPlayer ?: return false
         val vehicle = player.vehicle
-        if (vehicle is VehicleEntity && vehicle.banHand(player)) {
-            event.isCanceled = true
-        }
+        return vehicle is VehicleEntity && vehicle.banHand(player)
     }
 
     fun resetGunStatus() {
@@ -3095,21 +3105,20 @@ object ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onRenderNameTag(event: RenderNameTagEvent) {
-        val entity = event.entity as? Player ?: return
-        val self = localPlayer ?: return
-        if (self == entity) return
-        if (self.vehicle !is VehicleEntity) return
-        if (self.isPassengerOfSameVehicle(entity)) {
-            event.setCanRender(TriState.FALSE)
-        }
+    /**
+     * ponytail: RenderNameTagEvent аналога нет. Логика цела, но не зарегистрирована --
+     * звать из миксина на EntityRenderer.shouldShowName.
+     */
+    private fun shouldHideNameTag(entity: Entity): Boolean {
+        if (entity !is Player) return false
+        val self = localPlayer ?: return false
+        if (self == entity) return false
+        if (self.vehicle !is VehicleEntity) return false
+        return self.isPassengerOfSameVehicle(entity)
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    fun onPlayerLoggedIn(event: PlayerEvent.PlayerLoggedInEvent) {
+    private fun onPlayerLoggedIn(player: Player) {
         if (!DisplayConfig.ENABLE_VERSION_CHECK_WARNING.get()) return
-        val player = event.entity ?: return
         if (ModVersionEventHandler.currentVersion == null || ModVersionEventHandler.previousVersion == null) return
 
         player.displayClientMessage(
@@ -3133,8 +3142,7 @@ object ClientEventHandler {
         )
     }
 
-    @SubscribeEvent
-    fun onFogColor(event: ViewportEvent.ComputeFogColor) {
+    private fun onFogColor(event: ViewportEvent.ComputeFogColor) {
         if (activeThermalImaging) {
             event.red = 0.1F
             event.green = 0.1F
@@ -3142,8 +3150,7 @@ object ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    fun onClientVehicleFire(event: ClientVehicleFireEvent) {
+    private fun onClientVehicleFire(event: ClientVehicleFireEvent) {
         val shooter = event.shooter
         val vehicle = event.vehicle
         val index = event.index

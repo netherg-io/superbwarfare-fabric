@@ -5,6 +5,8 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.init.ModTags
 import com.atsuishio.superbwarfare.item.CustomDamageProperty
 import com.atsuishio.superbwarfare.tools.NBTTool
+import io.github.fabricators_of_create.porting_lib.item.extensions.DamageableItem
+import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerEvents
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundSource
@@ -13,13 +15,10 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.SwordItem
 import net.minecraft.world.item.Tier
 import net.minecraft.world.item.TooltipFlag
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import org.joml.Math
 
 open class HammerItem(tier: Tier, attackDamage: Int, attackSpeed: Float, properties: Properties) :
-    SwordItem(tier, properties.attributes(createAttributes(tier, attackDamage, attackSpeed))) {
+    SwordItem(tier, properties.attributes(createAttributes(tier, attackDamage, attackSpeed))), DamageableItem {
 
     constructor(tier: Tier, attackDamage: Int, attackSpeed: Float, maxDamage: Int) : this(
         tier,
@@ -41,11 +40,9 @@ open class HammerItem(tier: Tier, attackDamage: Int, attackSpeed: Float, propert
         )
     }
 
-    override fun hasCraftingRemainingItem(stack: ItemStack): Boolean {
-        return true
-    }
-
-    override fun getCraftingRemainingItem(itemstack: ItemStack): ItemStack {
+    // NeoForge звал hasCraftingRemainingItem(stack) и getCraftingRemainingItem(stack) парой;
+    // на Fabric это один getRecipeRemainder(stack) из FabricItem, а has... всегда возвращал true.
+    override fun getRecipeRemainder(itemstack: ItemStack): ItemStack {
         val stack = itemstack.copy()
 
         val tag = NBTTool.getTag(stack)
@@ -78,10 +75,13 @@ open class HammerItem(tier: Tier, attackDamage: Int, attackSpeed: Float, propert
         return super.hurtEnemy(stack, target, attacker)
     }
 
-    @EventBusSubscriber
     companion object {
-        @SubscribeEvent
-        fun onItemCraftedByHammer(event: PlayerEvent.ItemCraftedEvent) {
+        /** Общий. */
+        fun init() {
+            PlayerEvents.ItemCraftedEvent.EVENT.register { onItemCraftedByHammer(it) }
+        }
+
+        private fun onItemCraftedByHammer(event: PlayerEvents.ItemCraftedEvent) {
             val item = event.crafting
             val container = event.inventory
             val player = event.entity

@@ -11,9 +11,9 @@ import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
-import net.neoforged.neoforge.network.handling.IPayloadHandler
-import net.neoforged.neoforge.network.registration.PayloadRegistrar
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 
 val payloadTypeMap = mutableMapOf<Class<*>, CustomPacketPayload.Type<*>>()
 
@@ -25,9 +25,10 @@ inline fun <reified T> decodeFrom(input: FriendlyByteBuf): T {
     return ByteBufDecoder(input).decodeSerializableValue(serializer())
 }
 
-private inline fun <reified T : PacketPayload> playTo(reg: (CustomPacketPayload.Type<T>, StreamCodec<in RegistryFriendlyByteBuf, T>, IPayloadHandler<T>) -> Unit) {
+/** Регистрация приёмников на клиенте откладывается: ClientPlayNetworking доступен только там. */
+private val clientReceivers = mutableListOf<() -> Unit>()
 
-    val codec = createStreamCodec<T>()
+private inline fun <reified T : PacketPayload> payloadType(): CustomPacketPayload.Type<T> {
     val className = T::class.java.simpleName.substringBefore("Message")
 
     val name = buildString {
@@ -44,27 +45,36 @@ private inline fun <reified T : PacketPayload> playTo(reg: (CustomPacketPayload.
 
     val type = CustomPacketPayload.Type<T>(loc(name))
     payloadTypeMap[T::class.java] = type
-
-    reg(type, codec) { msg, context -> with(msg) { context.handler() } }
+    return type
 }
 
 private inline fun <reified T : ServerPacketPayload> playToServer() {
-    playTo<T> { type, codec, handler ->
-        registrar!!.playToServer<T>(type, codec, handler)
+    val type = payloadType<T>()
+    val codec: StreamCodec<in RegistryFriendlyByteBuf, T> = createStreamCodec<T>()
+    PayloadTypeRegistry.playC2S().register(type, codec)
+    ServerPlayNetworking.registerGlobalReceiver(type) { payload, context ->
+        payload.handle { context.player() }
     }
 }
 
 private inline fun <reified T : ClientPacketPayload> playToClient() {
-    playTo<T> { type, codec, handler ->
-        registrar!!.playToClient<T>(type, codec, handler)
+    val type = payloadType<T>()
+    val codec: StreamCodec<in RegistryFriendlyByteBuf, T> = createStreamCodec<T>()
+    PayloadTypeRegistry.playS2C().register(type, codec)
+    clientReceivers.add {
+        ClientPlayNetworking.registerGlobalReceiver(type) { payload, context ->
+            payload.handle { context.player() }
+        }
     }
 }
 
-private var registrar: PayloadRegistrar? = null
-
-fun initializeNetwork(event: RegisterPayloadHandlersEvent) {
-    registrar = event.registrar("1")
+fun initializeNetwork() {
     registerPayloads()
+}
+
+/** Вызывается из клиентской точки входа после initializeNetwork. */
+fun initializeClientNetwork() {
+    clientReceivers.forEach { it() }
 }
 
 private fun registerPayloads() {

@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile
 
 import com.atsuishio.superbwarfare.config.server.ProjectileConfig
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.tick.ServerTickEvent
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 
 /**
  * 服务端手动 tick 兜底：让 fast projectile 在未加载区块中也能继续飞行。
@@ -18,11 +16,13 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent
  * `tickCount` 与上次相同，说明原版系统这一 tick 没有 tick 该弹体 → 手动补一次。
  * 这样既不会与原版 double-tick，也能保证在未加载区块中持续飞行。
  */
-@EventBusSubscriber
 object FastProjectileManualTicker {
 
-    @SubscribeEvent
-    fun onServerTick(event: ServerTickEvent.Post) {
+    fun init() {
+        ServerTickEvents.END_SERVER_TICK.register { onServerTick() }
+    }
+
+    private fun onServerTick() {
         if (!ProjectileConfig.PROJECTILE_CHUNK_LOADING.get()) return
         if (FastThrowableProjectile.manualTickRegistered().isEmpty()) return
 

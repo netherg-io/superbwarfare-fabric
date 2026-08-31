@@ -30,16 +30,12 @@ import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import org.joml.Math
 
 @Environment(EnvType.CLIENT)
-@EventBusSubscriber(Dist.CLIENT)
 object HelicopterHud {
     const val ID: String = "@Helicopter"
 
@@ -68,8 +64,11 @@ object HelicopterHud {
 
     private var dis = 512.0
 
-    @SubscribeEvent
-    fun onHelicopterHudClientTick(event: ClientTickEvent.Post) {
+    fun init() {
+        ClientTickEvents.END_CLIENT_TICK.register { onHelicopterHudClientTick() }
+    }
+
+    private fun onHelicopterHudClientTick() {
         val player = localPlayer ?: return
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return

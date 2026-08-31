@@ -13,17 +13,24 @@ import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.common.EffectCure
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent
-import net.neoforged.neoforge.event.entity.player.PlayerEvent
-import net.neoforged.neoforge.event.tick.EntityTickEvent
+import io.github.fabricators_of_create.porting_lib.entity.EffectCure
+import io.github.fabricators_of_create.porting_lib.entity.events.living.MobEffectEvent
+import io.github.fabricators_of_create.porting_lib.entity.events.tick.EntityTickEvent
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.Entity
 
-@EventBusSubscriber
 object PhosphorusFireMobEffect : MobEffect(MobEffectCategory.HARMFUL, 0xB1C1F2) {
     const val TAG_PHOSPHORUS_FIRE_COUNT = "SbwPhosphorusFireCount"
     const val TAG_PHOSPHORUS_FIRE_ATTACKER = "SbwPhosphorusFireAttacker"
+
+    fun init() {
+        MobEffectEvent.Added.EVENT.register { onEffectAdded(it) }
+        MobEffectEvent.Expired.EVENT.register { onEffectExpired(it) }
+        MobEffectEvent.Remove.EVENT.register { onEffectRemoved(it) }
+        EntityTrackingEvents.START_TRACKING.register { target, player -> onStartTracking(target, player) }
+        EntityTickEvent.Post.EVENT.register { onLivingTick(it) }
+    }
 
     override fun applyEffectTick(entity: LivingEntity, amplifier: Int): Boolean {
         val attacker = if (!entity.persistentData.contains(TAG_PHOSPHORUS_FIRE_ATTACKER)) {
@@ -71,8 +78,7 @@ object PhosphorusFireMobEffect : MobEffect(MobEffectCategory.HARMFUL, 0xB1C1F2) 
     ) {
     }
 
-    @SubscribeEvent
-    fun onEffectAdded(event: MobEffectEvent.Added) {
+    private fun onEffectAdded(event: MobEffectEvent.Added) {
         val living = event.entity
         val instance = event.effectInstance ?: return
 
@@ -88,8 +94,7 @@ object PhosphorusFireMobEffect : MobEffect(MobEffectCategory.HARMFUL, 0xB1C1F2) 
         living.sendPacketToTrackingThis(ClientPhosphorusFireMessage(living.id, true))
     }
 
-    @SubscribeEvent
-    fun onEffectExpired(event: MobEffectEvent.Expired) {
+    private fun onEffectExpired(event: MobEffectEvent.Expired) {
         val living = event.entity
         val instance = event.effectInstance ?: return
 
@@ -101,8 +106,7 @@ object PhosphorusFireMobEffect : MobEffect(MobEffectCategory.HARMFUL, 0xB1C1F2) 
         }
     }
 
-    @SubscribeEvent
-    fun onEffectRemoved(event: MobEffectEvent.Remove) {
+    private fun onEffectRemoved(event: MobEffectEvent.Remove) {
         val living = event.entity
         val instance = event.effectInstance ?: return
 
@@ -114,18 +118,15 @@ object PhosphorusFireMobEffect : MobEffect(MobEffectCategory.HARMFUL, 0xB1C1F2) 
         }
     }
 
-    @SubscribeEvent
-    fun onStartTracking(event: PlayerEvent.StartTracking) {
-        val target = event.target
+    private fun onStartTracking(target: Entity, player: ServerPlayer) {
         if (target is LivingEntity) {
             if (target.hasEffect(ModMobEffects.PHOSPHORUS_FIRE)) {
-                event.entity.sendPacketToTrackingThis(ClientPhosphorusFireMessage(target.id, true))
+                player.sendPacketToTrackingThis(ClientPhosphorusFireMessage(target.id, true))
             }
         }
     }
 
-    @SubscribeEvent
-    fun onLivingTick(event: EntityTickEvent.Post) {
+    private fun onLivingTick(event: EntityTickEvent.Post) {
         val living = event.entity as? LivingEntity ?: return
         if (!living.level().isClientSide && living.hasEffect(ModMobEffects.PHOSPHORUS_FIRE) && living.level().gameTime % 1000 == 0.toLong()) {
             event.entity.sendPacketToTrackingThis(ClientPhosphorusFireMessage(living.id, true))

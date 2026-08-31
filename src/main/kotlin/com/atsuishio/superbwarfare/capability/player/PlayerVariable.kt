@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.capability.player
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.data.gun.Ammo
 import com.atsuishio.superbwarfare.init.ModAttachments
 import com.atsuishio.superbwarfare.network.message.receive.PlayerVariablesSyncMessage
@@ -9,10 +8,10 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.neoforged.neoforge.common.util.INBTSerializable
-import net.neoforged.neoforge.event.entity.player.PlayerEvent.*
 import net.neoforged.neoforge.network.PacketDistributor
 import java.util.*
 import java.util.function.Consumer
@@ -122,8 +121,16 @@ class PlayerVariable : INBTSerializable<CompoundTag> {
         readFromNBT(nbt)
     }
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
+        fun init() {
+            ServerPlayConnectionEvents.JOIN.register { handler, _, _ -> onPlayerLoggedIn(handler.player) }
+            ServerPlayerEvents.AFTER_RESPAWN.register { _, newPlayer, _ -> onPlayerRespawn(newPlayer) }
+            ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register { player, _, _ ->
+                onPlayerChangeDimension(player)
+            }
+            ServerPlayerEvents.COPY_FROM.register { original, newPlayer, _ -> clonePlayer(original, newPlayer) }
+        }
+
         @JvmStatic
         fun modify(player: Player, consumer: Consumer<PlayerVariable>) {
             val cap = player.getData(ModAttachments.PLAYER_VARIABLE).watch()
@@ -136,45 +143,32 @@ class PlayerVariable : INBTSerializable<CompoundTag> {
             return entity.getData(ModAttachments.PLAYER_VARIABLE)
         }
 
-        @SubscribeEvent
-        fun onPlayerLoggedIn(event: PlayerLoggedInEvent) {
-            val player = event.entity
-            if (player !is ServerPlayer) return
-
+        private fun onPlayerLoggedIn(player: ServerPlayer) {
             PacketDistributor.sendToPlayer(
                 player,
                 PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate())
             )
         }
 
-        @SubscribeEvent
-        fun onPlayerRespawn(event: PlayerRespawnEvent) {
-            val player = event.entity
-            if (player !is ServerPlayer) return
-
+        private fun onPlayerRespawn(player: ServerPlayer) {
             PacketDistributor.sendToPlayer(
                 player,
                 PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate())
             )
         }
 
-        @SubscribeEvent
-        fun onPlayerChangeDimension(event: PlayerChangedDimensionEvent) {
-            val player = event.entity
-            if (player !is ServerPlayer) return
-
+        private fun onPlayerChangeDimension(player: ServerPlayer) {
             PacketDistributor.sendToPlayer(
                 player,
                 PlayerVariablesSyncMessage(player.id, getOrDefault(player).forceUpdate())
             )
         }
 
-        @SubscribeEvent
-        fun clonePlayer(event: Clone) {
-            event.original.revive()
-            val original = event.original.getData(ModAttachments.PLAYER_VARIABLE)
-            if (event.entity.level().isClientSide()) return
-            event.entity.setData(ModAttachments.PLAYER_VARIABLE, original.copy())
+        private fun clonePlayer(oldPlayer: ServerPlayer, newPlayer: ServerPlayer) {
+            oldPlayer.revive()
+            val original = oldPlayer.getData(ModAttachments.PLAYER_VARIABLE)
+            if (newPlayer.level().isClientSide()) return
+            newPlayer.setData(ModAttachments.PLAYER_VARIABLE, original.copy())
         }
     }
 

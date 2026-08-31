@@ -9,33 +9,35 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.VertexSorting
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.core.BlockPos
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import org.joml.Matrix4f
 
 /**
  * 在 3D 世界中渲染超出玩家视距的同步实体。
  *
- * 在 [RenderLevelStageEvent.Stage.AFTER_ENTITIES] 阶段：
+ * 在 [WorldRenderEvents.AFTER_ENTITIES] 阶段：
  * 1. 扩展投影矩阵远裁剪面（参考 RemoteEntityRenderHandler）
  * 2. 扩展雾曲线
  * 3. 渲染未在 clientLevel 中的同步实体
  * 4. 恢复雾和投影矩阵
  */
-@EventBusSubscriber(value = [Dist.CLIENT])
+@Environment(EnvType.CLIENT)
 object SyncedEntityWorldRenderer {
-    @SubscribeEvent
-    fun onRenderLevelStage(event: RenderLevelStageEvent) {
-        if (event.stage != RenderLevelStageEvent.Stage.AFTER_ENTITIES) return
+    fun init() {
+        WorldRenderEvents.AFTER_ENTITIES.register { onRenderLevelStage(it) }
+    }
+
+    private fun onRenderLevelStage(context: WorldRenderContext) {
         if (!SyncConfig.ENABLE_RENDER_SYNCED_ENTITIES.get()) return
 
         val level = clientLevel ?: return
-        val camera = event.camera
+        val camera = context.camera()
         val dispatcher = mc.entityRenderDispatcher
         val bufferSource = mc.renderBuffers().bufferSource()
-        val partialTick = event.partialTick
+        val partialTick = context.tickCounter()
 
         val uniqueEntities = ClientSyncedEntityHandler.getSyncedWorldRenderEntities(level)
 
@@ -92,7 +94,7 @@ object SyncedEntityWorldRenderer {
                     relZ,
                     entity.yRot,
                     partialTick.getGameTimeDeltaPartialTick(true),
-                    event.poseStack,
+                    context.matrixStack(),
                     bufferSource,
                     packedLight
                 )

@@ -23,16 +23,12 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.ClientTickEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import org.joml.Math
 
 @Environment(EnvType.CLIENT)
-@EventBusSubscriber(Dist.CLIENT)
 object OldAircraftHud {
     const val ID: String = "@OldAircraft"
 
@@ -60,8 +56,11 @@ object OldAircraftHud {
         size = 72f
     }
 
-    @SubscribeEvent
-    fun onOldAircraftHudClientTick(event: ClientTickEvent.Post) {
+    fun init() {
+        ClientTickEvents.END_CLIENT_TICK.register { onOldAircraftHudClientTick() }
+    }
+
+    private fun onOldAircraftHudClientTick() {
         val player = localPlayer ?: return
         val vehicle = player.vehicle
         if (vehicle !is VehicleEntity) return

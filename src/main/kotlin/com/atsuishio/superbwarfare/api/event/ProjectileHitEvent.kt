@@ -8,8 +8,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
-import net.neoforged.bus.api.Event
-import net.neoforged.bus.api.ICancellableEvent
+import com.atsuishio.superbwarfare.fabric.CancellableEvent
 import org.jetbrains.annotations.ApiStatus
 
 /**
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.ApiStatus
  */
 @ApiStatus.AvailableSince("0.8.7")
 open class ProjectileHitEvent private constructor(val owner: Entity?, val projectile: Projectile, val hitVec: Vec3) :
-    Event(), ICancellableEvent {
+    CancellableEvent() {
     class HitEntity(owner: Entity?, projectile: Projectile, val result: ExtendedEntityRayTraceResult) :
         ProjectileHitEvent(owner, projectile, result.location) {
         val target: Entity = result.entity

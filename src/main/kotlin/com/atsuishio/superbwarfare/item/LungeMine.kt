@@ -27,10 +27,11 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import io.github.fabricators_of_create.porting_lib.item.extensions.EntitySwingListenerItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.ReequipAnimationItem
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 import software.bernie.geckolib.animatable.GeoItem
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.animation.AnimatableManager.ControllerRegistrar
@@ -41,7 +42,7 @@ import software.bernie.geckolib.animation.RawAnimation
 import software.bernie.geckolib.util.GeckoLibUtil
 
 // 不要改这个东西，会肘击 YSM
-open class LungeMine : Item(Properties().stacksTo(4)), GeoItem {
+open class LungeMine : Item(Properties().stacksTo(4)), GeoItem, EntitySwingListenerItem, ReequipAnimationItem {
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
 
     fun getTransformType(type: ItemDisplayContext?) {
@@ -82,7 +83,8 @@ open class LungeMine : Item(Properties().stacksTo(4)), GeoItem {
         return this.cache
     }
 
-    override fun onEntitySwing(stack: ItemStack, entity: LivingEntity, hand: InteractionHand): Boolean {
+    // Porting Lib отдаёт onEntitySwing без InteractionHand, руку тут всё равно не использовали.
+    override fun onEntitySwing(stack: ItemStack, entity: LivingEntity): Boolean {
         return false
     }
 
@@ -140,32 +142,32 @@ open class LungeMine : Item(Properties().stacksTo(4)), GeoItem {
         return ItemAttributeModifiers(list, true)
     }
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
         var transformType: ItemDisplayContext? = null
 
-        @SubscribeEvent
-        private fun registerItemExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private val renderer: BlockEntityWithoutLevelRenderer = LungeMineRenderer()
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            val renderer: BlockEntityWithoutLevelRenderer = LungeMineRenderer()
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
-                    return renderer
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.LUNGE_MINE.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
+                    renderer.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
+            )
+        }
 
-                override fun getArmPose(
-                    entityLiving: LivingEntity,
-                    hand: InteractionHand,
-                    itemStack: ItemStack
-                ): ArmPose {
-                    if (!itemStack.isEmpty) {
-                        if (entityLiving.usedItemHand == hand) {
-                            return ModEnumExtensions.Client.lungeMinePose
-                        }
-                    }
-                    return ArmPose.EMPTY
+        // Аналога IClientItemExtensions#getArmPose на Fabric нет (ни в Fabric API, ни в Porting Lib):
+        // осталась функцией без регистрации, звать из миксина на HumanoidModel/PlayerRenderer.
+        @Environment(EnvType.CLIENT)
+        fun getArmPose(entityLiving: LivingEntity, hand: InteractionHand, itemStack: ItemStack): ArmPose {
+            if (!itemStack.isEmpty) {
+                if (entityLiving.usedItemHand == hand) {
+                    return ModEnumExtensions.Client.lungeMinePose
                 }
-            }, ModItems.LUNGE_MINE)
+            }
+            return ArmPose.EMPTY
         }
     }
 }

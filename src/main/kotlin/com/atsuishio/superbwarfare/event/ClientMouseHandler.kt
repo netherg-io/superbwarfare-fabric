@@ -11,17 +11,13 @@ import com.atsuishio.superbwarfare.init.ModMobEffects
 import com.atsuishio.superbwarfare.item.gun.GunItem
 import com.atsuishio.superbwarfare.network.message.send.MouseMoveMessage
 import com.atsuishio.superbwarfare.tools.*
+import io.github.fabricators_of_create.porting_lib.client_events.event.client.ViewportEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.CameraType
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec2
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.event.ClientTickEvent
-import net.neoforged.neoforge.client.event.ViewportEvent
 import kotlin.math.abs
 
-@EventBusSubscriber(Dist.CLIENT)
 object ClientMouseHandler {
     @JvmField
     var posO: Vec2 = Vec2(0f, 0f)
@@ -71,8 +67,12 @@ object ClientMouseHandler {
     @JvmField
     var nacelleCameraYaw: Double = 0.0
 
-    @SubscribeEvent
-    fun handleClientTick(event: ClientTickEvent.Post) {
+    fun init() {
+        ClientTickEvents.END_CLIENT_TICK.register { handleClientTick() }
+        ViewportEvent.ComputeCameraAngles.EVENT.register { handleCameraAngles() }
+    }
+
+    private fun handleClientTick() {
         val player = localPlayer ?: return
 
         posO = posN
@@ -177,9 +177,7 @@ object ClientMouseHandler {
         }
     }
 
-    @Suppress("unused")
-    @SubscribeEvent
-    fun handleClientTick(event: ViewportEvent.ComputeCameraAngles) {
+    private fun handleCameraAngles() {
         val player = localPlayer ?: return
 
         if (notInGame) {

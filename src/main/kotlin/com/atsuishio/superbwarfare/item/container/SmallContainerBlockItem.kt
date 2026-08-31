@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item.container
 
-import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.client.renderer.item.SmallContainerBlockItemRenderer
 import com.atsuishio.superbwarfare.init.ModBlocks
@@ -18,10 +17,9 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.SeededContainerLoot
 import net.minecraft.world.level.storage.loot.LootTable
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
 
 class SmallContainerBlockItem : BlockItem(ModBlocks.SMALL_CONTAINER.get(), Properties().stacksTo(1).fireResistant()) {
 
@@ -30,7 +28,6 @@ class SmallContainerBlockItem : BlockItem(ModBlocks.SMALL_CONTAINER.get(), Prope
             && !source.`is`(DamageTypes.CACTUS)
 
 
-    @EventBusSubscriber(modid = Mod.MODID)
     companion object {
         @JvmField
         val SMALL_CONTAINERS: MutableList<() -> ItemStack> = mutableListOf(
@@ -53,18 +50,20 @@ class SmallContainerBlockItem : BlockItem(ModBlocks.SMALL_CONTAINER.get(), Prope
             return stack
         }
 
-        @SubscribeEvent
-        fun registerArmorExtensions(event: RegisterClientExtensionsEvent) {
-            event.registerItem(object : IClientItemExtensions {
-                private var renderer: BlockEntityWithoutLevelRenderer? = null
+        /** Клиент: BEWLR из IClientItemExtensions#getCustomRenderer заменён на DynamicItemRenderer из Fabric API. */
+        @Environment(EnvType.CLIENT)
+        fun init() {
+            var renderer: BlockEntityWithoutLevelRenderer? = null
 
-                override fun getCustomRenderer(): BlockEntityWithoutLevelRenderer {
+            BuiltinItemRendererRegistry.INSTANCE.register(
+                ModItems.SMALL_CONTAINER.get(),
+                BuiltinItemRendererRegistry.DynamicItemRenderer { stack, mode, poseStack, buffer, light, overlay ->
                     if (renderer == null) {
                         renderer = SmallContainerBlockItemRenderer(mc.blockEntityRenderDispatcher, mc.entityModels)
                     }
-                    return renderer!!
+                    renderer!!.renderByItem(stack, mode, poseStack, buffer, light, overlay)
                 }
-            }, ModItems.SMALL_CONTAINER)
+            )
         }
     }
 }

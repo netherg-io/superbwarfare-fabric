@@ -11,13 +11,19 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener
 import net.minecraft.util.profiling.ProfilerFiller
+import net.minecraft.server.packs.PackType
 import net.minecraft.world.entity.EntityType
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.AddReloadListenerEvent
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 
-@EventBusSubscriber
-object WreckageLootDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/loot") {
+object WreckageLootDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/loot"),
+    IdentifiableResourceReloadListener {
+    override fun getFabricId(): ResourceLocation = Mod.loc("wreckage_loot_data")
+
+    fun init() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(this)
+    }
+
     private val data: MutableMap<ResourceLocation, WreckageLootData> = mutableMapOf()
 
     override fun apply(
@@ -43,10 +49,5 @@ object WreckageLootDataManager : SimpleJsonResourceReloadListener(Gson(), "sbw/l
 
     fun getLootData(type: EntityType<*>): WreckageLootData? {
         return data[BuiltInRegistries.ENTITY_TYPE.getKey(type)]
-    }
-
-    @SubscribeEvent
-    fun onAddReloadListeners(event: AddReloadListenerEvent) {
-        event.addListener(this)
     }
 }

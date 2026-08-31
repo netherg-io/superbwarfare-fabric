@@ -1,32 +1,33 @@
 package com.atsuishio.superbwarfare.mobeffect
 
 import com.atsuishio.superbwarfare.init.ModMobEffects
+import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingHurtEvent
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectCategory
-import net.neoforged.bus.api.SubscribeEvent
-import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.event.entity.living.LivingHealEvent
-import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent
+import net.minecraft.world.entity.LivingEntity
 
-@EventBusSubscriber
 object TraumaMobEffect : MobEffect(MobEffectCategory.HARMFUL, 0xF4ADB4) {
-    @SubscribeEvent
-    fun onLivingHeal(event: LivingHealEvent) {
-        val entity = event.entity
-        val effect = entity.getEffect(ModMobEffects.TRAUMA) ?: return
+    fun init() {
+        LivingHurtEvent.EVENT.register { onLivingHurt(it) }
+    }
+
+    /**
+     * Аналога LivingHealEvent нет ни в Fabric API, ни в Porting Lib: лечение нигде не публикуется
+     * как событие. Логика сохранена как чистая функция — она возвращает итоговое лечение
+     * (0 = полностью подавить), остаётся вызвать её из миксина на LivingEntity#heal.
+     */
+    private fun modifyHealAmount(entity: LivingEntity, amount: Float): Float {
+        val effect = entity.getEffect(ModMobEffects.TRAUMA) ?: return amount
 
         val amp = effect.amplifier + 1
         if (amp >= 10) {
-            event.isCanceled = true
-            return
+            return 0f
         }
 
-        val amount = event.amount
-        event.amount = amount * (1 - amp * 0.1f)
+        return amount * (1 - amp * 0.1f)
     }
 
-    @SubscribeEvent
-    fun onLivingHurt(event: LivingIncomingDamageEvent) {
+    private fun onLivingHurt(event: LivingHurtEvent) {
         val entity = event.entity
         val effect = entity.getEffect(ModMobEffects.TRAUMA) ?: return
 

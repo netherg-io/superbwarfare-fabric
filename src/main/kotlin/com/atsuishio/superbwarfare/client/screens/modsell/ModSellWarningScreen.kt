@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen
 import net.minecraft.client.gui.screens.multiplayer.WarningScreen
 import net.minecraft.network.chat.CommonComponents
 import net.minecraft.network.chat.Component
-import net.neoforged.api.distmarker.Dist
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import java.net.InetAddress
@@ -28,7 +27,6 @@ class ModSellWarningScreen(val lastScreen: Screen) : WarningScreen(
         .append(Component.literal(TranslationRecord.get(TranslationRecord.CONTENT)))
 ) {
 
-//    @EventBusSubscriber(value = [Dist.CLIENT])
     companion object {
         val ENVIRONMENT_CHECKSUM = generateEnvironmentHash()
 
@@ -65,17 +63,18 @@ class ModSellWarningScreen(val lastScreen: Screen) : WarningScreen(
             }
         }
 
-//        @SubscribeEvent(priority = EventPriority.HIGH)
-//        fun onGuiOpen(event: ScreenEvent.Opening) {
-//            if (!((event.newScreen is JoinMultiplayerScreen || event.newScreen is SafetyScreen) && event.currentScreen is TitleScreen))
-//                return
-//
-//            if (EnvironmentChecksumConfig.ENVIRONMENT_CHECKSUM.get().equals(ENVIRONMENT_CHECKSUM)) return
-//
-//            // 拦截多人游戏界面加载
-//            event.isCanceled = true
-//            mc.setScreen(event.currentScreen?.let { ModSellWarningScreen(it) })
-//        }
+        // Отключено ещё в апстриме. Под Fabric у ScreenEvent.Opening аналога нет:
+        // ScreenEvents.BEFORE_INIT экран не отменяет, потребуется миксин на Minecraft.setScreen.
+        //        fun onGuiOpen(event: ScreenEvent.Opening) {
+        //            if (!((event.newScreen is JoinMultiplayerScreen || event.newScreen is SafetyScreen) && event.currentScreen is TitleScreen))
+        //                return
+        //
+        //            if (EnvironmentChecksumConfig.ENVIRONMENT_CHECKSUM.get().equals(ENVIRONMENT_CHECKSUM)) return
+        //
+        //            // 拦截多人游戏界面加载
+        //            event.isCanceled = true
+        //            mc.setScreen(event.currentScreen?.let { ModSellWarningScreen(it) })
+        //        }
     }
 
 
