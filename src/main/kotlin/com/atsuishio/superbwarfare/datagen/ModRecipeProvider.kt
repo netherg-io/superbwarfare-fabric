@@ -36,7 +36,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe
 import net.minecraft.world.level.ItemLike
 import net.neoforged.neoforge.common.Tags
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient
-import net.neoforged.neoforge.registries.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import java.util.concurrent.CompletableFuture
 
 class ModRecipeProvider(output: PackOutput, registries: CompletableFuture<HolderLookup.Provider>) :

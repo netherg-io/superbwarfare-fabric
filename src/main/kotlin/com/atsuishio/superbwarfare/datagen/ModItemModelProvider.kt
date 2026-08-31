@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider
 import net.neoforged.neoforge.client.model.generators.ModelFile
 import net.neoforged.neoforge.common.data.ExistingFileHelper
-import net.neoforged.neoforge.registries.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
 
 @Suppress("unused")
 class ModItemModelProvider(output: PackOutput, existingFileHelper: ExistingFileHelper) :

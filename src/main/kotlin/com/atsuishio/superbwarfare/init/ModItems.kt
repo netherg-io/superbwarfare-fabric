@@ -46,8 +46,8 @@ import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.DispenserBlock
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.DeferredSpawnEggItem
-import net.neoforged.neoforge.registries.DeferredHolder
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import java.util.function.Supplier
 
 @Suppress("unused")

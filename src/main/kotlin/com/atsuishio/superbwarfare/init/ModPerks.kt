@@ -19,8 +19,8 @@ import net.neoforged.bus.api.IEventBus
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.neoforge.registries.DeferredHolder
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import net.neoforged.neoforge.registries.NewRegistryEvent
 import net.neoforged.neoforge.registries.RegistryBuilder
 import java.nio.file.Files

@@ -8,8 +8,8 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ArmorMaterial
 import net.minecraft.world.item.crafting.Ingredient
-import net.neoforged.neoforge.registries.DeferredHolder
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import java.util.*
 
 object ModArmorMaterial {

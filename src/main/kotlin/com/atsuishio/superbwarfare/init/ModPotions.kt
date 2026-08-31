@@ -5,8 +5,8 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.item.alchemy.Potion
 import net.neoforged.bus.api.IEventBus
-import net.neoforged.neoforge.registries.DeferredHolder
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 
 object ModPotions {
     val POTIONS: DeferredRegister<Potion> = DeferredRegister.create(BuiltInRegistries.POTION, Mod.MODID)

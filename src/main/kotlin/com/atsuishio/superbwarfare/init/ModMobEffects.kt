@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.mobeffect.*
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.effect.MobEffect
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import java.util.function.Supplier
 
 object ModMobEffects {

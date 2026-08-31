@@ -6,7 +6,7 @@ import com.atsuishio.superbwarfare.advancement.criteria.RPGMeleeExplosionTrigger
 import com.atsuishio.superbwarfare.advancement.criteria.VehicleHurtTrigger
 import net.minecraft.advancements.CriterionTrigger
 import net.minecraft.core.registries.Registries
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import java.util.function.Supplier
 
 object ModCriteriaTriggers {

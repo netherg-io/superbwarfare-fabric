@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.capability.energy.VehicleEnergyStorage
 import com.atsuishio.superbwarfare.client.animation.entity.VehicleAnimationInstance
 import com.atsuishio.superbwarfare.client.lighting.VehicleLightingHandler
 import com.atsuishio.superbwarfare.client.model.entity.VehicleModelInstance
-import com.atsuishio.superbwarfare.compat.sable.SableCompatHandler
 import com.atsuishio.superbwarfare.config.server.SyncConfig
 import com.atsuishio.superbwarfare.config.server.VehicleConfig
 import com.atsuishio.superbwarfare.data.DataLoader
@@ -4632,13 +4631,7 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
             ignoreEntityGroundCheckStepping = true
         }
 
-        // No-OBB vehicles reuse Sable's normal Entity.move collision path so they can
-        // stand on and follow SubLevel physics bodies. Without Sable they keep vMove.
-        if (getCollisionOBB() == null && SableCompatHandler.hasMod()) {
-            super.move(movementType, movement)
-        } else {
-            vMove(movementType, movement)
-        }
+        vMove(movementType, movement)
 
         if (lastTickSpeed < 0.2 || collisionCoolDown > 0 || this is DroneEntity) return
         val driver = this.lastDriver

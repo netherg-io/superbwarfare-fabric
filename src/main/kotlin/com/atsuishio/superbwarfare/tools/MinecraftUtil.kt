@@ -30,7 +30,7 @@ import net.fabricmc.api.Environment
 import net.neoforged.bus.api.Event
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.network.PacketDistributor
-import net.neoforged.neoforge.registries.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import org.joml.Matrix4f
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract

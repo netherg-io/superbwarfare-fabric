@@ -69,9 +69,12 @@ dependencies {
     modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1.jar"))
 
     modImplementation("software.bernie.geckolib:geckolib-fabric-1.21.1:4.7.5")
-    modImplementation("net.createmod.ponder:ponder-fabric:${project.property("ponder_version")}+mc${project.property("minecraft_version")}")
     modImplementation("dev.engine-room.flywheel:flywheel-fabric-${project.property("minecraft_version")}:${project.property("flywheel_version")}")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")
+
+    // Отдаёт net.neoforged.neoforge.common.ModConfigSpec под Fabric с тем же именем пакета,
+    // поэтому весь пакет config едет без правок: ModConfigBuilder там -- typealias на его Builder.
+    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.3")
 
     compileOnly("com.maydaymemory:mae:1.1.2") {
         exclude("com.google.code.findbugs", "jsr305")

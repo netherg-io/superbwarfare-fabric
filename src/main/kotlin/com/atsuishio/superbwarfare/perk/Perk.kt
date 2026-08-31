@@ -16,7 +16,7 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.Item
-import net.neoforged.neoforge.registries.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import java.util.*
 
 open class Perk(val descriptionId: String, val type: Type) : PropertyModifier<GunData, DefaultGunData> {

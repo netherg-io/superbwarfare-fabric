@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
 import net.neoforged.bus.api.Event
 import net.neoforged.fml.event.IModBusEvent
-import net.neoforged.neoforge.registries.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import org.jetbrains.annotations.ApiStatus
 
 /**

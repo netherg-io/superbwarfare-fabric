@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.Mod
-import com.atsuishio.superbwarfare.compat.sable.SableCompatHandler
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig
 import com.atsuishio.superbwarfare.entity.OBBEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
@@ -313,17 +312,6 @@ class CustomExplosion @JvmOverloads constructor(
                 }
             }
 
-            // 处理Sable物理结构（SubLevel）上的方块爆炸破坏
-            if (SableCompatHandler.hasMod()) {
-                SableCompatHandler.processExplosionOnSubLevels(
-                    this.level,
-                    Vec3(this.x, this.y, this.z),
-                    this.radius,
-                    this.damage,
-                    this,
-                    this.damageCalculator
-                )
-            }
         }
 
         val diameter = this.radius * 2f
@@ -476,17 +464,6 @@ class CustomExplosion @JvmOverloads constructor(
             val blowList = this.toBlow.stream().filter { !this.level.getBlockState(it).isAir }.toList()
             processBlockList(blowList)
 
-            // 处理Sable物理结构（SubLevel）上的方块爆炸破坏
-            if (SableCompatHandler.hasMod()) {
-                SableCompatHandler.processExplosionOnSubLevels(
-                    this.level,
-                    Vec3(this.x, this.y, this.z),
-                    this.radius,
-                    this.damage,
-                    this,
-                    this.damageCalculator
-                )
-            }
         }
     }
 

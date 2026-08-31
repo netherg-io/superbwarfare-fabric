@@ -9,8 +9,8 @@ import net.minecraft.core.particles.SimpleParticleType
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
-import net.neoforged.neoforge.registries.DeferredHolder
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import java.util.function.Supplier
 
 object ModParticleTypes {

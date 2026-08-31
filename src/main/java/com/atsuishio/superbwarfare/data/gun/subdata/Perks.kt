@@ -8,7 +8,7 @@ import com.atsuishio.superbwarfare.perk.PerkInstance
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
-import net.neoforged.neoforge.registries.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
 
 /**
  * Manages perk storage for a single [GunData] instance.

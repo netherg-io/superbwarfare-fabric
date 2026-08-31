@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.client.overlay
 
 import com.atsuishio.superbwarfare.Mod.Companion.loc
 import com.atsuishio.superbwarfare.client.RenderHelper
-import com.atsuishio.superbwarfare.compat.realcamera.RealCameraCompatHolder
 import com.atsuishio.superbwarfare.config.client.DisplayConfig
 import com.atsuishio.superbwarfare.config.server.MiscConfig
 import com.atsuishio.superbwarfare.data.gun.GunData
@@ -102,11 +101,6 @@ object CrossHairOverlay : CommonOverlay("cross_hair") {
                 (-6 * ClientEventHandler.turnRot[1] - (if (player.isSprinting) 10 else 6) * ClientEventHandler.movePosX).toFloat()
             moveY =
                 (-6 * ClientEventHandler.turnRot[0] + 6 * ClientEventHandler.velocityY.toFloat() - (if (player.isSprinting) 10 else 6) * ClientEventHandler.movePosY - 0.25 * ClientEventHandler.boltMove).toFloat()
-            // 判断RC是否加载，用于适配动态准星
-            if (RealCameraCompatHolder.hasMod()) {
-                moveX = RealCameraCompatHolder.getCompatMoveX(moveX)
-                moveY = RealCameraCompatHolder.getCompatMoveY(moveY)
-            }
         }
 
         RenderSystem.disableDepthTest()

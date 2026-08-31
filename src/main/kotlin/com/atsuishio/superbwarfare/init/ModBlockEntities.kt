@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.block.entity.*
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.entity.BlockEntityType
-import net.neoforged.neoforge.registries.DeferredHolder
-import net.neoforged.neoforge.registries.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.DeferredHolder
+import com.atsuishio.superbwarfare.fabric.DeferredRegister
 
 object ModBlockEntities {
     @JvmField

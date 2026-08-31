@@ -10,7 +10,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import com.atsuishio.superbwarfare.fabric.DeferredHolder;
 
 import java.util.Locale;
 import java.util.function.Supplier;
