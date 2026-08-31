@@ -15,11 +15,11 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import kotlin.math.max
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 open class FiringParametersScreen(private val stack: ItemStack, private val hand: InteractionHand) :
     Screen(GameNarrator.NO_TITLE) {
     lateinit var posX: EditBox
@@ -152,7 +152,7 @@ open class FiringParametersScreen(private val stack: ItemStack, private val hand
         editBox.setFilter { it.matches("-?\\d*".toRegex()) }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     internal inner class ModeButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
         AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
         override fun onPress() {
@@ -178,7 +178,7 @@ open class FiringParametersScreen(private val stack: ItemStack, private val hand
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     internal inner class DoneButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
         AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
         override fun onPress() {

@@ -23,10 +23,10 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object DroneHudOverlay : CommonOverlay("drone_hud") {
     private val FRAME = loc("textures/overlay/frame/frame.png")
     private val TV_FRAME = loc("textures/overlay/vehicle/land/tv_frame.png")

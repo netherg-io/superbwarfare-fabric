@@ -11,10 +11,10 @@ import com.atsuishio.superbwarfare.tools.worldToScreen
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object RedTriangleOverlay : CommonOverlay("red_triangle") {
     private val TRIANGLE = loc("textures/overlay/rpg/red_triangle.png")
 

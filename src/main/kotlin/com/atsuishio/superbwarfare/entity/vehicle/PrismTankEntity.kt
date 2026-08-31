@@ -23,8 +23,8 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
 open class PrismTankEntity(type: EntityType<PrismTankEntity>, world: Level) : VehicleEntity(type, world) {
     init {
@@ -227,7 +227,7 @@ open class PrismTankEntity(type: EntityType<PrismTankEntity>, world: Level) : Ve
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun firstPersonAmmoComponent(data: GunData, player: Player?): Component {
         val name = data.get(GunProp.NAME)
         if (name.isNullOrBlank()) return Component.empty()

@@ -7,8 +7,8 @@ import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.tools.InventoryTool
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.items.IItemHandler
 import kotlin.math.min
@@ -117,7 +117,7 @@ object PlayerAmmoStrategy : AmmoConsumeStrategy() {
         return InventoryTool.insertItem(handler, ammoType.itemStack, count)
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getDisplayName(consumer: AmmoConsumer): String {
         return consumer.playerAmmoType?.displayName ?: super.getDisplayName(consumer)
     }

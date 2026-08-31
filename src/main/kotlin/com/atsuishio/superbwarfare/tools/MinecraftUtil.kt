@@ -25,8 +25,8 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.bus.api.Event
 import net.neoforged.neoforge.common.NeoForge
 import net.neoforged.neoforge.network.PacketDistributor
@@ -35,22 +35,22 @@ import org.joml.Matrix4f
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
-@get:OnlyIn(Dist.CLIENT)
+@get:Environment(EnvType.CLIENT)
 val mc: Minecraft get() = Minecraft.getInstance()
 
-@get:OnlyIn(Dist.CLIENT)
+@get:Environment(EnvType.CLIENT)
 val localPlayer get() = mc.player
 
-@get:OnlyIn(Dist.CLIENT)
+@get:Environment(EnvType.CLIENT)
 val clientLevel get() = mc.level
 
-@get:OnlyIn(Dist.CLIENT)
+@get:Environment(EnvType.CLIENT)
 val font: Font get() = mc.font
 
-@get:OnlyIn(Dist.CLIENT)
+@get:Environment(EnvType.CLIENT)
 val options: Options get() = mc.options
 
-@get:OnlyIn(Dist.CLIENT)
+@get:Environment(EnvType.CLIENT)
 val notInGame: Boolean
     get() {
         if (mc.player == null) return true

@@ -20,13 +20,13 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.capabilities.Capabilities
 import java.util.regex.Pattern
 import kotlin.math.max
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object AmmoBarOverlay : CommonOverlay("ammo_bar") {
 
     private val LINE = loc("textures/overlay/ammo_bar/fire_mode/line.png")

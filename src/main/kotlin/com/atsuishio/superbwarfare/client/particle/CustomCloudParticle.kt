@@ -4,12 +4,12 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.particle.*
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.core.BlockPos
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import kotlin.math.max
 import kotlin.math.min
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 open class CustomCloudParticle protected constructor(
     world: ClientLevel,
     x: Double,
@@ -31,7 +31,7 @@ open class CustomCloudParticle protected constructor(
     protected var cooldown: Boolean
     protected var light: Boolean
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     class Provider(private val spriteSet: SpriteSet) : ParticleProvider<CustomCloudOption> {
         override fun createParticle(
             pType: CustomCloudOption,

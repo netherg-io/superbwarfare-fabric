@@ -16,8 +16,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.util.Mth
 import net.minecraft.world.inventory.InventoryMenu
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import org.joml.Vector3f
 import kotlin.math.max
 
@@ -177,7 +177,7 @@ class BulletDecalParticle @JvmOverloads constructor(
         return ParticleRenderType.TERRAIN_SHEET
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     class Provider : ParticleProvider<BulletDecalOption> {
         override fun createParticle(
             option: BulletDecalOption,

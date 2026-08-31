@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.data.gun.AmmoConsumer
 import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.gun.ammo_consumer_strategy.AmmoConsumeStrategy.Companion.match
 import net.minecraft.world.entity.Entity
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.items.IItemHandler
 
 /**
@@ -60,7 +60,7 @@ abstract class AmmoConsumeStrategy {
     abstract fun withdraw(consumer: AmmoConsumer, handler: IItemHandler, count: Int): Int
 
     /** 在武器 AmmoBarOverlay 上显示的弹药信息 */
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     open fun getDisplayName(consumer: AmmoConsumer): String = "Invalid"
 
     companion object {

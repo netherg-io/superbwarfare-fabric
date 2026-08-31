@@ -13,11 +13,11 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.client.IItemDecorator
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 class ContainerItemDecorator : IItemDecorator {
 
     override fun render(guiGraphics: GuiGraphics, font: Font, stack: ItemStack, xOffset: Int, yOffset: Int): Boolean {

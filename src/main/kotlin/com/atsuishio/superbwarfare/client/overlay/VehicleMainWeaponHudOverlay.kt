@@ -26,7 +26,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.phys.Vec3
 import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.ClientTickEvent
@@ -34,7 +35,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent
 /**
  * 控制载具主武器的玩家显示的HUD
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 @EventBusSubscriber(Dist.CLIENT)
 object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
     const val EMPTY = "@Empty"

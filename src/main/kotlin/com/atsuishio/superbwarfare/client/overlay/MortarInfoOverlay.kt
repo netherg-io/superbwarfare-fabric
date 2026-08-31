@@ -7,10 +7,10 @@ import com.atsuishio.superbwarfare.tools.FormatTool.format1D
 import com.atsuishio.superbwarfare.tools.RangeTool.getRange
 import com.atsuishio.superbwarfare.tools.plus
 import net.minecraft.network.chat.Component
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object MortarInfoOverlay : CommonOverlay("mortar_info") {
     val BASE_POINT = CENTER.offset(-90F, -26F)
     val PITCH = StringComponent(BASE_POINT)

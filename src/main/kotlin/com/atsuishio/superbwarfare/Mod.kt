@@ -22,7 +22,6 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.repository.Pack
 import net.minecraft.server.packs.repository.PackSource
-import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModContainer
@@ -30,7 +29,8 @@ import net.neoforged.fml.common.Mod
 import net.neoforged.fml.config.ModConfig
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
-import net.neoforged.fml.loading.FMLEnvironment
+import net.fabricmc.api.EnvType
+import net.fabricmc.loader.api.FabricLoader
 import net.neoforged.neoforge.client.event.ClientTickEvent
 import net.neoforged.neoforge.client.event.RegisterShadersEvent
 import net.neoforged.neoforge.common.NeoForge
@@ -84,7 +84,7 @@ class Mod(bus: IEventBus, container: ModContainer) {
         bus.addListener<DataPackRegistryEvent.NewRegistry> { ModDatapackRegistries.onNewRegistry(it) }
         bus.addListener<RegisterShadersEvent> { ModParticleRenderTypes.onRegisterShaders(it) }
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
             CompatHolder.hasMod(CompatHolder.CLOTH_CONFIG) { ClothConfigHelper.registerScreen() }
         }
 
@@ -94,7 +94,7 @@ class Mod(bus: IEventBus, container: ModContainer) {
 
         NeoForge.EVENT_BUS.register(this)
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
+        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
             SoundLimit.init()
         }
 

@@ -8,10 +8,10 @@ import com.atsuishio.superbwarfare.tools.NBTTool
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object ArmorPlateOverlay : CommonOverlay("armor_plate") {
     private val ICON = loc("textures/overlay/armor_plate/icon.png")
     private val BAR_1 = loc("textures/overlay/armor_plate/bar_1.png")

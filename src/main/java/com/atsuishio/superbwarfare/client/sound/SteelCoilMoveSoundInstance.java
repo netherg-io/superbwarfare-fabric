@@ -8,10 +8,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class SteelCoilMoveSoundInstance extends AbstractTickableSoundInstance {
 
     private final Minecraft client;
@@ -73,7 +73,7 @@ public abstract class SteelCoilMoveSoundInstance extends AbstractTickableSoundIn
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static class SteelCoilMoveSound extends SteelCoilMoveSoundInstance {
 
         public SteelCoilMoveSound(SteelCoilEntity entity) {

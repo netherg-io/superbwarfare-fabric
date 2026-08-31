@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.data.gun.AmmoConsumer
 import com.atsuishio.superbwarfare.data.gun.GunData
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.items.IItemHandler
 import kotlin.math.floor
 
@@ -59,6 +59,6 @@ class HungerAmmoStrategy : AmmoConsumeStrategy() {
 
     override fun withdraw(consumer: AmmoConsumer, handler: IItemHandler, count: Int) = 0
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getDisplayName(consumer: AmmoConsumer) = "Hunger"
 }

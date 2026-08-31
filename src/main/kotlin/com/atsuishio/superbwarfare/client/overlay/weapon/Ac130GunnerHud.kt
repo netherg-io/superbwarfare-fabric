@@ -24,11 +24,11 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import org.joml.Math
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 class Ac130GunnerHud {
     companion object {
         val ROLL_IND = loc("textures/overlay/vehicle/helicopter/roll_ind.png")

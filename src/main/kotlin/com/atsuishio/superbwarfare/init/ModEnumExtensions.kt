@@ -6,8 +6,8 @@ import net.minecraft.network.chat.Style
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.HumanoidArm
 import net.minecraft.world.item.Rarity
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.fml.common.asm.enumextension.EnumProxy
 import net.neoforged.neoforge.client.IArmPoseTransformer
 import java.util.function.UnaryOperator
@@ -46,7 +46,7 @@ object ModEnumExtensions {
     val virtual: Rarity
         get() = SUPERBWARFARE_VIRTUAL.getValue()
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     object Client {
         @JvmField
         val SUPERBWARFARE_LUNGE_MINE_POSE: EnumProxy<ArmPose> = EnumProxy(

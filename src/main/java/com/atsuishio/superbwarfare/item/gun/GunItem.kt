@@ -61,8 +61,8 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.energy.IEnergyStorage
 import org.joml.Math
@@ -1200,7 +1200,7 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getItemScreen(stack: ItemStack, player: Player, hand: InteractionHand): Screen? {
         if (ClientEventHandler.canOpenEditScreen(stack, hand)
             && stack.item is GunItem

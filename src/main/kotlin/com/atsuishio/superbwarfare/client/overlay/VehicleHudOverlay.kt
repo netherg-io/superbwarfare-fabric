@@ -31,12 +31,12 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import org.joml.Math
 import top.theillusivec4.curios.api.CuriosApi
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
     const val ANIMATION_TIME = 300
 

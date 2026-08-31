@@ -12,8 +12,8 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import java.util.concurrent.ThreadLocalRandom
 
 /**
@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom
  * @author paralax034
  * @since 0.8.9.1
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object MuzzleFlashHelper {
 
     // -----------------------------

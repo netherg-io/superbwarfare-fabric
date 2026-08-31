@@ -15,7 +15,8 @@ import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.HitResult
 import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.client.event.ClientTickEvent
@@ -28,7 +29,7 @@ import kotlin.math.max
  * 并预留对应警告的音效接口。
  * 警告触发条件针对MC短视距特点进行了合理调整。
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 @EventBusSubscriber(Dist.CLIENT)
 object GPWSOverlay : CommonOverlay("gpws") {
 

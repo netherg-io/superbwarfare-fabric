@@ -26,12 +26,12 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.player.Player
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import top.theillusivec4.curios.api.CuriosApi
 import kotlin.math.pow
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object KillMessageOverlay : CommonOverlay("kill_message") {
     private val HEADSHOT = loc("textures/overlay/damage_types/headshot.png")
 

@@ -22,11 +22,11 @@ import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
 import net.minecraft.world.level.ClipContext
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import kotlin.math.min
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object SpyglassRangeOverlay : CommonOverlay("spyglass_range") {
     private val INDICATOR = loc("textures/overlay/spyglass/indicator.png")
     private val SPYGLASS = loc("textures/overlay/spyglass/spyglass.png")

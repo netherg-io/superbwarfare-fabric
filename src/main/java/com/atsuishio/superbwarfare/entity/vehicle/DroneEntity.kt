@@ -56,8 +56,8 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.items.ItemHandlerHelper
 import org.joml.Math
 import java.util.*
@@ -818,7 +818,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         return false
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getCameraRotation(
         partialTicks: Float,
         player: Player,
@@ -831,7 +831,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         )
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getCameraPosition(
         partialTicks: Float,
         player: Player,

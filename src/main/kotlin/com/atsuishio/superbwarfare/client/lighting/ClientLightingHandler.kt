@@ -5,8 +5,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.projectile.Projectile
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
 /**
  * Client-side bridge that routes projectile lifecycle events to the lighting system.
@@ -17,7 +17,7 @@ import net.neoforged.api.distmarker.OnlyIn
  * @author paralax034
  * @since 0.8.9.1
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object ClientLightingHandler {
 
     /**

@@ -6,10 +6,10 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class HornSoundInstance extends AbstractTickableSoundInstance {
 
     private final Minecraft client;
@@ -71,7 +71,7 @@ public abstract class HornSoundInstance extends AbstractTickableSoundInstance {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static class VehicleHornSound extends HornSoundInstance {
 
         public VehicleHornSound(VehicleEntity entity) {

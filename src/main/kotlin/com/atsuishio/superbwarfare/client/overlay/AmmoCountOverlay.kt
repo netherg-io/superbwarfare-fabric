@@ -13,11 +13,11 @@ import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import kotlin.math.roundToInt
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object AmmoCountOverlay : CommonOverlay("ammo_count") {
 
     private val ammoInfoTimer: AnimationTimer = AnimationTimer(500, 2000)

@@ -106,8 +106,8 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.common.util.FakePlayer
@@ -4406,7 +4406,7 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
      * @param zoom          是否在载具上瞄准
      * @param isFirstPerson 是否是第一人称视角
      */
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     open fun getCameraRotation(partialTicks: Float, player: Player, zoom: Boolean, isFirstPerson: Boolean): Vec2? {
         return VehicleClientUtils.getCameraRotation(this, partialTicks, player, zoom, isFirstPerson)
     }
@@ -4417,7 +4417,7 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
      * @param zoom          是否在载具上瞄准
      * @param isFirstPerson 是否是第一人称视角
      */
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     open fun getCameraPosition(partialTicks: Float, player: Player, zoom: Boolean, isFirstPerson: Boolean): Vec3? {
         return VehicleClientUtils.getCameraPosition(this, partialTicks, player, zoom, isFirstPerson)
     }
@@ -4425,7 +4425,7 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
     /**
      * 是否使用载具固定视角
      */
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     open fun useFixedCameraPos(entity: Entity?): Boolean {
         return VehicleClientUtils.useFixedCameraPos(this, entity)
     }
@@ -4946,12 +4946,12 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
     open val isAmphibious: Boolean
         get() = VehicleMiscUtils.isAmphibious(this)
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     open fun firstPersonAmmoComponent(data: GunData, player: Player?): Component {
         return VehicleClientUtils.firstPersonAmmoComponent(this, data, player)
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     open fun thirdPersonAmmoComponent(data: GunData, player: Player?): Component {
         return VehicleClientUtils.thirdPersonAmmoComponent(this, data, player)
     }

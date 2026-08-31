@@ -19,11 +19,11 @@ import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import kotlin.math.max
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object Type63InfoOverlay : CommonOverlay("type_63_info") {
     private val AP by lazy { ItemStack(ModItems.MEDIUM_ROCKET_AP.get()) }
     private val HE by lazy { ItemStack(ModItems.MEDIUM_ROCKET_HE.get()) }

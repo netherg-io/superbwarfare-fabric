@@ -10,16 +10,17 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.network.chat.Component
 import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.fml.loading.FMLEnvironment
+import net.fabricmc.loader.api.FabricLoader
 import net.neoforged.fml.loading.LoadingModList
 import net.neoforged.neoforge.client.event.ScreenEvent
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 class SnapshotWarningScreen(val lastScreen: Screen) : Screen(
     Component.translatable("warning.superbwarfare.title.snapshot").withStyle(ChatFormatting.BOLD)
 ) {
@@ -94,7 +95,7 @@ class SnapshotWarningScreen(val lastScreen: Screen) : Screen(
 
         @SubscribeEvent(priority = EventPriority.HIGH)
         fun onTitleScreenOpen(event: ScreenEvent.Init.Post) {
-            if (!FMLEnvironment.production) return
+            if (!!FabricLoader.getInstance().isDevelopmentEnvironment) return
             if (firstTimeStart || event.screen !is TitleScreen) return
             val version = getVersion() ?: return
             if (!version.toString().lowercase().contains("snapshot")) return

@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.longs.LongIterator
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
 /**
  * High-performance, zero-allocation registry for client-side dynamic block light sources.
@@ -21,7 +21,7 @@ import net.neoforged.api.distmarker.OnlyIn
  * @author paralax034
  * @since 0.8.9.1
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object LightPositionRegistry {
 
     private const val MAX_ACTIVE_LIGHTS = 2048

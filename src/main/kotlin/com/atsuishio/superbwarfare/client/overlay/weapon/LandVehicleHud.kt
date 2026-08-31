@@ -21,11 +21,11 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
 import net.minecraft.world.level.ClipContext
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import org.joml.Math
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object LandVehicleHud {
     const val ID: String = "@Land"
 

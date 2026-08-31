@@ -21,8 +21,8 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.item.context.UseOnContext
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
 var ItemStack.firingParameters: FiringParametersItem.Parameters
     get() = this.getOrDefault(ModDataComponents.FIRING_PARAMETERS, FiringParametersItem.Parameters())
@@ -80,7 +80,7 @@ class FiringParametersItem : Item(Properties().stacksTo(1)), ItemScreenProvider,
         )
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getItemScreen(stack: ItemStack, player: Player, hand: InteractionHand): Screen {
         return FiringParametersScreen(stack, hand)
     }

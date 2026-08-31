@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.event
 
 import com.atsuishio.superbwarfare.tools.HitboxHelper
-import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
-import net.neoforged.fml.loading.FMLEnvironment
+import net.fabricmc.api.EnvType
+import net.fabricmc.loader.api.FabricLoader
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
 import net.neoforged.neoforge.event.tick.PlayerTickEvent
 
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent
 object HitboxHelperEventHandler {
     @SubscribeEvent(receiveCanceled = true)
     fun onPlayerTick(event: PlayerTickEvent.Post) {
-        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+        if (FabricLoader.getInstance().environmentType == EnvType.SERVER) {
             HitboxHelper.onPlayerTick(event.entity)
         }
     }

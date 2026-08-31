@@ -10,11 +10,11 @@ import net.minecraft.client.particle.ParticleRenderType
 import net.minecraft.client.renderer.ShaderInstance
 import net.minecraft.client.renderer.texture.TextureAtlas
 import net.minecraft.client.renderer.texture.TextureManager
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.client.event.RegisterShadersEvent
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object ModParticleRenderTypes {
 
     private var softParticleShader: ShaderInstance? = null

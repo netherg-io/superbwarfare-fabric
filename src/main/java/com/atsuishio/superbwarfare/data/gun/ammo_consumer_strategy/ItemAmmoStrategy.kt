@@ -14,8 +14,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.items.IItemHandler
 
@@ -121,7 +121,7 @@ object ItemAmmoStrategy : AmmoConsumeStrategy() {
         return InventoryTool.insertItem(handler, consumer.stack(), count)
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @Environment(EnvType.CLIENT)
     override fun getDisplayName(consumer: AmmoConsumer): String {
         val stack = consumer.stack
         if (stack.isEmpty) return super.getDisplayName(consumer)

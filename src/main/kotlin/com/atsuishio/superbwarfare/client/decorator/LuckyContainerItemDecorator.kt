@@ -7,11 +7,11 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.core.component.DataComponents
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.client.IItemDecorator
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 class LuckyContainerItemDecorator : IItemDecorator {
     override fun render(guiGraphics: GuiGraphics, font: Font, stack: ItemStack, xOffset: Int, yOffset: Int): Boolean {
         if (stack.item !is LuckyContainerBlockItem) return false

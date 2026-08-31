@@ -2,12 +2,12 @@ package com.atsuishio.superbwarfare.compat
 
 import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.compat.clothconfig.ClothConfigHelper
-import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.ModList
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent
-import net.neoforged.fml.loading.FMLEnvironment
+import net.fabricmc.api.EnvType
+import net.fabricmc.loader.api.FabricLoader
 
 @EventBusSubscriber(modid = Mod.MODID)
 object CompatHolder {
@@ -23,7 +23,7 @@ object CompatHolder {
     fun onInterModEnqueue(event: InterModEnqueueEvent) {
         event.enqueueWork {
             hasMod(CLOTH_CONFIG) {
-                if (FMLEnvironment.dist == Dist.CLIENT) {
+                if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
                     ClothConfigHelper.registerScreen()
                 }
             }

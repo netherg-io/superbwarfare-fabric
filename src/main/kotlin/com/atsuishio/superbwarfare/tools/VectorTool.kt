@@ -10,8 +10,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import org.joml.Quaterniond
 import org.joml.Vector3d
 import org.joml.Vector3f
@@ -40,7 +40,7 @@ fun BlockPos.toVec3f() = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())
  *
  * https://github.com/LukenSkyne/Minecraft-Ping-Wheel/blob/138295954dab9d2451ad19e16d8d413ef018a2d8/common/src/main/java/nx/pingwheel/common/helper/MathUtils.java#L15>
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 fun Vec3.worldToScreen(): Vec3 {
     val window = mc.window
     val camera = mc.gameRenderer.mainCamera
@@ -67,7 +67,7 @@ fun Vec3.worldToScreen(): Vec3 {
     )
 }
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 @JvmName("canSee")
 fun Vec3.canBeSeen(): Boolean {
     val camera = mc.gameRenderer.mainCamera

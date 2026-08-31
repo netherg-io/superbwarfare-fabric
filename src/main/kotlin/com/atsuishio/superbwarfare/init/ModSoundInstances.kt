@@ -5,12 +5,12 @@ import com.atsuishio.superbwarfare.entity.living.SteelCoilEntity
 import com.atsuishio.superbwarfare.entity.projectile.FastThrowableProjectile
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.tools.mc
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import java.util.function.BiConsumer
 import java.util.function.Consumer
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object ModSoundInstances {
     fun init() {
         VehicleEntity.playTrackSound =

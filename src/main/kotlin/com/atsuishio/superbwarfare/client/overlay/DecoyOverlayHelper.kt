@@ -5,10 +5,10 @@ import com.atsuishio.superbwarfare.init.ModKeyMappings
 import com.atsuishio.superbwarfare.tools.mc
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 object DecoyOverlayHelper {
 
     @JvmStatic

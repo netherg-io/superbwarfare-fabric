@@ -22,13 +22,13 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.RecipeHolder
-import net.neoforged.api.distmarker.Dist
-import net.neoforged.api.distmarker.OnlyIn
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.neoforged.neoforge.items.ItemStackHandler
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper
 import kotlin.jvm.optionals.getOrNull
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 class BlueprintResearchTableScreen(
     menu: BlueprintResearchTableMenu, playerInventory: Inventory, title: Component
 ) : AbstractContainerScreen<BlueprintResearchTableMenu>(menu, playerInventory, title) {
