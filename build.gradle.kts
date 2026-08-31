@@ -36,6 +36,8 @@ repositories {
     maven { url = uri("https://maven.createmod.net") }
     maven { url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") }
     maven { url = uri("https://maven.shedaniel.me/") }
+    maven { url = uri("https://mvn.devos.one/snapshots/") }
+    maven { url = uri("https://jitpack.io") }   // Fabric-ASM, транзитивная у Porting Lib
     maven {
         name = "GeckoLib"
         url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
@@ -75,6 +77,14 @@ dependencies {
     // Отдаёт net.neoforged.neoforge.common.ModConfigSpec под Fabric с тем же именем пакета,
     // поэтому весь пакет config едет без правок: ModConfigBuilder там -- typealias на его Builder.
     modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.3")
+
+    // Porting Lib даёт события в форме Forge/NeoForge поверх Fabric: LivingFallEvent,
+    // LivingKnockBackEvent, LivingDropsEvent, MobEffectEvent и прочие, которых в Fabric API нет.
+    // Иначе под каждое пришлось бы писать свой миксин -- три десятка штук.
+    val portingLib = "3.1.0-beta.90+1.21.1"
+    for (module in listOf("core", "entity", "level_events", "client_events", "transfer", "items")) {
+        modImplementation("io.github.fabricators_of_create.Porting-Lib:$module:$portingLib")
+    }
 
     compileOnly("com.maydaymemory:mae:1.1.2") {
         exclude("com.google.code.findbugs", "jsr305")
