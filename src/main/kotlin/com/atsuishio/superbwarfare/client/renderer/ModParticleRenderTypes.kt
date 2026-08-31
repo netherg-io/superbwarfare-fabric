@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.BufferBuilder
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas
 import net.minecraft.client.renderer.texture.TextureManager
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.client.event.RegisterShadersEvent
+import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback
 
 @Environment(EnvType.CLIENT)
 object ModParticleRenderTypes {
@@ -24,15 +24,12 @@ object ModParticleRenderTypes {
      * Registers a custom particle shader that does NOT use alpha cutoff (discard),
      * enabling smooth soft-edged transparency unlike the vanilla particle shader.
      */
-    fun onRegisterShaders(event: RegisterShadersEvent) {
-        val resourceProvider = event.resourceProvider
-        event.registerShader(
-            ShaderInstance(
-                resourceProvider,
-                loc("rendertype_particle_soft"),
-                DefaultVertexFormat.PARTICLE
-            )
-        ) { shader -> softParticleShader = shader }
+    fun registerShaders() {
+        CoreShaderRegistrationCallback.EVENT.register { context ->
+            context.register(loc("rendertype_particle_soft"), DefaultVertexFormat.PARTICLE) { shader ->
+                softParticleShader = shader
+            }
+        }
     }
 
     /**

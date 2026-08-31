@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.animation.entity
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.entity.projectile.Ptkm1rEntity
 import com.atsuishio.superbwarfare.resource.model.ProjectileModelReloadListener
 import net.minecraft.resources.ResourceLocation

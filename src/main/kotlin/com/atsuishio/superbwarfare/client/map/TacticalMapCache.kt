@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.map
 
 import com.atsuishio.superbwarfare.Mod
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.client.map.TacticalMapCache.LOD_SAMPLE_SIZE
 import com.atsuishio.superbwarfare.client.map.TacticalMapCache.TILE_SIZE
 import com.atsuishio.superbwarfare.client.map.TacticalMapCache.flushPendingDiskWrites

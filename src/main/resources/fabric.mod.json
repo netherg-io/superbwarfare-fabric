@@ -6,7 +6,20 @@
   "description": "A Warfare Mod — Fabric port for Blockfield",
   "license": "LGPL-3.0-only",
   "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "com.atsuishio.superbwarfare.Mod"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "com.atsuishio.superbwarfare.ModClient"
+      }
+    ]
+  },
   "mixins": [
     "mixins.superbwarfare.json"
   ],
@@ -15,6 +28,7 @@
     "fabric-api": "*",
     "fabric-language-kotlin": "*",
     "minecraft": "~1.21.1",
-    "java": ">=21"
+    "java": ">=21",
+    "forgeconfigapiport": "*"
   }
 }

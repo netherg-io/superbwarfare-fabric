@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.animation
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.api.event.RenderPlayerArmEvent
 import com.atsuishio.superbwarfare.client.renderer.CustomGunRenderer
 import com.atsuishio.superbwarfare.client.renderer.ModRenderTypes

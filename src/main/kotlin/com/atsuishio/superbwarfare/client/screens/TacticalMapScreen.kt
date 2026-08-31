@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.screens
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.client.ClientSyncedEntityHandler
 import com.atsuishio.superbwarfare.client.map.*
 import com.atsuishio.superbwarfare.client.map.CoordinateConverter.scaleFromZoom

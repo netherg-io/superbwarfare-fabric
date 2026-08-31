@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.item
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.item.misc.SkinSprayItem
 import com.atsuishio.superbwarfare.resource.model.ItemModelReloadListener
 import com.github.mcmodderanchor.simplebedrockmodel.v1.client.renderer.BedrockModelRenderTypes

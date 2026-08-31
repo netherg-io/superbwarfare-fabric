@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.animation.entity
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.entity.living.TargetEntity
 
 class TargetContext(entity: TargetEntity) : BasicEntityContext<TargetEntity>(entity, ANIM) {

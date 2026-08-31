@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle.utils
 
-import com.atsuishio.superbwarfare.Mod.Companion.queueServerWork
+import com.atsuishio.superbwarfare.Mod.queueServerWork
 import com.atsuishio.superbwarfare.config.server.VehicleConfig
 import com.atsuishio.superbwarfare.data.vehicle.subdata.DestroyInfo
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType

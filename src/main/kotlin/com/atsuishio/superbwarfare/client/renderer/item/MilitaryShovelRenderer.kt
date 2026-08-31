@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.item
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.item.weapon.MilitaryShovelItem
 import com.atsuishio.superbwarfare.resource.model.ItemModelReloadListener
 import com.mojang.blaze3d.vertex.PoseStack

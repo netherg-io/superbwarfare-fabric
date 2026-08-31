@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.block
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.block.VehicleAssemblingTableBlock
 import com.atsuishio.superbwarfare.block.entity.VehicleAssemblingTableBlockEntity
 import com.atsuishio.superbwarfare.block.property.BlockPart

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.item
 
-import com.atsuishio.superbwarfare.Mod.Companion.loc
+import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.item.projectile.Ptkm1rItem
 import com.atsuishio.superbwarfare.resource.model.ProjectileModelReloadListener
 import com.mojang.blaze3d.vertex.PoseStack
