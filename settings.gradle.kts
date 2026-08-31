@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
         mavenLocal()
+        maven { url = uri("https://maven.fabricmc.net/") }
         gradlePluginPortal()
-        maven { url = uri("https://maven.neoforged.net/releases") }
     }
     plugins {
         id("org.jetbrains.kotlin.jvm") version "2.1.20"
