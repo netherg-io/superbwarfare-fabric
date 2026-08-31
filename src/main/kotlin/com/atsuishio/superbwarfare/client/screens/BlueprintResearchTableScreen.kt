@@ -24,8 +24,8 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.crafting.RecipeHolder
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.items.ItemStackHandler
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper
+import com.atsuishio.superbwarfare.fabric.ItemStackHandler
+import com.atsuishio.superbwarfare.fabric.RecipeWrapper
 import kotlin.jvm.optionals.getOrNull
 
 @Environment(EnvType.CLIENT)

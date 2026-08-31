@@ -26,6 +26,7 @@ import com.atsuishio.superbwarfare.entity.OBBEntity
 import com.atsuishio.superbwarfare.entity.getValue
 import com.atsuishio.superbwarfare.entity.misc.CatapultShuttleEntity
 import com.atsuishio.superbwarfare.entity.mixin.OBBHitter
+import com.atsuishio.superbwarfare.entity.mixin.persistentData
 import com.atsuishio.superbwarfare.entity.setValue
 import com.atsuishio.superbwarfare.entity.vehicle.*
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity.Companion.ENV_RATE_RECOMPUTE_INTERVAL
@@ -107,13 +108,14 @@ import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 import net.neoforged.neoforge.common.NeoForgeMod
 import net.neoforged.neoforge.common.util.FakePlayer
-import net.neoforged.neoforge.energy.IEnergyStorage
+import com.atsuishio.superbwarfare.fabric.IEnergyStorage
 import net.neoforged.neoforge.entity.IEntityWithComplexSpawn
 import net.neoforged.neoforge.fluids.FluidType
-import net.neoforged.neoforge.items.ItemHandlerHelper
+import com.atsuishio.superbwarfare.fabric.ItemHandlerHelper
 import org.joml.*
 import java.util.*
 import java.util.function.BiConsumer

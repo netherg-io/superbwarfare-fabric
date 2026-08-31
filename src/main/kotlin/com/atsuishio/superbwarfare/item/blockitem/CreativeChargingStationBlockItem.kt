@@ -8,7 +8,7 @@ import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.TooltipFlag
-import net.neoforged.neoforge.energy.IEnergyStorage
+import com.atsuishio.superbwarfare.fabric.IEnergyStorage
 import javax.annotation.ParametersAreNonnullByDefault
 
 class CreativeChargingStationBlockItem :

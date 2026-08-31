@@ -40,7 +40,7 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
-import net.neoforged.neoforge.items.ItemHandlerHelper
+import com.atsuishio.superbwarfare.fabric.ItemHandlerHelper
 import java.util.*
 
 open class EDDEntity : HangingEntity, OwnableEntity {

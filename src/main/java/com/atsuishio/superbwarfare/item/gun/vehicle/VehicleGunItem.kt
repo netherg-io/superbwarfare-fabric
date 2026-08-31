@@ -17,8 +17,9 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.energy.IEnergyStorage
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
+import com.atsuishio.superbwarfare.fabric.IEnergyStorage
 
 open class VehicleGunItem : GunItem(Properties()) {
     override fun modifyProperty(modifier: PMC<GunData, DefaultGunData>) {

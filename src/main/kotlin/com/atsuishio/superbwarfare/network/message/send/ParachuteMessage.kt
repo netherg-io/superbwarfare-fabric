@@ -7,17 +7,16 @@ import com.atsuishio.superbwarfare.network.PayloadContext
 import com.atsuishio.superbwarfare.network.ServerPacketPayload
 import com.atsuishio.superbwarfare.tools.NBTTool
 import net.minecraft.sounds.SoundSource
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.findFirstEquipped
 
 object ParachuteMessage : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         val player = sender()
 
-        CuriosApi.getCuriosInventory(player)
-            .flatMap { c -> c.findFirstCurio(ModItems.PARACHUTE.get()) }
-            .ifPresent { s ->
+        findFirstEquipped(player, ModItems.PARACHUTE.get())
+            ?.let { s ->
                 val stack = s.stack()
-                if (player.cooldowns.isOnCooldown(stack.item)) return@ifPresent
+                if (player.cooldowns.isOnCooldown(stack.item)) return@let
 
                 val tag = NBTTool.getTag(stack)
                 if (!tag.getBoolean(ParachuteItem.TAG_OPEN) && player.deltaMovement.y < -0.6 && player.fallDistance > 4) {

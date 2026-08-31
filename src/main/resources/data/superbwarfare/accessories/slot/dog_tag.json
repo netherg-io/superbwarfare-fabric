@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "amount": 1,
+  "operation": "set",
+  "order": 114,
+  "icon": "superbwarfare:slot/dog_tag_slot",
+  "validators": [
+    "accessories:tag",
+    "accessories:component"
+  ]
+}

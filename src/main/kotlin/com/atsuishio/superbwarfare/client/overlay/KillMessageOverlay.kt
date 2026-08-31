@@ -28,7 +28,7 @@ import net.minecraft.world.entity.OwnableEntity
 import net.minecraft.world.entity.player.Player
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.findFirstEquipped
 import kotlin.math.pow
 
 @Environment(EnvType.CLIENT)
@@ -375,10 +375,8 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
             if (owner is Player) {
                 if (DisplayConfig.DOG_TAG_NAME_VISIBLE.get()) {
                     name = owner.displayName?.string + " + " + entityName
-                    CuriosApi.getCuriosInventory(owner).ifPresent { c ->
-                        c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent { s ->
-                            name = s.stack().getHoverName().string + " + " + entityName
-                        }
+                    findFirstEquipped(owner, ModItems.DOG_TAG.get())?.let { s ->
+                        name = s.stack().getHoverName().string + " + " + entityName
                     }
                 } else {
                     name = owner.displayName!!.string + " + " + entityName
@@ -386,10 +384,8 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
             }
         } else if (entity is Player) {
             if (!DisplayConfig.DOG_TAG_NAME_VISIBLE.get()) return name
-            CuriosApi.getCuriosInventory(entity).ifPresent { c ->
-                c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent { s ->
-                    name = s.stack().getHoverName().string
-                }
+            findFirstEquipped(entity, ModItems.DOG_TAG.get())?.let { s ->
+                name = s.stack().getHoverName().string
             }
         }
         return name
@@ -400,10 +396,8 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
         var name = entityName
         if (entity is Player) {
             if (!DisplayConfig.DOG_TAG_NAME_VISIBLE.get()) return name
-            CuriosApi.getCuriosInventory(entity).ifPresent { c ->
-                c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent { s ->
-                    name = s.stack().getHoverName().string
-                }
+            findFirstEquipped(entity, ModItems.DOG_TAG.get())?.let { s ->
+                name = s.stack().getHoverName().string
             }
         }
         return name
@@ -432,21 +426,12 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
     }
 
     fun shouldRenderDogTagIcon(living: LivingEntity?): Boolean {
-        val flag = booleanArrayOf(false)
-        CuriosApi.getCuriosInventory(living).flatMap { c ->
-            c.findFirstCurio(ModItems.DOG_TAG.get())
-        }.ifPresent { s ->
-            if (ClientDogTagImageTooltip.shouldRenderIcon(s.stack())) {
-                flag[0] = true
-            }
-        }
-        return flag[0] && DisplayConfig.DOG_TAG_ICON_VISIBLE.get()
+        val equipped = findFirstEquipped(living, ModItems.DOG_TAG.get()) ?: return false
+        return ClientDogTagImageTooltip.shouldRenderIcon(equipped.stack()) && DisplayConfig.DOG_TAG_ICON_VISIBLE.get()
     }
 
     fun renderDogTagIcon(guiGraphics: GuiGraphics, living: LivingEntity?, x: Float, y: Float) {
-        CuriosApi.getCuriosInventory(living).flatMap { c ->
-            c.findFirstCurio(ModItems.DOG_TAG.get())
-        }.ifPresent { s ->
+        findFirstEquipped(living, ModItems.DOG_TAG.get())?.let { s ->
             val stack = s.stack()
             val icon = DogTagItem.getColors(stack)
 

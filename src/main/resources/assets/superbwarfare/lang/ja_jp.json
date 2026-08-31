@@ -98,7 +98,7 @@
     "container.superbwarfare.reforging_table": "銃再鍛造台",
     "container.superbwarfare.superb_item_interface": "スーパーアイテムインターフェース",
     "container.superbwarfare.vehicle_assembling_table.assemble": "作成",
-    "curios.identifier.dog_tag": "ドッグタグ(認識票)",
+    "accessories.slot.dog_tag": "ドッグタグ(認識票)",
     "death.attack.air_crash": "%1$sに操縦桿を握らせるのはまずかった",
     "death.attack.air_crash.entity": "%1$sは%2$sによって空中で殺害された",
     "death.attack.air_crash.item": "%1$sは%2$sによって空中で殺害された",

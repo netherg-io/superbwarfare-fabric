@@ -6,8 +6,6 @@ import com.atsuishio.superbwarfare.client.RenderHelper
 import com.atsuishio.superbwarfare.client.animation.AnimationCurves
 import com.atsuishio.superbwarfare.client.animation.ValueAnimator
 import com.atsuishio.superbwarfare.client.screens.component.*
-import com.atsuishio.superbwarfare.compat.jei.JeiCompatHolder.hasJEI
-import com.atsuishio.superbwarfare.compat.jei.SbwJEIPlugin
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModRecipes
 import com.atsuishio.superbwarfare.inventory.menu.VehicleAssemblingMenu

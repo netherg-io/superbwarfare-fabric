@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.inventory.handler
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import net.minecraft.core.NonNullList
 import net.minecraft.world.item.ItemStack
-import net.neoforged.neoforge.items.ItemStackHandler
+import com.atsuishio.superbwarfare.fabric.ItemStackHandler
 
 open class VehicleContainerHandler(size: Int, val vehicle: VehicleEntity) : ItemStackHandler(size) {
     override fun onContentsChanged(slot: Int) {

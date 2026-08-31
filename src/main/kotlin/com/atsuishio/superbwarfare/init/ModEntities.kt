@@ -17,7 +17,7 @@ import net.minecraft.world.entity.*
 import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.levelgen.Heightmap
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
 

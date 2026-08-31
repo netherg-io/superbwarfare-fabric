@@ -5,7 +5,7 @@ import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.item.container.SmallContainerBlockItem
 import com.google.common.collect.ImmutableSet
 import net.minecraft.core.registries.BuiltInRegistries
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper
+import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
 import net.minecraft.core.component.DataComponentPredicate
 import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity

@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.Tag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
-import net.neoforged.neoforge.energy.EnergyStorage
+import com.atsuishio.superbwarfare.fabric.EnergyStorage
 
 /**
  * 自动同步的实体能量存储能力，会和客户端自动同步实体的当前能量值

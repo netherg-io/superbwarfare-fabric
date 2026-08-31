@@ -12,7 +12,8 @@ import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 
 open class ChargingStationMenu @JvmOverloads constructor(
     id: Int,

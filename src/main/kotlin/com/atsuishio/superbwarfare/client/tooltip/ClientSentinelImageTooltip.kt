@@ -5,7 +5,8 @@ import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.tools.FormatTool.format1D
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 
 class ClientSentinelImageTooltip(tooltip: GunImageComponent) : ClientGunImageTooltip(tooltip) {
     override val damageComponent: Component

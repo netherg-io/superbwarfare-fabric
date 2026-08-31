@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.neoforged.neoforge.items.IItemHandler
+import com.atsuishio.superbwarfare.fabric.IItemHandler
 
 @STOFactory(AmmoConsumer.AmmoConsumerInstanceBuilder::class)
 @Serializable

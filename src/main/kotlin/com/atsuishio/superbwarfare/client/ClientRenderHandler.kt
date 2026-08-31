@@ -25,7 +25,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
-import top.theillusivec4.curios.api.client.CuriosRendererRegistry
+import io.wispforest.accessories.api.client.AccessoriesRendererRegistry
 import kotlin.math.min
 
 @Environment(EnvType.CLIENT)
@@ -35,6 +35,7 @@ object ClientRenderHandler {
         registerRenderers()
         registerOverlays()
         registerLayer()
+        registerAccessoryRenderers()
     }
 
     // TODO 正确赋值该变量
@@ -144,12 +145,9 @@ object ClientRenderHandler {
         ModItems.VEHICLE_KEY.get() to VehicleKeyItemDecorator(),
     )
 
-    // ponytail: Curios под Fabric не портирован, зависимости в build.gradle.kts нет.
-    // Подключить, когда появится замена CuriosRendererRegistry (Trinkets или свой слой).
-    @Suppress("unused")
-    private fun onClientSetup() {
-        CuriosRendererRegistry.register(ModItems.PARACHUTE.get()) { ParachuteRenderer() }
-        CuriosRendererRegistry.register(ModItems.THERMAL_IMAGING_GOGGLES.get()) { ThermalImagingGogglesRenderer() }
+    private fun registerAccessoryRenderers() {
+        AccessoriesRendererRegistry.registerRenderer(ModItems.PARACHUTE.get()) { ParachuteRenderer() }
+        AccessoriesRendererRegistry.registerRenderer(ModItems.THERMAL_IMAGING_GOGGLES.get()) { ThermalImagingGogglesRenderer() }
     }
 
     private fun registerLayer() {

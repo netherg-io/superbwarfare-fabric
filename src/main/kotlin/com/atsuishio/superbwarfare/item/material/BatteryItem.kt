@@ -17,8 +17,9 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
-import net.neoforged.neoforge.capabilities.Capabilities
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
+import com.atsuishio.superbwarfare.fabric.equippedAccessories
 import java.util.*
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -93,23 +94,21 @@ open class BatteryItem(var maxEnergy: Int, properties: Properties) : Item(proper
             energyStorage.extractEnergy(received, false)
         }
 
-        CuriosApi.getCuriosInventory(entity).ifPresent { s ->
-            (0..<s.slots).forEach {
-                val stack = s.equippedCurios.getStackInSlot(it)
-                if (stack.isEmpty) return@forEach
-                if (stack.item is BatteryItem) return@forEach
-                val toCharge = stack.getCapability(Capabilities.EnergyStorage.ITEM) ?: return@forEach
-                if (!toCharge.canReceive()) return@forEach
+        equippedAccessories(entity).forEach { equipped ->
+            val stack = equipped.stack()
+            if (stack.isEmpty) return@forEach
+            if (stack.item is BatteryItem) return@forEach
+            val toCharge = stack.getCapability(Capabilities.EnergyStorage.ITEM) ?: return@forEach
+            if (!toCharge.canReceive()) return@forEach
 
-                val cellEnergy = energyStorage.energyStored
-                if (cellEnergy <= 0) return@forEach
+            val cellEnergy = energyStorage.energyStored
+            if (cellEnergy <= 0) return@forEach
 
-                val stackEnergyNeed =
-                    min(cellEnergy.toDouble(), (toCharge.maxEnergyStored - toCharge.energyStored).toDouble()).toInt()
+            val stackEnergyNeed =
+                min(cellEnergy.toDouble(), (toCharge.maxEnergyStored - toCharge.energyStored).toDouble()).toInt()
 
-                val received = toCharge.receiveEnergy(stackEnergyNeed, false)
-                energyStorage.extractEnergy(received, false)
-            }
+            val received = toCharge.receiveEnergy(stackEnergyNeed, false)
+            energyStorage.extractEnergy(received, false)
         }
     }
 

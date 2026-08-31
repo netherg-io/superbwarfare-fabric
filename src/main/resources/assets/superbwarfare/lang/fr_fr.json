@@ -74,7 +74,7 @@
     "container.superbwarfare.charging_station.hide_range": "Masquer la portée",
     "container.superbwarfare.charging_station.show_range": "Afficher la portée",
     "container.superbwarfare.reforging_table": "Table de reforge d'arme",
-    "curios.identifier.dog_tag": "Plaque d'identité",
+    "accessories.slot.dog_tag": "Plaque d'identité",
     "death.attack.air_crash": "%1$s a été tué dans un accident d'avion",
     "death.attack.air_crash.entity": "%1$s a été tué dans l'accident d'avion par %2$s",
     "death.attack.air_crash.item": "%1$s a été tué dans l'accident d'avion par %2$s",

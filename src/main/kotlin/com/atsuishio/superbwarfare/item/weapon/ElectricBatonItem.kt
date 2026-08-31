@@ -21,7 +21,8 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.SwordItem
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 import org.joml.Math
 import java.util.*
 import kotlin.math.roundToInt

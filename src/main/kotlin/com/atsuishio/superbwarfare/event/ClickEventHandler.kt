@@ -40,7 +40,7 @@ import net.minecraft.world.phys.Vec3
 import net.neoforged.fml.ModList
 import net.neoforged.neoforge.client.settings.KeyConflictContext
 import org.lwjgl.glfw.GLFW
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.isAccessoryEquipped
 
 object ClickEventHandler {
     @JvmField
@@ -274,14 +274,12 @@ object ClickEventHandler {
                     }
                 }
 
-                CuriosApi.getCuriosInventory(player).ifPresent {
-                    it.findFirstCurio(ModItems.THERMAL_IMAGING_GOGGLES.get()).ifPresent {
-                        ClientEventHandler.activeThermalImaging = !ClientEventHandler.activeThermalImaging
-                        if (ClientEventHandler.activeThermalImaging) {
-                            player.playSound(ModSounds.NIGHT_VISION_ACTIVATE.get())
-                        } else {
-                            player.playSound(ModSounds.CANNON_ZOOM_OUT.get())
-                        }
+                if (isAccessoryEquipped(player, ModItems.THERMAL_IMAGING_GOGGLES.get())) {
+                    ClientEventHandler.activeThermalImaging = !ClientEventHandler.activeThermalImaging
+                    if (ClientEventHandler.activeThermalImaging) {
+                        player.playSound(ModSounds.NIGHT_VISION_ACTIVATE.get())
+                    } else {
+                        player.playSound(ModSounds.CANNON_ZOOM_OUT.get())
                     }
                 }
             }

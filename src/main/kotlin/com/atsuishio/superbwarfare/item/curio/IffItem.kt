@@ -13,15 +13,13 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.server.MinecraftServer
-import top.theillusivec4.curios.api.CuriosApi
-import top.theillusivec4.curios.api.SlotContext
-import top.theillusivec4.curios.api.type.capability.ICurioItem
+import com.atsuishio.superbwarfare.fabric.isAnotherEquipped
+import io.wispforest.accessories.api.Accessory
+import io.wispforest.accessories.api.slot.SlotReference
 
-open class IffItem : Item(Properties().stacksTo(1)), ICurioItem {
-    override fun canEquip(slotContext: SlotContext, stack: ItemStack?): Boolean {
-        return CuriosApi.getCuriosInventory(slotContext.entity)
-            .map { it.findFirstCurio(this).isEmpty }
-            .orElseGet { false }
+open class IffItem : Item(Properties().stacksTo(1)), Accessory {
+    override fun canEquip(stack: ItemStack, reference: SlotReference): Boolean {
+        return !isAnotherEquipped(stack, reference, this)
     }
 
     override fun appendHoverText(

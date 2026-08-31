@@ -32,8 +32,8 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.energy.EnergyStorage
-import net.neoforged.neoforge.energy.IEnergyStorage
+import com.atsuishio.superbwarfare.fabric.EnergyStorage
+import com.atsuishio.superbwarfare.fabric.IEnergyStorage
 import java.util.*
 import javax.annotation.ParametersAreNonnullByDefault
 import kotlin.math.abs

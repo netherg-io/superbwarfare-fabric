@@ -34,7 +34,7 @@ import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import org.joml.Math
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.findFirstEquipped
 
 @Environment(EnvType.CLIENT)
 object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
@@ -302,9 +302,8 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
             }
 
             if (passenger is Player) {
-                CuriosApi.getCuriosInventory(passenger)
-                    .flatMap { c -> c.findFirstCurio(ModItems.DOG_TAG.get()) }
-                    .ifPresent { s -> name = s.stack().hoverName.string }
+                findFirstEquipped(passenger, ModItems.DOG_TAG.get())
+                    ?.let { s -> name = s.stack().hoverName.string }
             }
 
             guiGraphics.drawString(mc.font, name, 42, y, 0x66ff00, true)

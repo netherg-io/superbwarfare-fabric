@@ -18,12 +18,12 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import top.theillusivec4.curios.api.CuriosApi
-import top.theillusivec4.curios.api.SlotContext
-import top.theillusivec4.curios.api.type.capability.ICurioItem
+import com.atsuishio.superbwarfare.fabric.isAnotherEquipped
+import io.wispforest.accessories.api.Accessory
+import io.wispforest.accessories.api.slot.SlotReference
 import java.util.*
 
-class DogTagItem : Item(Properties().stacksTo(1)), ICurioItem, ItemScreenProvider, IVehicleInteract {
+class DogTagItem : Item(Properties().stacksTo(1)), Accessory, ItemScreenProvider, IVehicleInteract {
     override fun appendHoverText(
         stack: ItemStack,
         context: TooltipContext,
@@ -33,10 +33,8 @@ class DogTagItem : Item(Properties().stacksTo(1)), ICurioItem, ItemScreenProvide
         TooltipTool.addScreenProviderText(tooltipComponents)
     }
 
-    override fun canEquip(slotContext: SlotContext, stack: ItemStack?): Boolean {
-        return CuriosApi.getCuriosInventory(slotContext.entity)
-            .map { it.findFirstCurio(this).isEmpty }
-            .orElseGet { false }
+    override fun canEquip(stack: ItemStack, reference: SlotReference): Boolean {
+        return !isAnotherEquipped(stack, reference, this)
     }
 
     override fun getTooltipImage(pStack: ItemStack): Optional<TooltipComponent> {

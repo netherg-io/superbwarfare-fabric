@@ -1,11 +1,14 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.mixin.OBBHitter;
+import com.atsuishio.superbwarfare.entity.mixin.PersistentDataHolder;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.SuperStarShooterItem;
 import com.atsuishio.superbwarfare.tools.OBB;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -26,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements OBBHitter {
+public abstract class EntityMixin implements OBBHitter, PersistentDataHolder {
 
     @Shadow
     @Nullable
@@ -56,6 +59,31 @@ public abstract class EntityMixin implements OBBHitter {
     @Override
     public void sbw$setCurrentHitPart(OBB.@NotNull Part part) {
         this.sbw$currentHitPart = part;
+    }
+
+    @Unique
+    private CompoundTag sbw$persistentData;
+
+    @Override
+    public @NotNull CompoundTag sbw$getPersistentData() {
+        if (this.sbw$persistentData == null) {
+            this.sbw$persistentData = new CompoundTag();
+        }
+        return this.sbw$persistentData;
+    }
+
+    @Inject(method = "saveWithoutId(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;", at = @At("HEAD"))
+    private void sbw$savePersistentData(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
+        if (this.sbw$persistentData != null && !this.sbw$persistentData.isEmpty()) {
+            tag.put("SbwPersistentData", this.sbw$persistentData);
+        }
+    }
+
+    @Inject(method = "load(Lnet/minecraft/nbt/CompoundTag;)V", at = @At("TAIL"))
+    private void sbw$loadPersistentData(CompoundTag tag, CallbackInfo ci) {
+        if (tag.contains("SbwPersistentData", Tag.TAG_COMPOUND)) {
+            this.sbw$persistentData = tag.getCompound("SbwPersistentData");
+        }
     }
 
     @Inject(method = "turn(DD)V", at = @At("HEAD"), cancellable = true)

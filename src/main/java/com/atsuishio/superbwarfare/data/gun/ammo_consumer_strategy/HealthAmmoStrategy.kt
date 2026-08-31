@@ -8,7 +8,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.items.IItemHandler
+import com.atsuishio.superbwarfare.fabric.IItemHandler
 import kotlin.math.floor
 
 /**

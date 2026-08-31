@@ -14,8 +14,9 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
-import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.energy.IEnergyStorage
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
+import com.atsuishio.superbwarfare.fabric.IEnergyStorage
 
 open class BiogasGeneratorBlockEntity(pos: BlockPos, state: BlockState) :
     BlockEntity(ModBlockEntities.BIOGAS_GENERATOR.get(), pos, state) {

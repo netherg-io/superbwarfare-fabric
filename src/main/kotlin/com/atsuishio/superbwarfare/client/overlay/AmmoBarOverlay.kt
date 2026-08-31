@@ -22,7 +22,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 import java.util.regex.Pattern
 import kotlin.math.max
 

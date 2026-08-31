@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.item.gun.GunGeoItem;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import com.atsuishio.superbwarfare.fabric.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
@@ -34,7 +34,7 @@ public class TaserItem extends GunGeoItem {
         var stack = data.stack;
         int perkLevel = data.perk.getLevel(ModPerks.INSTANCE.getVOLT_OVERLOAD());
 
-        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var energyStorage = Capabilities.EnergyStorage.ITEM.get(stack);
         if (energyStorage != null) {
             energyStorage.extractEnergy(400 + 100 * perkLevel, false);
         }
@@ -44,7 +44,7 @@ public class TaserItem extends GunGeoItem {
     public boolean canShoot(GunData data, @Nullable Entity shooter) {
         int perkLevel = data.perk.getLevel(ModPerks.INSTANCE.getVOLT_OVERLOAD());
 
-        var energyStorage = data.stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var energyStorage = Capabilities.EnergyStorage.ITEM.get(data.stack);
         var hasEnoughEnergy = energyStorage != null && energyStorage.getEnergyStored() >= 400 + 100 * perkLevel;
 
         if (!hasEnoughEnergy) return false;

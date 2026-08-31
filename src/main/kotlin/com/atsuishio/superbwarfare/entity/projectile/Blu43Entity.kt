@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.items.ItemHandlerHelper
+import com.atsuishio.superbwarfare.fabric.ItemHandlerHelper
 import java.util.*
 import kotlin.math.max
 

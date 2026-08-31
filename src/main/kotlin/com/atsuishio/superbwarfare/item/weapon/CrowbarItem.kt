@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.*
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.block.Block
-import net.neoforged.neoforge.items.ItemHandlerHelper
+import com.atsuishio.superbwarfare.fabric.ItemHandlerHelper
 
 private val TIER = object : Tier {
     override fun getUses(): Int {

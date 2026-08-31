@@ -16,8 +16,9 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.capabilities.Capabilities
-import net.neoforged.neoforge.items.IItemHandler
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
+import com.atsuishio.superbwarfare.fabric.IItemHandler
 
 /**
  * 物品弹药策略（兜底策略）— ammo 字符串形如 "minecraft:arrow"、 "mod:item"、 "mod:item{tag}"

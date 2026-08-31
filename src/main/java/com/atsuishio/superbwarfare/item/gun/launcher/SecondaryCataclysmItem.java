@@ -23,7 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import com.atsuishio.superbwarfare.fabric.Capabilities;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.constant.DataTickets;
@@ -107,7 +107,7 @@ public class SecondaryCataclysmItem extends GunGeoItem {
     @Override
     public double getCustomDamage(GunData data) {
         var stack = data.stack;
-        var cap = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var cap = Capabilities.EnergyStorage.ITEM.get(stack);
         if (cap != null && cap.getEnergyStored() > 0) {
             return 2.5 * data.getDefault().damage;
         }
@@ -124,7 +124,7 @@ public class SecondaryCataclysmItem extends GunGeoItem {
 
         var stack = data.stack;
 
-        var stackCap = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var stackCap = Capabilities.EnergyStorage.ITEM.get(stack);
         var hasEnoughEnergy = stackCap != null && stackCap.getEnergyStored() >= 3000;
 
         boolean isChargedFire = hasEnoughEnergy;
@@ -146,7 +146,7 @@ public class SecondaryCataclysmItem extends GunGeoItem {
                 4, 0.1, 0.1, 0.1, 0.002, true);
 
         if (isChargedFire) {
-            var itemCap = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+            var itemCap = Capabilities.EnergyStorage.ITEM.get(stack);
             if (itemCap != null) {
                 itemCap.extractEnergy(3000, false);
             }
@@ -157,7 +157,7 @@ public class SecondaryCataclysmItem extends GunGeoItem {
 
     @Override
     public void playFireSounds(GunData data, Entity shooter, boolean zoom) {
-        var cap = data.stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var cap = Capabilities.EnergyStorage.ITEM.get(data.stack);
 
         if (cap != null && cap.getEnergyStored() > 3000) {
             float soundRadius = data.get(GunProp.SOUND_RADIUS).floatValue();

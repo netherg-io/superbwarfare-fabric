@@ -2,7 +2,8 @@ package com.atsuishio.superbwarfare.perk.js
 
 import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.gun.GunProp
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 
 /**
  * Proxy that exposes GunData properties and methods to JS perk scripts.

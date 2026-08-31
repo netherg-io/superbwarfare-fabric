@@ -35,8 +35,8 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BedPart
-import net.neoforged.neoforge.items.ItemStackHandler
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper
+import com.atsuishio.superbwarfare.fabric.ItemStackHandler
+import com.atsuishio.superbwarfare.fabric.RecipeWrapper
 import java.util.*
 
 open class BlueprintResearchTableBlockEntity(pos: BlockPos, state: BlockState) :

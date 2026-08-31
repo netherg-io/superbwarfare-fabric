@@ -11,23 +11,23 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
-import top.theillusivec4.curios.api.CuriosApi
-import top.theillusivec4.curios.api.SlotContext
-import top.theillusivec4.curios.api.type.capability.ICurioItem
+import com.atsuishio.superbwarfare.fabric.isAnotherEquipped
+import io.wispforest.accessories.api.Accessory
+import io.wispforest.accessories.api.slot.SlotReference
+import com.atsuishio.superbwarfare.fabric.findFirstEquipped
+import com.atsuishio.superbwarfare.fabric.isSlotVisible
 
-class ParachuteItem : Item(Properties().stacksTo(1).durability(600)), ICurioItem {
+class ParachuteItem : Item(Properties().stacksTo(1).durability(600)), Accessory {
     override fun isValidRepairItem(pStack: ItemStack, pRepairCandidate: ItemStack): Boolean {
         return pRepairCandidate.`is`(Items.PHANTOM_MEMBRANE)
     }
 
-    override fun canEquip(slotContext: SlotContext, stack: ItemStack?): Boolean {
-        return CuriosApi.getCuriosInventory(slotContext.entity)
-            .map { it.findFirstCurio(this).isEmpty }
-            .orElseGet { false }
+    override fun canEquip(stack: ItemStack, reference: SlotReference): Boolean {
+        return !isAnotherEquipped(stack, reference, this)
     }
 
-    override fun curioTick(slotContext: SlotContext, stack: ItemStack) {
-        val entity = slotContext.entity()
+    override fun tick(stack: ItemStack, reference: SlotReference) {
+        val entity = reference.entity()
         val tag = NBTTool.getTag(stack)
         if (entity !is Player) {
             if (!tag.getBoolean(TAG_OPEN) && entity.deltaMovement.y < -0.6 && entity.fallDistance > 4) {
@@ -89,16 +89,13 @@ class ParachuteItem : Item(Properties().stacksTo(1).durability(600)), ICurioItem
 
         @JvmStatic
         fun isParachuteOpen(entity: LivingEntity?): Boolean {
-            return CuriosApi.getCuriosInventory(entity).map {
-                it.findFirstCurio(ModItems.PARACHUTE.get())
-                    .map { c -> NBTTool.getTag(c.stack).getBoolean(TAG_OPEN) }.orElseGet { false }
-            }.orElseGet { false }
+            val equipped = findFirstEquipped(entity, ModItems.PARACHUTE.get()) ?: return false
+            return NBTTool.getTag(equipped.stack()).getBoolean(TAG_OPEN)
         }
 
         fun isParachuteVisible(entity: LivingEntity?): Boolean {
-            return CuriosApi.getCuriosInventory(entity).map {
-                it.findFirstCurio(ModItems.PARACHUTE.get()).map { c -> c.slotContext().visible() }.orElseGet { false }
-            }.orElseGet { false }
+            val equipped = findFirstEquipped(entity, ModItems.PARACHUTE.get()) ?: return false
+            return equipped.reference().isSlotVisible
         }
     }
 }

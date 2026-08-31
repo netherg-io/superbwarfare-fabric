@@ -17,15 +17,14 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
-import top.theillusivec4.curios.api.CuriosApi
-import top.theillusivec4.curios.api.SlotContext
-import top.theillusivec4.curios.api.type.capability.ICurioItem
+import com.atsuishio.superbwarfare.fabric.isAnotherEquipped
+import io.wispforest.accessories.api.Accessory
+import io.wispforest.accessories.api.slot.SlotReference
+import com.atsuishio.superbwarfare.fabric.isAccessoryEquipped
 
-open class TacticalTerminalItem : Item(Properties().stacksTo(1).rarity(Rarity.UNCOMMON)), ICurioItem {
-    override fun canEquip(slotContext: SlotContext, stack: ItemStack?): Boolean {
-        return CuriosApi.getCuriosInventory(slotContext.entity)
-            .map { it.findFirstCurio(this).isEmpty }
-            .orElseGet { false }
+open class TacticalTerminalItem : Item(Properties().stacksTo(1).rarity(Rarity.UNCOMMON)), Accessory {
+    override fun canEquip(stack: ItemStack, reference: SlotReference): Boolean {
+        return !isAnotherEquipped(stack, reference, this)
     }
 
     override fun appendHoverText(
@@ -69,9 +68,7 @@ open class TacticalTerminalItem : Item(Properties().stacksTo(1).rarity(Rarity.UN
     companion object {
         @JvmStatic
         fun isTerminalEquipped(entity: LivingEntity?): Boolean {
-            return CuriosApi.getCuriosInventory(entity)
-                .map { !it.findFirstCurio(ModItems.TACTICAL_TERMINAL.get()).isEmpty }
-                .orElseGet { false }
+            return isAccessoryEquipped(entity, ModItems.TACTICAL_TERMINAL.get())
         }
     }
 }

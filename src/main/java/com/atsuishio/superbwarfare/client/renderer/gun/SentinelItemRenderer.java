@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import com.atsuishio.superbwarfare.fabric.Capabilities;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.cache.object.GeoBone;
 
@@ -45,7 +45,7 @@ public class SentinelItemRenderer extends CustomGunRenderer<SentinelItem> {
         if (itemStack.getItem() instanceof GunItem && GeoItem.getId(itemStack) == this.getInstanceId(animatable)) {
             if (this.renderPerspective == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND || this.renderPerspective == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
 
-                var cap = itemStack.getCapability(Capabilities.EnergyStorage.ITEM);
+                var cap = Capabilities.EnergyStorage.ITEM.get(itemStack);
                 var flag = cap != null && cap.getEnergyStored() > 0;
 
                 if (name.equals("charge_illuminated")) {

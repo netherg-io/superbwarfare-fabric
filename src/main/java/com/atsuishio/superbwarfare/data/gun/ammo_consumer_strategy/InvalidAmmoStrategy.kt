@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.data.gun.AmmoConsumer
 import com.atsuishio.superbwarfare.data.gun.GunData
 import net.minecraft.world.entity.Entity
-import net.neoforged.neoforge.items.IItemHandler
+import com.atsuishio.superbwarfare.fabric.IItemHandler
 
 /**
  * 无效弹药策略 — 兜底策略，匹配所有未被其他策略匹配的 ammo 字符串。

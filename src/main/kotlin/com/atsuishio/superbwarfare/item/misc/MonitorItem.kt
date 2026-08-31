@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.item.misc
 
+import com.atsuishio.superbwarfare.entity.mixin.persistentData
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
 import com.atsuishio.superbwarfare.event.ClientEventHandler
 import com.atsuishio.superbwarfare.network.message.receive.ResetCameraTypeMessage
@@ -35,12 +36,12 @@ open class MonitorItem : Item(Properties().stacksTo(1)) {
     private fun resetDroneData(drone: DroneEntity?) {
         if (drone == null) return
 
-        drone.getPersistentData().putBoolean("left", false)
-        drone.getPersistentData().putBoolean("right", false)
-        drone.getPersistentData().putBoolean("forward", false)
-        drone.getPersistentData().putBoolean("backward", false)
-        drone.getPersistentData().putBoolean("up", false)
-        drone.getPersistentData().putBoolean("down", false)
+        drone.persistentData.putBoolean("left", false)
+        drone.persistentData.putBoolean("right", false)
+        drone.persistentData.putBoolean("forward", false)
+        drone.persistentData.putBoolean("backward", false)
+        drone.persistentData.putBoolean("up", false)
+        drone.persistentData.putBoolean("down", false)
     }
 
     @ParametersAreNonnullByDefault

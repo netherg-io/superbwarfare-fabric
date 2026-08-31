@@ -48,6 +48,7 @@ import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.DeferredSpawnEggItem
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
+import com.atsuishio.superbwarfare.fabric.registerAccessories
 import java.util.function.Supplier
 
 @Suppress("unused")
@@ -550,5 +551,14 @@ object ModItems {
         VEHICLES.register(bus)
         registerPerkItems()
         PERKS.register(bus)
+
+        // Accessories (замена Curios) требует явной регистрации предметов-аксессуаров
+        registerAccessories(
+            PARACHUTE.get(),
+            THERMAL_IMAGING_GOGGLES.get(),
+            TACTICAL_TERMINAL.get(),
+            DOG_TAG.get(),
+            IFF.get(),
+        )
     }
 }

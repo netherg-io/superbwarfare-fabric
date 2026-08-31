@@ -35,7 +35,8 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.Vec3
 import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingDeathEvent
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow

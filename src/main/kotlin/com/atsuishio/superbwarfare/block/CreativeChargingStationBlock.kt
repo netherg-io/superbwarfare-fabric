@@ -22,7 +22,8 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.phys.BlockHitResult
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 
 class CreativeChargingStationBlock(properties: Properties) : BaseEntityBlock(properties) {
     constructor() : this(Properties.of().sound(SoundType.METAL).strength(3.0f).requiresCorrectToolForDrops()) {

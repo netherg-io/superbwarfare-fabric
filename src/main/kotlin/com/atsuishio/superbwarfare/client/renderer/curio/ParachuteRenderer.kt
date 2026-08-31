@@ -13,24 +13,23 @@ import net.minecraft.client.model.EntityModel
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.entity.ItemRenderer
-import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
-import top.theillusivec4.curios.api.SlotContext
-import top.theillusivec4.curios.api.client.ICurioRenderer
+import io.wispforest.accessories.api.client.AccessoryRenderer
+import io.wispforest.accessories.api.slot.SlotReference
 
-class ParachuteRenderer : ICurioRenderer {
+class ParachuteRenderer : AccessoryRenderer {
     private val model: ParachuteModel = ParachuteModel(mc.entityModels.bakeLayer(ParachuteModel.LAYER_LOCATION))
 
-    override fun <T : LivingEntity, M : EntityModel<T>> render(
+    override fun <M : LivingEntity> render(
         stack: ItemStack,
-        slotContext: SlotContext,
+        reference: SlotReference,
         matrixStack: PoseStack,
-        renderLayerParent: RenderLayerParent<T, M>,
+        entityModel: EntityModel<M>,
         renderTypeBuffer: MultiBufferSource,
         light: Int,
         limbSwing: Float,
@@ -46,7 +45,7 @@ class ParachuteRenderer : ICurioRenderer {
         matrixStack.translate(0.0, 1.25, 0.0)
 
         if (stack.getOrCreateTag().getBoolean(ParachuteItem.TAG_OPEN)) {
-            val entity = slotContext.entity()
+            val entity = reference.entity()
             this.model.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTicks)
             this.model.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch)
 

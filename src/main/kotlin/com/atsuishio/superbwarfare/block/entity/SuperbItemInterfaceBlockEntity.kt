@@ -21,7 +21,8 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 import javax.annotation.ParametersAreNonnullByDefault
 
 open class SuperbItemInterfaceBlockEntity(type: BlockEntityType<*>, pPos: BlockPos, pBlockState: BlockState) :

@@ -35,8 +35,8 @@ object ContainerBlockPreview {
         val distance = 32
         val start = player.position().add(0.0, player.eyeHeight.toDouble(), 0.0)
         val end = player.position().add(look.x * distance, look.y * distance + player.eyeHeight, look.z * distance)
-        val context = ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player)
-        val result = player.level().clip(context)
+        val clipContext = ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player)
+        val result = player.level().clip(clipContext)
 
         if (result.type == HitResult.Type.MISS) return
 

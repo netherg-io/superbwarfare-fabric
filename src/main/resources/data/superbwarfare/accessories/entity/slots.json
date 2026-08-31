@@ -1,6 +1,7 @@
 {
+  "replace": false,
   "entities": [
-    "player"
+    "minecraft:player"
   ],
   "slots": [
     "head",

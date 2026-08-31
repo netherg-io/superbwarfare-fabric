@@ -6,7 +6,7 @@ import com.atsuishio.superbwarfare.data.gun.ammo_consumer_strategy.AmmoConsumeSt
 import net.minecraft.world.entity.Entity
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.items.IItemHandler
+import com.atsuishio.superbwarfare.fabric.IItemHandler
 
 /**
  * 弹药消耗策略抽象类。

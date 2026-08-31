@@ -55,12 +55,13 @@ import net.minecraft.world.level.block.CrossCollisionBlock
 import net.minecraft.world.level.block.DoorBlock
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 import org.joml.Matrix4f
 import org.lwjgl.glfw.GLFW
 import software.bernie.geckolib.animation.AnimationProcessor
 import software.bernie.geckolib.cache.`object`.GeoBone
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.isAccessoryEquipped
 import java.util.*
 import kotlin.experimental.or
 import kotlin.math.*
@@ -579,9 +580,7 @@ object ClientEventHandler {
 
     @JvmStatic
     fun hasThermalImagingGoggles(): Boolean {
-        return CuriosApi.getCuriosInventory(localPlayer).map {
-            it.findFirstCurio(ModItems.THERMAL_IMAGING_GOGGLES.get()).isPresent
-        }.orElseGet { false }
+        return isAccessoryEquipped(localPlayer, ModItems.THERMAL_IMAGING_GOGGLES.get())
     }
 
     fun handleThermalImaging(player: Player) {

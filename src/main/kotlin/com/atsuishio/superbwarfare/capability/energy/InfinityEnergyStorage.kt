@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.capability.energy
 
-import net.neoforged.neoforge.energy.IEnergyStorage
+import com.atsuishio.superbwarfare.fabric.IEnergyStorage
 
 /**
  * 无限供电能力，纯逆天

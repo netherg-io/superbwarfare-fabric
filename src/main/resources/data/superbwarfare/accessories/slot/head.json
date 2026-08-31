@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "amount": 1,
+  "operation": "set",
+  "validators": [
+    "accessories:tag",
+    "accessories:component"
+  ]
+}

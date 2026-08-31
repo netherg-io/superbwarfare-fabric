@@ -38,6 +38,7 @@ repositories {
     maven { url = uri("https://maven.shedaniel.me/") }
     maven { url = uri("https://mvn.devos.one/snapshots/") }
     maven { url = uri("https://jitpack.io") }   // Fabric-ASM, транзитивная у Porting Lib
+    maven { url = uri("https://maven.wispforest.io") }   // Accessories
     maven {
         name = "GeckoLib"
         url = uri("https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/")
@@ -78,9 +79,15 @@ dependencies {
     // поэтому весь пакет config едет без правок: ModConfigBuilder там -- typealias на его Builder.
     modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.3")
 
-    // Энергии нет ни в Fabric API, ни в Porting Lib. teamreborn:energy -- стандарт для Fabric;
-    // 4.1.0 -- последняя, чья нижняя граница (1.21) накрывает 1.21.1, дальше требуют 1.21.5+.
-    modImplementation("teamreborn:energy:4.1.0") { isTransitive = false }
+    // javax.annotation.ParametersAreNonnullByDefault: у NeoForge приходил транзитивно.
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+
+    // Скриптовый движок техники: апстрим зовёт shaded-пакет org.mozillaa из этого jar.
+    implementation(files("libs/rhino-1.8.1-SNAPSHOT.jar"))
+
+    // Curios под 1.21.1 существует только для NeoForge, готового слоя совместимости нет.
+    // Accessories -- живой fabric-аналог той же идеи (слоты аксессуаров).
+    modImplementation("io.wispforest:accessories-fabric:1.1.0-beta.53+1.21.1")
 
     // Porting Lib даёт события в форме Forge/NeoForge поверх Fabric: LivingFallEvent,
     // LivingKnockBackEvent, LivingDropsEvent, MobEffectEvent и прочие, которых в Fabric API нет.

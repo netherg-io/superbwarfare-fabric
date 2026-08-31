@@ -24,7 +24,7 @@ import net.minecraft.world.item.crafting.Recipe
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
-import net.neoforged.neoforge.items.wrapper.RecipeWrapper
+import com.atsuishio.superbwarfare.fabric.RecipeWrapper
 import kotlin.jvm.optionals.getOrNull
 
 class ResearchingRecipe(

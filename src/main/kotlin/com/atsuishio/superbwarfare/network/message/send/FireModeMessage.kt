@@ -9,7 +9,8 @@ import com.atsuishio.superbwarfare.network.PayloadContext
 import com.atsuishio.superbwarfare.network.ServerPacketPayload
 import com.atsuishio.superbwarfare.tools.SoundTool
 import kotlinx.serialization.Serializable
-import net.neoforged.neoforge.capabilities.Capabilities
+import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.fabric.getCapability
 
 @Serializable
 data class FireModeMessage(val forward: Boolean) : ServerPacketPayload() {

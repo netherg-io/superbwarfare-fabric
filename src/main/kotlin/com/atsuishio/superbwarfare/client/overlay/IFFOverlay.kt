@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import top.theillusivec4.curios.api.CuriosApi
+import com.atsuishio.superbwarfare.fabric.isAccessoryEquipped
 
 @Environment(EnvType.CLIENT)
 object IFFOverlay : CommonOverlay("iff") {
@@ -54,9 +54,7 @@ object IFFOverlay : CommonOverlay("iff") {
         val poseStack = guiGraphics.pose()
         poseStack.pushPose()
 
-        CuriosApi.getCuriosInventory(player)
-            .flatMap { c -> c.findFirstCurio(ModItems.IFF.get()) }
-            .ifPresent { _ ->
+        if (isAccessoryEquipped(player, ModItems.IFF.get())) {
                 // ── 友方实体（绿色）──
                 var friendlyEntities = ClientSyncedEntityHandler.getSyncedFriendlyEntities(level)
                 val clientEntities = SeekTool.Builder(player)

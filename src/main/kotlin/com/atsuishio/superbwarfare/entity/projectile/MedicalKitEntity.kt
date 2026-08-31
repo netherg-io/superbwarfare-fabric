@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.entity.EntityTypeTest
-import net.neoforged.neoforge.items.ItemHandlerHelper
+import com.atsuishio.superbwarfare.fabric.ItemHandlerHelper
 
 open class MedicalKitEntity(type: EntityType<MedicalKitEntity>, level: Level) : Entity(type, level) {
     open val modelInstance = ProjectileModelReloadListener.getModel(MODEL)?.createInstance()
