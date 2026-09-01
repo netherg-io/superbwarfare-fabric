@@ -79,7 +79,7 @@ dependencies {
 
     // Отдаёт net.neoforged.neoforge.common.ModConfigSpec под Fabric с тем же именем пакета,
     // поэтому весь пакет config едет без правок: ModConfigBuilder там -- typealias на его Builder.
-    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.3")
+    modImplementation("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.1.6")
 
     // javax.annotation.ParametersAreNonnullByDefault: у NeoForge приходил транзитивно.
     compileOnly("com.google.code.findbugs:jsr305:3.0.2")
