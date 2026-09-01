@@ -69,7 +69,7 @@ dependencies {
     // Jar в git не лежит (*.gitignore на бинарники). Пересобрать:
     //   git clone -b 1.21.1 https://github.com/Sh1roCu/SimpleBedrockModel-Fabric
     //   cd SimpleBedrockModel-Fabric && ./gradlew build && cp build/libs/*[!s].jar ../superbwarfare-fabric/libs/
-    modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1.jar"))
+    modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1-bf1.jar")) // см. libs/patch-simplebedrockmodel.sh
 
     modImplementation("software.bernie.geckolib:geckolib-fabric-1.21.1:4.7.5")
     modImplementation("dev.engine-room.flywheel:flywheel-fabric-${project.property("minecraft_version")}:${project.property("flywheel_version")}")
@@ -123,6 +123,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 tasks.processResources {
     from("COPYING", "COPYING.LESSER")
+    // fabric.mod.json держит ${version}; без подстановки загрузчик ругается на несемвер и
+    // не может проверять зависимости от мода.
+    inputs.property("version", project.version)
+    filesMatching("fabric.mod.json") {
+        expand("version" to project.version)
+    }
 }
 
 // Быстрая проверка компиляции без упаковки jar.

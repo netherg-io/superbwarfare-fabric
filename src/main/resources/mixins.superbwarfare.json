@@ -12,7 +12,6 @@
     "EntityAccessor",
     "EntityMixin",
     "EntityOnGroundAccessor",
-    "EntitySetPosRawMixin",
     "ExplosionMixin",
     "FishingHookMixin",
     "ItemEntityHurtMixin",
