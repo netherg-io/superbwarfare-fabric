@@ -70,6 +70,9 @@ dependencies {
     //   git clone -b 1.21.1 https://github.com/Sh1roCu/SimpleBedrockModel-Fabric
     //   cd SimpleBedrockModel-Fabric && ./gradlew build && cp build/libs/*[!s].jar ../superbwarfare-fabric/libs/
     modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1-bf1.jar")) // см. libs/patch-simplebedrockmodel.sh
+    // Только для dev-запуска: в проде MAE приезжает вложенным jar внутри SimpleBedrockModel,
+    // а loom вложенные jar не разворачивает, и клиент падает на NoClassDefFoundError.
+    modRuntimeOnly("com.maydaymemory:mae:1.1.4")
 
     modImplementation("software.bernie.geckolib:geckolib-fabric-1.21.1:4.7.5")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")

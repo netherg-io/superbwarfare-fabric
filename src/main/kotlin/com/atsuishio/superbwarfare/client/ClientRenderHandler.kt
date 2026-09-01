@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import io.wispforest.accessories.api.client.AccessoriesRendererRegistry
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import kotlin.math.min
 
 @Environment(EnvType.CLIENT)
@@ -33,7 +34,10 @@ object ClientRenderHandler {
     fun init() {
         registerTooltip()
         registerRenderers()
-        registerOverlays()
+        // Отложено: объекты оверлеев в своих clinit читают mc.font, а клиентский entrypoint
+        // зовётся из Minecraft.<init>, где font ещё не присвоен. Порядок слоёв не страдает --
+        // до первого кадра всё равно далеко.
+        ClientLifecycleEvents.CLIENT_STARTED.register { registerOverlays() }
         registerLayer()
         registerAccessoryRenderers()
     }

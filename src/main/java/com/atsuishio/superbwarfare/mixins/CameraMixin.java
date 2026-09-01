@@ -37,7 +37,8 @@ public abstract class CameraMixin {
     @Shadow
     protected abstract void setPosition(double x, double y, double z);
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FFF)V", ordinal = 0),
+    // Ваниль зовёт двухаргументный setRotation; трёхаргументный (с креном) добавляет NeoForge.
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", ordinal = 0),
             method = "setup",
             cancellable = true)
     private void onSetup(BlockGetter level, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTicks, CallbackInfo info) {
