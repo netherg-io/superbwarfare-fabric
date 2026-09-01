@@ -9,13 +9,13 @@
     "count": 1,
     "id": "superbwarfare:silver_ingot"
   },
-  "neoforge:conditions": [
+  "fabric:load_conditions": [
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:tag_empty",
-        "tag": "c:dusts/silver"
-      }
+      "condition": "fabric:tags_populated",
+      "registry": "minecraft:item",
+      "values": [
+        "c:dusts/silver"
+      ]
     }
   ]
 }

@@ -109,6 +109,7 @@ object Mod : ModInitializer {
         ModDataComponents.register(null)
         ModTabs.init()
         ModEntities.init()
+        ModBiomeModifications.init()
         ModMobEffects.REGISTRY.register(null)
         ModParticleTypes.REGISTRY.register(null)
         ModPotions.register(null)

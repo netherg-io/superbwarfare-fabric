@@ -12,13 +12,15 @@
       "tag": "minecraft:arrows"
     },
     "d": {
-      "type": "neoforge:components",
+      "fabric:type": "fabric:components",
+      "base": {
+        "item": "minecraft:potion"
+      },
       "components": {
         "minecraft:potion_contents": {
           "potion": "minecraft:healing"
         }
-      },
-      "items": "minecraft:potion"
+      }
     }
   },
   "pattern": [
