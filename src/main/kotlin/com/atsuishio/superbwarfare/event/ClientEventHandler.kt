@@ -2911,12 +2911,9 @@ object ClientEventHandler {
         return vehicle is VehicleEntity && vehicle.hidePassenger(otherPlayer)
     }
 
-    /**
-     * ponytail: RenderGuiLayerEvent.Pre аналога нет -- HudRenderCallback у Fabric не даёт
-     * отменять отдельный ванильный слой. Логика цела, но не зарегистрирована --
-     * звать из миксина на Gui.renderCrosshair.
-     */
-    private fun shouldHideCrossHair(): Boolean {
+    /** Зовётся из GuiHudMixin: HudRenderCallback не умеет отменять отдельный ванильный слой. */
+    @JvmStatic
+    fun shouldHideCrossHair(): Boolean {
         val player = localPlayer ?: return false
 
         // When combat HUD is hidden by server, suppress vanilla crosshair in ALL views
@@ -2963,10 +2960,10 @@ object ClientEventHandler {
     /**
      * 载具banHand时，禁用快捷栏渲染
      *
-     * ponytail: как и shouldHideCrossHair -- аналога RenderGuiLayerEvent.Pre нет,
-     * звать из миксина на Gui.renderItemHotbar.
+     * Зовётся из GuiHudMixin.
      */
-    private fun shouldHideHotbar(): Boolean {
+    @JvmStatic
+    fun shouldHideHotbar(): Boolean {
         val player = localPlayer ?: return false
         val vehicle = player.vehicle
         return vehicle is VehicleEntity && vehicle.banHand(player)

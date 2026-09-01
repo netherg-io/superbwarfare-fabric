@@ -33,7 +33,9 @@
     "ClientPacketListenerMixin",
     "ClientPlayerEntityMixin",
     "EntityRenderDispatcherMixin",
+    "GameRendererInvoker",
     "GameRendererMixin",
+    "GuiHudMixin",
     "HumanoidModelMixin",
     "ItemInHandLayerMixin",
     "ItemInHandRendererMixin",
@@ -52,7 +54,6 @@
     "PlayerItemInHandLayerMixin",
     "PlayerRendererMixin",
     "PostPassMixin",
-    "GameRendererInvoker",
     "SpriteContentsAccessor"
   ],
   "minVersion": "0.8",
