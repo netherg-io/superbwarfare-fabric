@@ -1,0 +1,761 @@
+src/main/java/com/atsuishio/superbwarfare/client/shader/ThermalShaderHandler.kt:67:38 Argument type mismatch: actual type is '@Nullable() PoseStack?', but 'PoseStack' was expected.
+src/main/java/com/atsuishio/superbwarfare/client/shader/ThermalShaderHandler.kt:119:41 Unresolved reference 'isStencilEnabled'.
+src/main/java/com/atsuishio/superbwarfare/client/shader/ThermalShaderHandler.kt:119:76 Unresolved reference 'isStencilEnabled'.
+src/main/java/com/atsuishio/superbwarfare/client/shader/ThermalShaderHandler.kt:120:35 Unresolved reference 'enableStencil'.
+src/main/java/com/atsuishio/superbwarfare/data/ComplexJsonResourceReloadListener.kt:35:40 Function invocation 'isCanceled()' expected.
+src/main/java/com/atsuishio/superbwarfare/data/ComplexJsonResourceReloadListener.kt:52:40 Function invocation 'isCanceled()' expected.
+src/main/java/com/atsuishio/superbwarfare/data/ComplexJsonResourceReloadListener.kt:60:40 Function invocation 'isCanceled()' expected.
+src/main/java/com/atsuishio/superbwarfare/data/IncrementalTagUpdater.kt:276:27 Argument type mismatch: actual type is 'Byte', but 'Int' was expected.
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:181:5 'onDroppedByPlayer' overrides nothing.
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:187:5 'shouldCauseReequipAnimation' overrides nothing.
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:189:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:190:96 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:236:5 'supportsEnchantment' overrides nothing.
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:238:5 'getMaxDamage' overrides nothing.
+src/main/java/com/atsuishio/superbwarfare/item/gun/GunItem.kt:496:21 Argument type mismatch: actual type is 'LivingEntity?', but 'ServerPlayer?' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ChargingStationBlock.kt:145:5 'getCloneItemStack' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/block/ChargingStationBlock.kt:152:49 Argument type mismatch: actual type is 'BlockState', but 'LevelReader!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ChargingStationBlock.kt:152:56 Argument type mismatch: actual type is 'HitResult', but 'BlockPos!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ChargingStationBlock.kt:152:64 Argument type mismatch: actual type is 'LevelReader', but 'BlockState!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ChargingStationBlock.kt:152:71 Too many arguments for 'fun getCloneItemStack(level: LevelReader!, pos: BlockPos!, state: BlockState!): ItemStack!'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ChargingStationBlock.kt:152:76 Too many arguments for 'fun getCloneItemStack(level: LevelReader!, pos: BlockPos!, state: BlockState!): ItemStack!'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:140:22 Unresolved reference 'hasShiftDown'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:162:33 Unresolved reference 'level'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:227:5 'getCloneItemStack' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:234:49 Argument type mismatch: actual type is 'BlockState', but 'LevelReader!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:234:56 Argument type mismatch: actual type is 'HitResult', but 'BlockPos!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:234:64 Argument type mismatch: actual type is 'LevelReader', but 'BlockState!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:234:71 Too many arguments for 'fun getCloneItemStack(level: LevelReader!, pos: BlockPos!, state: BlockState!): ItemStack!'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/ContainerBlock.kt:234:76 Too many arguments for 'fun getCloneItemStack(level: LevelReader!, pos: BlockPos!, state: BlockState!): ItemStack!'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/DragonTeethBlock.kt:59:5 'getAdjacentBlockPathType' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/block/SmallContainerBlock.kt:166:5 'getCloneItemStack' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/block/SmallContainerBlock.kt:173:45 Argument type mismatch: actual type is 'BlockState', but 'LevelReader!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/SmallContainerBlock.kt:173:52 Argument type mismatch: actual type is 'HitResult', but 'BlockPos!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/SmallContainerBlock.kt:173:60 Argument type mismatch: actual type is 'LevelReader', but 'BlockState!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/SmallContainerBlock.kt:173:67 Too many arguments for 'fun getCloneItemStack(level: LevelReader!, pos: BlockPos!, state: BlockState!): ItemStack!'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/SmallContainerBlock.kt:173:72 Too many arguments for 'fun getCloneItemStack(level: LevelReader!, pos: BlockPos!, state: BlockState!): ItemStack!'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/BlueprintResearchTableBlockEntity.kt:323:5 'handleUpdateTag' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/BlueprintResearchTableBlockEntity.kt:327:5 'onDataPacket' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/ChargingStationBlockEntity.kt:166:60 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<Int>>', but 'DataComponentType<out T! (of fun <T : Any!> getOrDefault)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/ChargingStationBlockEntity.kt:174:24 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<Int>>', but 'DataComponentType<Int!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/CreativeChargingStationBlockEntity.kt:39:5 'onDataPacket' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/CreativeChargingStationBlockEntity.kt:44:15 Unresolved reference 'onDataPacket'.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/FuMO25BlockEntity.kt:154:5 'handleUpdateTag' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/block/entity/FuMO25BlockEntity.kt:158:5 'onDataPacket' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/energy/ItemEnergyStorage.kt:23:31 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/energy/ItemEnergyStorage.kt:23:35 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<Int>>', but 'DataComponentType<out T! (of fun <T : Any!> get)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/energy/ItemEnergyStorage.kt:31:29 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<Int>>', but 'DataComponentType<in Int!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/energy/ItemEnergyStorage.kt:41:23 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<Int>>', but 'DataComponentType<in Int!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/living/PhosphorusFireCapability.kt:9:38 Unresolved reference 'util'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/living/PhosphorusFireCapability.kt:12:34 Unresolved reference 'INBTSerializable'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/living/PhosphorusFireCapability.kt:15:5 'serializeNBT' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/living/PhosphorusFireCapability.kt:22:5 'deserializeNBT' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/living/PhosphorusFireCapability.kt:34:27 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:14:38 Unresolved reference 'util'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:15:31 Unresolved reference 'network'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:19:24 Unresolved reference 'INBTSerializable'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:27:21 Unresolved reference 'hasData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:29:34 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:33:13 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:106:5 'equals' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:116:5 'serializeNBT' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:120:5 'deserializeNBT' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:136:30 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:143:27 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:147:13 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:154:13 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:161:13 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:168:23 Unresolved reference 'revive'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:169:38 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:171:23 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/capability/player/PlayerVariable.kt:175:5 'hashCode' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/client/TooltipTool.kt:27:42 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/ContainerItemDecorator.kt:18:38 Unresolved reference 'IItemDecorator'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/ContainerItemDecorator.kt:21:32 Unresolved reference 'IItemDecorator'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/ContainerItemDecorator.kt:23:5 'render' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/LuckyContainerItemDecorator.kt:12:38 Unresolved reference 'IItemDecorator'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/LuckyContainerItemDecorator.kt:15:37 Unresolved reference 'IItemDecorator'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/LuckyContainerItemDecorator.kt:16:5 'render' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/VehicleKeyItemDecorator.kt:15:38 Unresolved reference 'IItemDecorator'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/VehicleKeyItemDecorator.kt:18:33 Unresolved reference 'IItemDecorator'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/decorator/VehicleKeyItemDecorator.kt:19:5 'render' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:72:56 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:73:29 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:103:29 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:280:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:293:29 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:318:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoBarOverlay.kt:330:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoCountOverlay.kt:75:26 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoCountOverlay.kt:132:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoCountOverlay.kt:142:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/AmmoCountOverlay.kt:172:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/DecoyOverlayHelper.kt:24:98 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/DecoyOverlayHelper.kt:63:94 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/DroneHudOverlay.kt:41:36 Cannot access 'field serverSimulationDistance: Int': it is private in 'net/minecraft/client/multiplayer/ClientPacketListener'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/KillMessageOverlay.kt:168:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/KillMessageOverlay.kt:223:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/KillMessageOverlay.kt:248:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/KillMessageOverlay.kt:302:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleCrosshairOverlay.kt:336:37 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt:356:70 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt:365:70 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt:398:62 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt:403:66 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt:701:82 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleHudOverlay.kt:713:29 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleMainWeaponHudOverlay.kt:389:76 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleMainWeaponHudOverlay.kt:515:72 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/VehicleMainWeaponHudOverlay.kt:560:64 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/overlay/components/StringComponent.kt:24:21 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/client/particle/BulletDecalParticle.kt:76:54 Unresolved reference 'getTexture'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/block/BlueprintResearchTableBlockEntityRenderer.kt:70:5 'getRenderBoundingBox' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/block/VehicleAssemblingTableBlockEntityRenderer.kt:64:5 'getRenderBoundingBox' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/curio/ParachuteRenderer.kt:80:22 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/curio/ParachuteRenderer.kt:88:22 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/curio/ParachuteRenderer.kt:89:22 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/curio/ParachuteRenderer.kt:90:22 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/curio/ParachuteRenderer.kt:100:21 Argument type mismatch: actual type is '@Nullable() PoseStack?', but 'PoseStack' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/curio/ParachuteRenderer.kt:107:22 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/ContainerBlockPreview.kt:65:18 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/ContainerBlockPreview.kt:68:18 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/ContainerBlockPreview.kt:91:28 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/ContainerBlockPreview.kt:135:18 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/TowingChainRenderer.kt:73:18 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/TowingChainRenderer.kt:79:18 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/TowingChainRenderer.kt:81:29 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/renderer/special/TowingChainRenderer.kt:114:18 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type '@Nullable() PoseStack?'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/ArtilleryIndicatorScreen.kt:151:20 Class 'ArtilleryIndicatorScreen.ModeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/ArtilleryIndicatorScreen.kt:177:20 Class 'ArtilleryIndicatorScreen.DoneButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/BlueprintResearchTableScreen.kt:242:13 Class 'BlueprintResearchTableScreen.CraftButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/BlueprintResearchTableScreen.kt:262:19 Class 'BlueprintResearchTableScreen.PageButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/ChargingStationScreen.kt:85:20 Class 'ChargingStationScreen.ShowRangeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/DogTagEditorScreen.kt:196:20 Class 'DogTagEditorScreen.ColorButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/DogTagEditorScreen.kt:226:25 Class 'DogTagEditorScreen.FinishButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/DogTagEditorScreen.kt:263:47 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<List<Short>>>>', but 'DataComponentType<in MutableList<MutableList<Short>>!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/FiringParametersScreen.kt:156:20 Class 'FiringParametersScreen.ModeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/FiringParametersScreen.kt:182:20 Class 'FiringParametersScreen.DoneButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/FuMO25Screen.kt:289:20 Class 'FuMO25Screen.LockButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/FuMO25Screen.kt:332:14 Class 'FuMO25Screen.ModeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/LoiterConfigScreen.kt:215:19 Class 'LoiterConfigScreen.ToggleButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/LoiterConfigScreen.kt:234:19 Class 'LoiterConfigScreen.ConfirmButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/LoiterConfigScreen.kt:252:19 Class 'LoiterConfigScreen.TerrainCheckbox' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/MissilePosInputScreen.kt:106:20 Class 'MissilePosInputScreen.DoneButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/ReforgingTableScreen.kt:97:14 Class 'ReforgingTableScreen.ReforgeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/ReforgingTableScreen.kt:121:20 Class 'ReforgingTableScreen.UpgradeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/ReforgingTableScreen.kt:169:20 Class 'ReforgingTableScreen.DowngradeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/SnapshotWarningScreen.kt:16:26 Unresolved reference 'loading'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/SnapshotWarningScreen.kt:17:19 Unresolved reference 'maven'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/SnapshotWarningScreen.kt:105:27 Unresolved reference 'DefaultArtifactVersion'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/SnapshotWarningScreen.kt:106:27 Unresolved reference 'LoadingModList'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/SnapshotWarningScreen.kt:106:48 Unresolved reference 'getModFileById'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/SnapshotWarningScreen.kt:107:20 Unresolved reference 'DefaultArtifactVersion'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/TacticalMapScreen.kt:2554:60 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/VehicleAssemblingScreen.kt:144:14 Cannot access 'field renderables: (Mutable)List<Renderable!>!': it is private in 'net/minecraft/client/gui/screens/Screen'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/VehicleAssemblingScreen.kt:361:17 Unresolved reference 'hasJEI'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/VehicleAssemblingScreen.kt:366:21 Unresolved reference 'SbwJEIPlugin'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/VehicleSkinScreen.kt:140:46 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/VehicleSkinScreen.kt:153:19 Class 'VehicleSkinScreen.SkinSlotButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/VehicleSkinScreen.kt:258:19 Class 'VehicleSkinScreen.PageButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/WeaponEditScreen.kt:250:50 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/WeaponEditScreen.kt:258:20 Class 'WeaponEditScreen.EditButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/component/AssembleButton.kt:10:1 Class 'AssembleButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/component/CategoryButton.kt:13:1 Class 'CategoryButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/component/PageButton.kt:9:1 Class 'PageButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/component/RecipeButton.kt:15:1 Class 'RecipeButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/screens/component/ScaleButton.kt:8:1 Class 'ScaleButton' is not abstract and does not implement abstract member:
+src/main/kotlin/com/atsuishio/superbwarfare/client/tooltip/ClientGunImageTooltip.kt:319:44 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:11:26 Unresolved reference 'ModLoadingContext'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:12:42 Unresolved reference 'IConfigScreenFactory'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:35:9 Unresolved reference 'ModLoadingContext'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:35:33 Unresolved reference 'registerExtensionPoint'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:36:13 Unresolved reference 'IConfigScreenFactory'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:36:41 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:36:41 Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:37:13 Unresolved reference 'IConfigScreenFactory'.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:37:36 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/compat/clothconfig/ClothConfigHelper.kt:37:39 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/mixin/DamageAccess.kt:6:38 Unresolved reference 'damagesource'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/mixin/DamageAccess.kt:23:54 Unresolved reference 'DamageContainer'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Blu43Entity.kt:159:49 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/BounceProjectile.kt:40:42 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/C4Entity.kt:609:33 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ClaymoreEntity.kt:211:49 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:53:31 Unresolved reference 'entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:58:84 Unresolved reference 'IEntityWithComplexSpawn'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:377:37 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:426:60 Function invocation 'isCanceled()' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:498:79 Function invocation 'isCanceled()' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:618:5 'writeSpawnData' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:628:5 'readSpawnData' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:817:5 'onAddedToLevel' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:818:15 Unresolved reference 'onAddedToLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:826:5 'onRemovedFromLevel' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/FastThrowableProjectile.kt:827:15 Unresolved reference 'onRemovedFromLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/GrapeshotEntity.kt:63:33 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/HandGrenadeEntity.kt:49:27 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:274:32 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:274:36 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<Pair<Int, Double>>>>', but 'DataComponentType<out T! (of fun <T : Any!> get)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:275:42 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:275:42 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:277:25 None of the following candidates is applicable:
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:278:19 Unresolved reference 'offer'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:280:26 Unresolved reference 'size'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:281:23 Unresolved reference 'poll'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:284:19 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/IAdvancedHitDetection.kt:285:17 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<Pair<Int, Double>>>>', but 'DataComponentType<in T! (of fun <T : Any!> set)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/M18SmokeGrenadeEntity.kt:120:27 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/MedicalKitEntity.kt:69:49 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/MedicalKitEntity.kt:79:13 Unresolved reference 'isInFluidType'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/MissileProjectile.kt:23:31 Unresolved reference 'entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/MissileProjectile.kt:25:81 Unresolved reference 'IEntityWithComplexSpawn'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:69:31 Unresolved reference 'event'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:373:25 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:373:25 Condition type mismatch: inferred type is 'Predicate<ERROR CLASS: Cannot infer argument for type parameter T>' but 'Boolean' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:373:26 Unresolved reference 'EventHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:456:37 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:529:79 Function invocation 'isCanceled()' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:620:44 Too many arguments for 'fun getSoundType(): SoundType!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:620:57 Too many arguments for 'fun getSoundType(): SoundType!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:620:67 Too many arguments for 'fun getSoundType(): SoundType!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:652:60 Function invocation 'isCanceled()' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:812:5 'onAddedToLevel' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:813:15 Unresolved reference 'onAddedToLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:895:5 'onRemovedFromLevel' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/ProjectileEntity.kt:896:15 Unresolved reference 'onRemovedFromLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Ptkm1rEntity.kt:168:49 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/SuperStarProjectileEntity.kt:122:33 Cannot access 'fun getSoundType(state: BlockState!): SoundType!': it is protected in 'net/minecraft/world/level/block/state/BlockBehaviour'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/SuperStarProjectileEntity.kt:178:44 Too many arguments for 'fun getSoundType(): SoundType!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/SuperStarProjectileEntity.kt:178:57 Too many arguments for 'fun getSoundType(): SoundType!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/SuperStarProjectileEntity.kt:178:99 Too many arguments for 'fun getSoundType(): SoundType!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/projectile/Tm62Entity.kt:170:42 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/MortarEntity.kt:255:17 Assignment type mismatch: actual type is 'Vec2', but 'Float' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/MortarEntity.kt:255:49 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/TurretWreckEntity.kt:204:44 Unresolved reference 'getFriction'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/TurretWreckEntity.kt:519:5 'onRemovedFromLevel' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/TurretWreckEntity.kt:520:15 Unresolved reference 'onRemovedFromLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/ArtilleryEntity.kt:70:5 'onAddedToLevel' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/ArtilleryEntity.kt:71:15 Unresolved reference 'onAddedToLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:113:38 Unresolved reference 'NeoForgeMod'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:114:38 Unresolved reference 'util'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:116:31 Unresolved reference 'entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:117:31 Unresolved reference 'fluids'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:129:5 Unresolved reference 'IEntityWithComplexSpawn'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:733:15 Too many arguments for 'fun openMenu(menu: MenuProvider?): OptionalInt!'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:733:17 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:733:28 Unresolved reference 'writeInt'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:825:14 'val' cannot be reassigned.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:845:14 'val' cannot be reassigned.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:849:20 Cannot access 'field boardingCooldown: Int': it is protected in 'net/minecraft/world/entity/Entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:1544:5 'writeSpawnData' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:1563:5 'readSpawnData' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:1966:31 Unresolved reference 'FakePlayer'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:1973:31 Unresolved reference 'FakePlayer'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:1982:31 Unresolved reference 'FakePlayer'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2204:5 'isInFluidType' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2204:55 Unresolved reference 'FluidType'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2205:62 Unresolved reference 'isInFluidType'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2210:26 Unresolved reference 'isInFluidType'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2248:32 Unresolved reference 'FluidType'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2249:22 Unresolved reference 'NeoForgeMod'.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/base/VehicleEntity.kt:2526:152 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:55:17 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:66:20 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:88:17 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:173:26 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:220:29 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:222:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:251:17 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:261:20 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:282:17 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:367:26 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:428:18 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:432:14 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:456:20 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:470:37 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:570:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:624:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:848:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:874:46 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1159:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1184:34 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1314:20 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1411:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1413:23 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1413:69 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1457:13 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1462:17 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleEngineUtils.kt:1596:29 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleMotionUtils.kt:639:25 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleMotionUtils.kt:893:28 Function invocation 'isInFluidType(...)' expected.
+src/main/kotlin/com/atsuishio/superbwarfare/entity/vehicle/utils/VehicleVecUtils.kt:34:16 Unresolved reference 'getFluidTypeHeight'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:40:26 Unresolved reference 'ModList'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:41:38 Unresolved reference 'settings'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:65:43 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:69:48 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:71:57 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:103:43 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:111:48 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:128:43 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:144:47 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:148:52 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:151:61 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:157:52 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:262:62 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:287:48 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:291:59 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:297:64 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:302:46 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:302:81 Unresolved reference 'keyModifier'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:302:102 Unresolved reference 'KeyConflictContext'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:305:46 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:315:49 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:315:110 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:319:64 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:323:48 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:325:56 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:334:50 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:340:67 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:344:68 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:355:67 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:359:68 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:359:113 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:365:57 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:372:49 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:407:46 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:410:60 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:413:58 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:423:48 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:427:53 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:433:55 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:439:44 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:448:44 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:452:49 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:454:58 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:459:50 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:670:13 Unresolved reference 'ModList'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClickEventHandler.kt:670:27 Unresolved reference 'isLoaded'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:611:25 Cannot access 'fun loadEffect(resourceLocation: ResourceLocation!): Unit': it is private in 'net/minecraft/client/renderer/GameRenderer'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:647:25 Cannot access 'fun loadEffect(resourceLocation: ResourceLocation!): Unit': it is private in 'net/minecraft/client/renderer/GameRenderer'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:806:61 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:856:62 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:857:62 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:884:62 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:3126:63 Unresolved reference 'ArtifactVersion'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ClientEventHandler.kt:3127:63 Unresolved reference 'ArtifactVersion'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/EntityUseGunEventHandler.kt:29:16 Cannot access 'field goalSelector: GoalSelector!': it is protected in 'net/minecraft/world/entity/Mob'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/GunEventHandler.kt:276:42 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/GunEventHandler.kt:281:25 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/GunEventHandler.kt:590:35 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/GunEventHandler.kt:591:25 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/LivingEventHandler.kt:656:26 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/LivingEventHandler.kt:658:33 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/event/LivingEventHandler.kt:658:55 'operator' modifier is required on 'FirNamedFunctionSymbol kotlin/compareTo' in 'compareTo'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/LivingEventHandler.kt:670:16 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ModVersionEventHandler.kt:3:19 Unresolved reference 'maven'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ModVersionEventHandler.kt:13:26 Unresolved reference 'ArtifactVersion'.
+src/main/kotlin/com/atsuishio/superbwarfare/event/ModVersionEventHandler.kt:16:25 Unresolved reference 'ArtifactVersion'.
+src/main/kotlin/com/atsuishio/superbwarfare/fabric/MultipartEntities.kt:5:52 Unresolved reference 'EnderDragonPart'.
+src/main/kotlin/com/atsuishio/superbwarfare/fabric/MultipartEntities.kt:19:53 Unresolved reference 'EnderDragonPart'.
+src/main/kotlin/com/atsuishio/superbwarfare/fabric/MultipartEntities.kt:22:12 Unresolved reference 'EnderDragonPart'.
+src/main/kotlin/com/atsuishio/superbwarfare/fabric/MultipartEntities.kt:22:38 Unresolved reference 'parentMob'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:6:31 Unresolved reference 'attachment'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:8:31 Unresolved reference 'registries'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:12:44 Unresolved reference 'AttachmentType'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:13:33 Unresolved reference 'NeoForgeRegistries'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:16:35 Unresolved reference 'AttachmentType'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:19:13 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:19:24 Unresolved reference 'AttachmentType'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:23:35 Unresolved reference 'AttachmentType'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:26:13 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModAttachments.kt:26:24 Unresolved reference 'AttachmentType'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModCommandArguments.kt:22:31 Unresolved reference 'registerByClass'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModDataComponents.kt:13:22 Unresolved reference 'bus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModDataComponents.kt:22:26 Unresolved reference 'createDataComponents'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModDataComponents.kt:65:13 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModDataComponents.kt:65:22 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModDataComponents.kt:69:28 Unresolved reference 'IEventBus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:30:18 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:30:18 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:33:14 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:37:25 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:37:25 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:40:14 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:44:18 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:44:18 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:47:14 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:51:22 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:51:22 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:53:14 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:58:23 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:58:23 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:60:34 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:64:28 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:64:28 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:66:39 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:70:26 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:70:26 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:72:37 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:77:23 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:77:23 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:79:34 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:83:20 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:83:20 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:85:32 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:89:18 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:89:18 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:91:29 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:95:17 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:95:17 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:95:54 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:98:19 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:98:19 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:100:30 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:104:14 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:104:14 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:104:46 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:107:23 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:107:23 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:109:34 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:113:15 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:113:15 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:113:49 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:336:17 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:336:17 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:336:55 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:375:10 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:382:10 Unresolved reference 'setTrackingRange'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEntities.kt:390:10 Unresolved reference 'setShouldReceiveVelocityUpdates'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:11:26 Unresolved reference 'common'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:12:38 Unresolved reference 'IArmPoseTransformer'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:17:34 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:17:54 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:28:31 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:28:51 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:39:32 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:39:52 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:52:44 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:52:65 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:55:13 Unresolved reference 'IArmPoseTransformer'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:55:35 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:55:42 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:55:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:57:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:57:72 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:58:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:59:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:59:72 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:60:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:69:41 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:69:62 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:72:13 Unresolved reference 'IArmPoseTransformer'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:72:35 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:72:42 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:72:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:74:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:74:74 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:75:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:75:49 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:76:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:77:55 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:81:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:82:64 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:92:36 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:92:57 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:95:13 Unresolved reference 'IArmPoseTransformer'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:95:35 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:95:42 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:95:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:97:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:97:72 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:98:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:98:49 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:99:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:100:55 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:104:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:105:64 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:115:52 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:115:73 Unresolved reference 'EnumProxy'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:118:13 Unresolved reference 'IArmPoseTransformer'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:118:35 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:118:42 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:118:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:120:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:120:73 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:121:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:122:27 Unresolved reference 'rightArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:123:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:123:72 Unresolved reference 'head'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:124:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModEnumExtensions.kt:125:27 Unresolved reference 'leftArm'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModGameRules.kt:7:19 Cannot access 'static fun <T : GameRules.Value<T!>!> register(name: String!, category: GameRules.Category!, type: GameRules.Type<T!>!): GameRules.Key<T!>!': it is private in 'net/minecraft/world/level/GameRules'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModGameRules.kt:10:36 Cannot access 'static fun create(defaultValue: Boolean): GameRules.Type<GameRules.BooleanValue!>!': it is package-private in 'net/minecraft/world/level/GameRules.BooleanValue'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:47:22 Unresolved reference 'bus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:48:38 Unresolved reference 'DeferredSpawnEggItem'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:203:38 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:204:9 Unresolved reference 'DeferredSpawnEggItem'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:211:42 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:212:9 Unresolved reference 'DeferredSpawnEggItem'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:243:191 Argument type mismatch: actual type is 'Float', but 'Int' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:244:199 Argument type mismatch: actual type is 'Float', but 'Int' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:411:29 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:442:79 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:448:107 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:522:50 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModItems.kt:546:23 Unresolved reference 'IEventBus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:8:38 Unresolved reference 'extensions'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:9:31 Unresolved reference 'network'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:19:32 Unresolved reference 'IContainerFactory'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:21:44 Unresolved reference 'IMenuTypeExtension'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:30:9 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:30:9 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:30:44 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:30:54 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:30:59 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:34:9 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:34:9 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:34:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:34:55 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:34:60 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:37:39 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:40:40 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:43:41 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:46:40 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:49:39 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:53:9 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:53:9 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:53:50 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:53:60 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:53:65 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:56:24 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:56:24 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:56:51 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:56:61 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:56:66 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:60:9 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:60:9 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:60:47 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:60:57 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:60:62 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:64:9 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:64:9 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:64:53 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:64:63 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModMenuTypes.kt:64:68 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModParticleTypes.kt:93:51 Cannot access 'constructor(overrideLimiter: Boolean): SimpleParticleType': it is protected in 'net/minecraft/core/particles/SimpleParticleType'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModPotions.kt:7:22 Unresolved reference 'bus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModPotions.kt:30:23 Unresolved reference 'IEventBus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModRecipes.kt:15:22 Unresolved reference 'bus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModRecipes.kt:71:23 Unresolved reference 'IEventBus'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:9:30 Argument type mismatch: actual type is 'MatchGroup?', but 'MenuType<out MiniVehicleContainerMenu!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:9:74 No value passed for parameter 'name'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:10:30 Argument type mismatch: actual type is 'MatchGroup?', but 'MenuType<out SmallVehicleContainerMenu!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:10:75 No value passed for parameter 'name'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:11:30 Argument type mismatch: actual type is 'MatchGroup?', but 'MenuType<out MediumVehicleContainerMenu!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:11:76 No value passed for parameter 'name'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:12:30 Argument type mismatch: actual type is 'MatchGroup?', but 'MenuType<out LargeVehicleContainerMenu!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:12:75 No value passed for parameter 'name'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:13:30 Argument type mismatch: actual type is 'MatchGroup?', but 'MenuType<out HugeVehicleContainerMenu!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModScreens.kt:13:74 No value passed for parameter 'name'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModSerializers.kt:13:31 Unresolved reference 'registries'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModSerializers.kt:18:33 Unresolved reference 'NeoForgeRegistries'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModTags.kt:18:25 Unresolved reference 'create'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModTags.kt:23:26 Cannot access 'static fun create(name: String!): TagKey<Block!>!': it is private in 'net/minecraft/tags/BlockTags'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModTags.kt:28:25 Unresolved reference 'create'.
+src/main/kotlin/com/atsuishio/superbwarfare/init/ModTags.kt:33:26 Cannot access 'static fun create(name: String!): TagKey<Block!>!': it is private in 'net/minecraft/tags/BlockTags'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/ChargingStationMenu.kt:65:39 Unresolved reference 'getBurnTime'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/ChargingStationMenu.kt:65:90 Unresolved reference 'getFoodProperties'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/HugeVehicleContainerMenu.kt:5:38 Unresolved reference 'extensions'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/HugeVehicleContainerMenu.kt:22:13 Unresolved reference 'IMenuTypeExtension'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/HugeVehicleContainerMenu.kt:22:41 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/HugeVehicleContainerMenu.kt:22:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/HugeVehicleContainerMenu.kt:22:56 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/HugeVehicleContainerMenu.kt:22:107 Unresolved reference 'readInt'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/LargeVehicleContainerMenu.kt:5:38 Unresolved reference 'extensions'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/LargeVehicleContainerMenu.kt:22:13 Unresolved reference 'IMenuTypeExtension'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/LargeVehicleContainerMenu.kt:22:41 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/LargeVehicleContainerMenu.kt:22:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/LargeVehicleContainerMenu.kt:22:56 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/LargeVehicleContainerMenu.kt:22:108 Unresolved reference 'readInt'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MediumVehicleContainerMenu.kt:5:38 Unresolved reference 'extensions'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MediumVehicleContainerMenu.kt:22:13 Unresolved reference 'IMenuTypeExtension'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MediumVehicleContainerMenu.kt:22:41 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MediumVehicleContainerMenu.kt:22:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MediumVehicleContainerMenu.kt:22:56 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MediumVehicleContainerMenu.kt:22:109 Unresolved reference 'readInt'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MiniVehicleContainerMenu.kt:5:38 Unresolved reference 'extensions'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MiniVehicleContainerMenu.kt:22:13 Unresolved reference 'IMenuTypeExtension'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MiniVehicleContainerMenu.kt:22:41 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MiniVehicleContainerMenu.kt:22:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MiniVehicleContainerMenu.kt:22:56 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/MiniVehicleContainerMenu.kt:22:107 Unresolved reference 'readInt'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/SmallVehicleContainerMenu.kt:5:38 Unresolved reference 'extensions'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/SmallVehicleContainerMenu.kt:22:13 Unresolved reference 'IMenuTypeExtension'.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/SmallVehicleContainerMenu.kt:22:41 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/SmallVehicleContainerMenu.kt:22:45 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/SmallVehicleContainerMenu.kt:22:56 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/inventory/menu/SmallVehicleContainerMenu.kt:22:108 Unresolved reference 'readInt'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/LungeMine.kt:126:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/LungeMine.kt:127:65 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoBoxItem.kt:30:24 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<AmmoBoxInfo>>', but 'DataComponentType<out T! (of fun <T : Any!> get)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoBoxItem.kt:43:30 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<AmmoBoxInfo>>', but 'DataComponentType<in AmmoBoxInfo!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoBoxItem.kt:88:26 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoBoxItem.kt:107:20 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoBoxItem.kt:119:5 'onEntitySwing' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoSupplierItem.kt:53:37 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/ammo/AmmoSupplierItem.kt:65:20 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/GeHelmetM35Item.kt:47:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/GeHelmetM35Item.kt:48:60 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/RuChest6b43Item.kt:50:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/RuChest6b43Item.kt:51:60 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/RuHelmet6b47Item.kt:50:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/RuHelmet6b47Item.kt:51:60 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/UsChestIotvItem.kt:50:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/UsChestIotvItem.kt:51:60 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/UsHelmetPasgtItem.kt:47:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/armor/UsHelmetPasgtItem.kt:48:60 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/ContainerBlockItem.kt:37:5 'canBeHurtBy' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/ContainerBlockItem.kt:40:15 Unresolved reference 'canBeHurtBy'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/ContainerBlockItem.kt:163:36 Cannot access 'val encodeId: String?': it is protected in 'net/minecraft/world/entity/Entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/LuckyContainerBlockItem.kt:33:5 'canBeHurtBy' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/LuckyContainerBlockItem.kt:33:78 Unresolved reference 'canBeHurtBy'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/SmallContainerBlockItem.kt:26:5 'canBeHurtBy' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/container/SmallContainerBlockItem.kt:26:78 Unresolved reference 'canBeHurtBy'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:68:30 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:68:34 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<List<Short>>>>', but 'DataComponentType<out T! (of fun <T : Any!> get)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:68:76 Unresolved reference 'not' for operator '!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:68:80 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:70:28 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:71:29 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:71:29 Not enough information to infer type argument for 'V'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:71:48 Only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Nothing?'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:72:33 Overload resolution ambiguity between candidates:
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:73:36 Argument type mismatch: actual type is 'V? (of fun <K, V> Map<out K, V>.get)', but 'Short' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/DogTagItem.kt:73:36 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/ParachuteItem.kt:81:46 Argument type mismatch: actual type is 'LivingEntity!', but 'ServerPlayer?' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/curio/TacticalTerminalItem.kt:45:74 Cannot access 'field key: InputConstants.Key!': it is private in 'net/minecraft/client/KeyMapping'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/material/VehicleResetKitItem.kt:12:5 'hasCraftingRemainingItem' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/material/VehicleResetKitItem.kt:16:5 'getCraftingRemainingItem' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/DPSGeneratorDeployerItem.kt:125:76 Unresolved reference 'position'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/FiringParametersItem.kt:28:31 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<FiringParametersItem.Parameters>>', but 'DataComponentType<out FiringParametersItem.Parameters!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/FiringParametersItem.kt:30:13 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<FiringParametersItem.Parameters>>', but 'DataComponentType<in FiringParametersItem.Parameters!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/MonitorItem.kt:82:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/MonitorItem.kt:83:65 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/MonitorItem.kt:135:5 'shouldCauseReequipAnimation' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TargetDeployerItem.kt:108:78 Unresolved reference 'position'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:27:28 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:27:32 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<Pair<Int, Double>>>>', but 'DataComponentType<out T! (of fun <T : Any!> get)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:28:38 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:28:38 Not enough information to infer type argument for 'T'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:31:22 For-loop range must have an 'iterator()' method.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:61:19 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:61:23 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<Pair<Int, Double>>>>', but 'DataComponentType<in T! (of fun <T : Any!> set)>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/TranscriptItem.kt:61:59 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/VehicleKeyItem.kt:29:29 Unresolved reference 'level'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/misc/VehicleKeyItem.kt:33:71 Argument type mismatch: actual type is 'Any', but 'Level' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/projectile/C4BombItem.kt:111:5 'getBurnTime' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/projectile/RpgRocketStandardItem.kt:25:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/projectile/RpgRocketStandardItem.kt:26:65 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/projectile/RpgRocketTBGItem.kt:25:5 'getDefaultAttributeModifiers' overrides nothing. Potential signatures for overriding:
+src/main/kotlin/com/atsuishio/superbwarfare/item/projectile/RpgRocketTBGItem.kt:26:65 Too many arguments for 'fun getDefaultAttributeModifiers(): ItemAttributeModifiers!'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:43:10 Unresolved reference 'setNoRepair'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:45:5 'isDamageable' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:54:5 'getSweepHitBox' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:55:22 Unresolved reference 'getSweepHitBox'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:58:5 'canBeHurtBy' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:67:5 'onEntitySwing' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:72:22 Unresolved reference 'onEntitySwing'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:80:5 'canDisableShield' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:176:24 'val' cannot be reassigned.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/BeastItem.kt:180:24 Cannot access 'field levelCallback: EntityInLevelCallback!': it is private in 'net/minecraft/world/entity/Entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:30:38 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:31:38 Unresolved reference 'ItemAbility'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:63:5 'canPerformAction' overrides nothing.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:65:22 Unresolved reference 'ItemAbility'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:83:60 Unresolved reference 'getToolModifiedState'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:83:90 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:94:46 Unresolved reference 'getToolModifiedState'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:94:76 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:97:35 Assignment type mismatch: actual type is 'Any', but 'BlockState?' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:99:46 Unresolved reference 'getToolModifiedState'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:99:76 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:128:33 Unresolved reference 'getToolModifiedState'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:128:63 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:131:20 Return type mismatch: expected 'BlockState?', actual 'Any'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:133:29 Unresolved reference 'getToolModifiedState'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:133:59 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:137:20 Return type mismatch: expected 'BlockState?', actual 'Any'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:139:29 Unresolved reference 'getToolModifiedState'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:139:59 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:143:20 Return type mismatch: expected 'BlockState?', actual 'Any'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:169:36 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:169:36 Not enough information to infer type argument for 'E'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:170:20 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:171:20 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:172:20 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/item/weapon/MilitaryShovelItem.kt:173:17 Unresolved reference 'ItemAbilities'.
+src/main/kotlin/com/atsuishio/superbwarfare/network/message/receive/ClientPhosphorusFireMessage.kt:21:16 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/network/message/receive/PlayerVariablesSyncMessage.kt:19:32 Unresolved reference 'getData'.
+src/main/kotlin/com/atsuishio/superbwarfare/network/message/receive/PlayerVariablesSyncMessage.kt:32:16 Unresolved reference 'setData'.
+src/main/kotlin/com/atsuishio/superbwarfare/network/message/send/DogTagFinishEditMessage.kt:25:19 Argument type mismatch: actual type is 'DeferredHolder<DataComponentType<*>, DataComponentType<List<List<Short>>>>', but 'DataComponentType<in List<List<Short>>!>!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/network/message/send/MeleeAttackMessage.kt:25:38 Unresolved reference 'CommonHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/network/message/send/MeleeAttackMessage.kt:55:18 Unresolved reference 'CommonHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/perk/Perk.kt:31:37 Unresolved reference 'getEntries'.
+src/main/kotlin/com/atsuishio/superbwarfare/perk/Perk.kt:32:27 Unresolved reference 'get'.
+src/main/kotlin/com/atsuishio/superbwarfare/recipe/ResearchingRecipe.kt:174:35 Unresolved reference 'create'.
+src/main/kotlin/com/atsuishio/superbwarfare/recipe/vehicle/VehicleAssemblingRecipe.kt:99:36 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/BvrSyncExclusion.kt:97:29 Cannot access 'val encodeId: String?': it is protected in 'net/minecraft/world/entity/Entity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/CustomExplosion.kt:40:31 Unresolved reference 'event'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/CustomExplosion.kt:328:9 Unresolved reference 'EventHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/CustomExplosion.kt:626:13 Unresolved reference 'EventHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:26:38 Unresolved reference 'CommonHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:27:38 Unresolved reference 'damagesource'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:62:32 Unresolved reference 'DamageContainer'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:64:21 Unresolved reference 'CommonHooks'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:72:47 Unresolved reference 'newDamage'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:85:38 Unresolved reference 'newDamage'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:90:46 Cannot access 'field lastHurt: Float': it is protected in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:95:91 Cannot access 'field lastHurt: Float': it is protected in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:96:32 Cannot access 'field lastHurt: Float': it is protected in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:99:32 Cannot access 'field lastHurt: Float': it is protected in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:100:68 Unresolved reference 'postAttackInvulnerabilityTicks'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:106:47 Unresolved reference 'newDamage'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:118:36 Cannot access 'field lastHurtByPlayerTime: Int': it is protected in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:121:36 Cannot access 'field lastHurtByPlayerTime: Int': it is protected in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:166:28 'val' cannot be reassigned.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/DamageHandler.kt:167:28 Cannot access 'field lastDamageStamp: Long': it is private in 'net/minecraft/world/entity/LivingEntity'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/EntityFindUtil.kt:22:26 Cannot access 'val entities: LevelEntityGetter<Entity!>!': it is protected in 'net/minecraft/server/level/ServerLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/EntityFindUtil.kt:25:26 Cannot access 'val entities: LevelEntityGetter<Entity!>!': it is protected in 'net/minecraft/client/multiplayer/ClientLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/EntityFindUtil.kt:58:38 Cannot access 'val entities: LevelEntityGetter<Entity!>!': it is protected in 'net/minecraft/client/multiplayer/ClientLevel'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/InventoryTool.kt:338:52 Unresolved reference 'getMaxStackSize'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/InventoryTool.kt:363:39 Unresolved reference 'getMaxStackSize'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/MinecraftUtil.kt:32:31 Unresolved reference 'network'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/MinecraftUtil.kt:114:5 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/MinecraftUtil.kt:118:5 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/MinecraftUtil.kt:122:5 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/MinecraftUtil.kt:126:5 Unresolved reference 'PacketDistributor'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/RadarScanner.kt:184:25 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/RadarScanner.kt:184:25 Condition type mismatch: inferred type is 'Predicate<ERROR CLASS: Cannot infer argument for type parameter T>' but 'Boolean' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/RadarScanner.kt:184:51 Unresolved reference 'test'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:22:38 Unresolved reference 'util'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:113:26 Unresolved reference 'TriPredicate'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:113:66 Unresolved reference 'TriPredicate'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:113:81 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:113:89 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:113:94 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:115:28 Unresolved reference 'level'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:116:26 Unresolved reference 'onPos'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:121:58 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:123:80 Unresolved reference 'id'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:133:17 Argument type mismatch: actual type is 'Int', but 'Double' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:134:17 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:134:17 Condition type mismatch: inferred type is 'Predicate<ERROR CLASS: Cannot infer argument for type parameter T>' but 'Boolean' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SeekTool.kt:457:43 Unresolved reference 'test'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:32:29 Unresolved reference 'getPixelRGBA'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:35:36 'infix' modifier is required on 'FirNamedFunctionSymbol java/math/BigInteger.and'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:35:40 Argument type mismatch: actual type is 'Int', but 'BigInteger!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:36:36 'infix' modifier is required on 'FirNamedFunctionSymbol java/math/BigInteger.and'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:36:40 Argument type mismatch: actual type is 'Int', but 'BigInteger!' was expected.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:37:26 Cannot infer type for this parameter. Specify it explicitly.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:40:16 Return type mismatch: expected 'Int', actual 'BigInteger'.
+src/main/kotlin/com/atsuishio/superbwarfare/tools/SpritePixelHelper.kt:40:21 Unresolved reference 'shl'.
