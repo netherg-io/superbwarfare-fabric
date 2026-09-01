@@ -28,8 +28,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.phys.AABB
@@ -163,7 +163,7 @@ open class ChargingStationBlockEntity(pos: BlockPos, state: BlockState) :
         if (level != null) {
             (this.energyStorage as EnergyStorage).deserializeNBT(
                 level.registryAccess(),
-                IntTag.valueOf(componentInput.getOrDefault(ModDataComponents.ENERGY, 0))
+                IntTag.valueOf(componentInput.getOrDefault(ModDataComponents.ENERGY.get(), 0))
             )
         }
     }
@@ -171,7 +171,7 @@ open class ChargingStationBlockEntity(pos: BlockPos, state: BlockState) :
     override fun collectImplicitComponents(components: DataComponentMap.Builder) {
         super.collectImplicitComponents(components)
 
-        components.set(ModDataComponents.ENERGY, this.energyStorage.energyStored)
+        components.set(ModDataComponents.ENERGY.get(), this.energyStorage.energyStored)
     }
 
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
@@ -351,7 +351,9 @@ open class ChargingStationBlockEntity(pos: BlockPos, state: BlockState) :
                 if (handler.energyStored >= handler.maxEnergyStored) return
 
                 val fuel: ItemStack = blockEntity.getItem(SLOT_FUEL)
-                val burnTime = fuel.getBurnTime(RecipeType.SMELTING)
+                // NeoForge: stack.getBurnTime(RecipeType.SMELTING). Ванильная таблица топлива --
+                // та же, в которую fabric-content-registries дописывает топливо других модов.
+                val burnTime = AbstractFurnaceBlockEntity.getFuel()[fuel.item] ?: 0
 
                 val fuelEnergy = fuel.getCapability(Capabilities.EnergyStorage.ITEM)
 
@@ -368,11 +370,12 @@ open class ChargingStationBlockEntity(pos: BlockPos, state: BlockState) :
                     blockEntity.fuelTick = burnTime
                     blockEntity.maxFuelTick = burnTime
 
-                    if (fuel.hasCraftingRemainingItem()) {
+                    val remainder = fuel.recipeRemainder
+                    if (!remainder.isEmpty) {
                         if (fuel.count <= 1) {
-                            blockEntity.setItem(SLOT_FUEL, fuel.craftingRemainingItem)
+                            blockEntity.setItem(SLOT_FUEL, remainder)
                         } else {
-                            val copy = fuel.craftingRemainingItem.copy()
+                            val copy = remainder.copy()
                             copy.count = 1
 
                             val itemEntity = ItemEntity(
@@ -399,7 +402,7 @@ open class ChargingStationBlockEntity(pos: BlockPos, state: BlockState) :
                     val saturation = foodComponent.saturation() * 2.0f * nutrition
                     var tick = nutrition * 80 + (saturation * 200).toInt()
 
-                    if (fuel.hasCraftingRemainingItem()) {
+                    if (!fuel.recipeRemainder.isEmpty) {
                         tick += 400
                     }
 

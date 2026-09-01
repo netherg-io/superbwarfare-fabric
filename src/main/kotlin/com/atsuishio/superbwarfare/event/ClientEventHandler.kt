@@ -65,6 +65,8 @@ import com.atsuishio.superbwarfare.fabric.isAccessoryEquipped
 import java.util.*
 import kotlin.experimental.or
 import kotlin.math.*
+import com.atsuishio.superbwarfare.client.boundKey
+import com.atsuishio.superbwarfare.mixins.GameRendererInvoker
 
 object ClientEventHandler {
     @JvmField
@@ -608,7 +610,7 @@ object ClientEventHandler {
     @JvmStatic
     fun turnOnThermalImaging() {
         ThermalShaderHandler.setActive(true)
-        mc.gameRenderer.loadEffect(Mod.loc("shaders/post/night_vision.json"))
+        (mc.gameRenderer as GameRendererInvoker).callLoadEffect(Mod.loc("shaders/post/night_vision.json"))
     }
 
     @JvmStatic
@@ -644,7 +646,7 @@ object ClientEventHandler {
     @JvmStatic
     fun turnOnHandsomeGoggles() {
         handsomeGogglesActive = true
-        mc.gameRenderer.loadEffect(Mod.loc("shaders/post/handsome_goggles.json"))
+        (mc.gameRenderer as GameRendererInvoker).callLoadEffect(Mod.loc("shaders/post/handsome_goggles.json"))
     }
 
     @JvmStatic
@@ -803,7 +805,7 @@ object ClientEventHandler {
                         player.displayClientMessage(
                             Component.translatable(
                                 "tips.superbwarfare.loiter_override_hint",
-                                ModKeyMappings.MOVE_FORWARD.key.displayName.string
+                                ModKeyMappings.MOVE_FORWARD.boundKey.displayName.string
                             ), true
                         )
                     }
@@ -853,8 +855,8 @@ object ClientEventHandler {
                     player.displayClientMessage(
                         Component.translatable(
                             "tips.superbwarfare.unload_passengers_hint",
-                            ModKeyMappings.UNLOAD_PASSENGERS.key.displayName.string,
-                            ModKeyMappings.UNLOAD_PASSENGERS.key.displayName.string
+                            ModKeyMappings.UNLOAD_PASSENGERS.boundKey.displayName.string,
+                            ModKeyMappings.UNLOAD_PASSENGERS.boundKey.displayName.string
                         ), true
                     )
                 }
@@ -881,7 +883,7 @@ object ClientEventHandler {
                     player.displayClientMessage(
                         Component.translatable(
                             "tips.superbwarfare.disconnect_towing_hint",
-                            ModKeyMappings.DISCONNECT_TOWING.key.displayName.string
+                            ModKeyMappings.DISCONNECT_TOWING.boundKey.displayName.string
                         ), true
                     )
                 }

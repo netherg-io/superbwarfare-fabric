@@ -56,6 +56,9 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.item.enchantment.Enchantment
+import com.atsuishio.superbwarfare.item.StackAttributeItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.CustomSupportsEnchantItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.ReequipAnimationItem
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
@@ -73,7 +76,8 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.function.Consumer
 
 abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), ItemScreenProvider,
-    EnergyStorageItem, PropertyModifier<GunData, DefaultGunData> {
+    EnergyStorageItem, PropertyModifier<GunData, DefaultGunData>, StackAttributeItem, ReequipAnimationItem,
+    CustomSupportsEnchantItem {
 
     protected val random: RandomSource = RandomSource.create()
 
@@ -176,18 +180,20 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
 
         val inMainHand = entity is LivingEntity && entity.mainHandItem == stack
         data.tick(entity, inMainHand)
+
+        // На NeoForge прочность отдавал IItemExtension#getMaxDamage(stack); ваниль читает компонент,
+        // поэтому его надо проставить самим -- первый же тик в инвентаре это и делает.
+        maxDurability(stack)
     }
 
-    override fun onDroppedByPlayer(stack: ItemStack, player: Player): Boolean {
-        player.inventory.removeItem(stack)
-        player.drop(stack, true)
-        return false
-    }
+    // ponytail: IItemExtension#onDroppedByPlayer выкидывал ствол чуть иначе (drop(stack, true)) и
+    // отменял ванильный выброс. Аналога на Fabric нет, ствол теперь падает как обычный предмет.
+    // Вернуть -- миксином в Player.drop(ItemStack, Boolean, Boolean).
 
     override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean) = false
 
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val list = ArrayList<ItemAttributeModifiers.Entry?>(super.getDefaultAttributeModifiers(stack).modifiers())
+        val list = ArrayList<ItemAttributeModifiers.Entry?>(baseAttributeModifiers(stack).modifiers())
         val data = from(stack)
 
         // 移速
@@ -233,9 +239,13 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
 
     override fun isEnchantable(stack: ItemStack) = false
 
-    override fun supportsEnchantment(stack: ItemStack, enchantment: Holder<Enchantment?>) = false
+    override fun supportsEnchantment(stack: ItemStack, enchantment: Holder<Enchantment>) = false
 
-    override fun getMaxDamage(stack: ItemStack): Int {
+    /**
+     * Замена IItemExtension#getMaxDamage(ItemStack): ваниль берёт прочность из компонентов, поэтому
+     * метод их и выставляет, а зовётся из inventoryTick и перед списанием прочности за выстрел.
+     */
+    fun maxDurability(stack: ItemStack): Int {
         val maxDurability = from(stack).get(GunProp.MAX_DURABILITY)
 
         if (maxDurability > 0) {
@@ -486,14 +496,14 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
         }
 
         val stack = data.stack()
-        if (this.getMaxDamage(stack) > 0) {
+        if (this.maxDurability(stack) > 0) {
             if (shooter is LivingEntity) {
                 stack.hurtAndBreak(data.get(GunProp.DURABILITY_PER_SHOOT), shooter, EquipmentSlot.MAINHAND)
             } else {
                 stack.hurtAndBreak(
                     data.get(GunProp.DURABILITY_PER_SHOOT),
                     level,
-                    null as LivingEntity?
+                    null as ServerPlayer?
                 ) { }
             }
         }

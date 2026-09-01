@@ -44,12 +44,9 @@ import net.minecraft.world.item.Item.Properties
 import net.minecraft.world.item.SwordItem.createAttributes
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.DispenserBlock
-import net.neoforged.bus.api.IEventBus
-import net.neoforged.neoforge.common.DeferredSpawnEggItem
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
 import com.atsuishio.superbwarfare.fabric.registerAccessories
-import java.util.function.Supplier
 
 @Suppress("unused")
 object ModItems {
@@ -200,16 +197,13 @@ object ModItems {
     val ITEMS: DeferredRegister<Item> = DeferredRegister.create(Registries.ITEM, Mod.MODID)
 
     // @formatter:off
+    // На Fabric реестры открыты сразу, поэтому ленивый DeferredSpawnEggItem не нужен:
+    // обращение к ModEntities инициализирует его объект до создания предмета.
     @JvmField val SENPAI_SPAWN_EGG = registerItem("senpai_spawn_egg") {
-        DeferredSpawnEggItem(
-            Supplier { ModEntities.SENPAI.value() },
-            -11584987,
-            -14014413,
-            Properties()
-        )
+        SpawnEggItem(ModEntities.SENPAI.get(), -11584987, -14014413, Properties())
     }
     @JvmField val STEEL_COIL_SPAWN_EGG = registerItem("steel_coil_spawn_egg") {
-        DeferredSpawnEggItem(ModEntities.STEEL_COIL, 0, 0xc0c0c0, Properties())
+        SpawnEggItem(ModEntities.STEEL_COIL.get(), 0, 0xc0c0c0, Properties())
     }
     @JvmField val ANCIENT_CPU = registerItem("ancient_cpu") { Item(Properties().rarity(Rarity.RARE)) }
     @JvmField val PROPELLER = registerItem("propeller")
@@ -239,10 +233,10 @@ object ModItems {
     @JvmField val CEMENTED_CARBIDE_HAMMER = registerItem("cemented_carbide_hammer") { HammerItem(ModItemTier.CEMENTED_CARBIDE, 8, -3.2f, Properties().durability(2000)) }
     @JvmField val NETHERITE_HAMMER = registerItem("netherite_hammer") { NetheriteHammerItem() }
     @JvmField val CEMENTED_CARBIDE_SWORD = registerItem("cemented_carbide_sword") { SwordItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(createAttributes(ModItemTier.CEMENTED_CARBIDE, -2, -2.4f))) }
-    @JvmField val CEMENTED_CARBIDE_PICKAXE = registerItem("cemented_carbide_pickaxe") { PickaxeItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(createAttributes(ModItemTier.CEMENTED_CARBIDE, -4, -2.8f))) }
-    @JvmField val CEMENTED_CARBIDE_AXE = registerItem("cemented_carbide_axe") { AxeItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(createAttributes(ModItemTier.CEMENTED_CARBIDE,  0f, -3.0f))) }
-    @JvmField val CEMENTED_CARBIDE_SHOVEL = registerItem("cemented_carbide_shovel") { ShovelItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(createAttributes(ModItemTier.CEMENTED_CARBIDE, -3.5f, -3.0f))) }
-    @JvmField val CEMENTED_CARBIDE_HOE = registerItem("cemented_carbide_hoe") { HoeItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(createAttributes(ModItemTier.CEMENTED_CARBIDE, -8, 0.0f))) }
+    @JvmField val CEMENTED_CARBIDE_PICKAXE = registerItem("cemented_carbide_pickaxe") { PickaxeItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(DiggerItem.createAttributes(ModItemTier.CEMENTED_CARBIDE, -4f, -2.8f))) }
+    @JvmField val CEMENTED_CARBIDE_AXE = registerItem("cemented_carbide_axe") { AxeItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(DiggerItem.createAttributes(ModItemTier.CEMENTED_CARBIDE, 0f, -3.0f))) }
+    @JvmField val CEMENTED_CARBIDE_SHOVEL = registerItem("cemented_carbide_shovel") { ShovelItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(DiggerItem.createAttributes(ModItemTier.CEMENTED_CARBIDE, -3.5f, -3.0f))) }
+    @JvmField val CEMENTED_CARBIDE_HOE = registerItem("cemented_carbide_hoe") { HoeItem(ModItemTier.CEMENTED_CARBIDE, Properties().attributes(DiggerItem.createAttributes(ModItemTier.CEMENTED_CARBIDE, -8f, 0.0f))) }
 
     @JvmField val T_BATON = registerItem("t_baton") { TBatonItem() }
     @JvmField val ELECTRIC_BATON = registerItem("electric_baton") { ElectricBatonItem() }
@@ -543,7 +537,7 @@ object ModItems {
         }
     }
 
-    fun register(bus: IEventBus) {
+    fun register(bus: Any? = null) {
         ITEMS.register(bus)
         GUNS.register(bus)
         AMMO.register(bus)

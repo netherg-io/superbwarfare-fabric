@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.data.gun.Ammo
 import com.atsuishio.superbwarfare.init.ModAttachments
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
+import com.atsuishio.superbwarfare.init.getData
+import com.atsuishio.superbwarfare.init.setData
 import com.atsuishio.superbwarfare.tools.InventoryTool
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component

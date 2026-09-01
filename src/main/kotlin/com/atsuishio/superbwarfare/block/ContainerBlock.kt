@@ -7,7 +7,9 @@ import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.init.ModTags
 import com.atsuishio.superbwarfare.resource.vehicle.VehicleResource
 import com.mojang.serialization.MapCodec
+import com.atsuishio.superbwarfare.tools.clientLevel
 import net.minecraft.ChatFormatting
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
@@ -37,7 +39,6 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 import kotlin.math.ceil
@@ -137,7 +138,7 @@ open class ContainerBlock :
                 Component.translatableWithFallback("info." + location.namespace + "." + location.path, "")
             val hasDescription = !info.string.isEmpty()
 
-            if (flag.hasShiftDown() && hasDescription) {
+            if (Screen.hasShiftDown() && hasDescription) {
                 // 详细描述
                 tooltip.add(info.withStyle(ChatFormatting.GRAY))
                 tooltip.add(Component.empty())
@@ -159,7 +160,7 @@ open class ContainerBlock :
             }
 
             val entityType = EntityType.byString(type).orElse(null)
-            val level = context.level()
+            val level = clientLevel
             if (entityType != null && level is Level) {
                 var w: Float
                 var h: Int
@@ -225,13 +226,11 @@ open class ContainerBlock :
     }
 
     override fun getCloneItemStack(
-        state: BlockState,
-        target: HitResult,
         level: LevelReader,
         pos: BlockPos,
-        player: Player
+        state: BlockState
     ): ItemStack {
-        val itemStack = super.getCloneItemStack(state, target, level, pos, player)
+        val itemStack = super.getCloneItemStack(level, pos, state)
         level.getBlockEntity(pos, ModBlockEntities.CONTAINER.get())
             .ifPresent { blockEntity ->
                 blockEntity.saveToItem(itemStack, level.registryAccess())

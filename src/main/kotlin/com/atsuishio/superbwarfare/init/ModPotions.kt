@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.Mod
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.item.alchemy.Potion
-import net.neoforged.bus.api.IEventBus
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
 
@@ -27,7 +26,7 @@ object ModPotions {
         return POTIONS.register(id, potion)
     }
 
-    fun register(bus: IEventBus) {
+    fun register(bus: Any?) {
         POTIONS.register(bus)
     }
 }

@@ -25,6 +25,7 @@ import net.fabricmc.api.Environment
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.floor
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 open class DogTagEditorScreen(var stack: ItemStack, private val hand: InteractionHand) : Screen(GameNarrator.NO_TITLE) {
@@ -194,7 +195,7 @@ open class DogTagEditorScreen(var stack: ItemStack, private val hand: Interactio
 
     @Environment(EnvType.CLIENT)
     internal inner class ColorButton(var color: Short, pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             this@DogTagEditorScreen.currentColor = this.color
             if (this.color.toInt() == -1 && hasShiftDown()) {
@@ -224,7 +225,7 @@ open class DogTagEditorScreen(var stack: ItemStack, private val hand: Interactio
 
     @Environment(EnvType.CLIENT)
     internal open inner class FinishButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             if (!this@DogTagEditorScreen.init) return
             if (this@DogTagEditorScreen.minecraft != null) {
@@ -260,7 +261,7 @@ open class DogTagEditorScreen(var stack: ItemStack, private val hand: Interactio
                 }
                 colorsArray[i] = color
             }
-            this@DogTagEditorScreen.stack.set(ModDataComponents.DOG_TAG_IMAGE, colorsArray)
+            this@DogTagEditorScreen.stack.set(ModDataComponents.DOG_TAG_IMAGE.get(), colorsArray)
 
             if (!name.isEmpty()) {
                 this@DogTagEditorScreen.stack.set(DataComponents.CUSTOM_NAME, Component.literal(name))

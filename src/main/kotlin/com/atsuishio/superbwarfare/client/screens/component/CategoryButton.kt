@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.network.chat.Component
 
 class CategoryButton(x: Int, y: Int, var category: VehicleAssemblingRecipe.Category, onPress: OnPress) :
-    Button(x, y, 20, 22, Component.empty(), onPress, DEFAULT_NARRATION) {
+    Button(x, y, 20, 22, Component.empty(), onPress, DEFAULT_NARRATION), AccessoriesButtonStub {
     private var isSelected = false
 
     override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {

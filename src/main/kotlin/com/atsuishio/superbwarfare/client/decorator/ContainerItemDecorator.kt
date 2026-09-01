@@ -15,10 +15,9 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.client.IItemDecorator
 
 @Environment(EnvType.CLIENT)
-class ContainerItemDecorator : IItemDecorator {
+class ContainerItemDecorator : ItemDecorator {
 
     override fun render(guiGraphics: GuiGraphics, font: Font, stack: ItemStack, xOffset: Int, yOffset: Int): Boolean {
         if (stack.item !is ContainerBlockItem) return false

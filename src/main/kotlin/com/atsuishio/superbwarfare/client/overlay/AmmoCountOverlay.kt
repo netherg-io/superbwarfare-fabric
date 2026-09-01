@@ -16,6 +16,8 @@ import net.minecraft.util.FastColor
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import kotlin.math.roundToInt
+import com.atsuishio.superbwarfare.client.drawString
+import com.atsuishio.superbwarfare.init.getData
 
 @Environment(EnvType.CLIENT)
 object AmmoCountOverlay : CommonOverlay("ammo_count") {

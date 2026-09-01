@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.entity.IBvrSyncableEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.player.Player
 import java.util.concurrent.ConcurrentHashMap
 
@@ -94,7 +95,8 @@ fun Entity.getBvrSyncNbt(): CompoundTag {
 
     // Fast-Path: Player entities (bypasses massive Player profile / inventory / advancement NBT)
     if (this is Player) {
-        val encodeId = this.encodeId ?: return tag
+        // Entity.getEncodeId() protected и без AT недоступен — повторяем его тело.
+        val encodeId = this.type.takeIf { it.canSerialize() }?.let { EntityType.getKey(it)?.toString() } ?: return tag
         tag.putString("id", encodeId)
         tag.putInt("EntityId", this.id)
         tag.putDouble("PosX", x)

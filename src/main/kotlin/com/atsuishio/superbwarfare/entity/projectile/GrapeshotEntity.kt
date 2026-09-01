@@ -60,7 +60,7 @@ open class GrapeshotEntity : FastThrowableProjectile {
         val resultPos = result.blockPos
         val state = level.getBlockState(resultPos)
 
-        val event = state.block.getSoundType(state, level, resultPos, this).breakSound
+        val event = state.soundType.breakSound
         val volume = min(4f, deltaMovement.length().toFloat() / 4f + 0.5f)
         val location = result.location
 

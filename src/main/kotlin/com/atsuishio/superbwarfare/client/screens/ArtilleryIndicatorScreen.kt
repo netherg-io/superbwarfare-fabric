@@ -16,6 +16,7 @@ import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import kotlin.math.max
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 open class ArtilleryIndicatorScreen(private val stack: ItemStack, private val hand: InteractionHand) :
@@ -149,7 +150,7 @@ open class ArtilleryIndicatorScreen(private val stack: ItemStack, private val ha
 
     @Environment(EnvType.CLIENT)
     internal inner class ModeButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             this@ArtilleryIndicatorScreen.isDepressed = !this@ArtilleryIndicatorScreen.isDepressed
         }
@@ -175,7 +176,7 @@ open class ArtilleryIndicatorScreen(private val stack: ItemStack, private val ha
 
     @Environment(EnvType.CLIENT)
     internal inner class DoneButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             if (!this@ArtilleryIndicatorScreen.init) return
             if (this@ArtilleryIndicatorScreen.minecraft != null) {

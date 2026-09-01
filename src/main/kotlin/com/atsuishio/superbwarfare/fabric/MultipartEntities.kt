@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.fabric
 
 import io.github.fabricators_of_create.porting_lib.entity.PartEntity
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.boss.enderdragon.EnderDragonPart
+import net.minecraft.world.entity.boss.EnderDragonPart
 
 /**
  * Замена PartEntity из NeoForge.

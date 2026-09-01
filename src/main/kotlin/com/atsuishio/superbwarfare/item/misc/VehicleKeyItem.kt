@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
+import com.atsuishio.superbwarfare.tools.clientLevel
 
 open class VehicleKeyItem(properties: Properties) : Item(properties), IVehicleInteract {
     constructor() : this(Properties().stacksTo(1))
@@ -26,7 +27,9 @@ open class VehicleKeyItem(properties: Properties) : Item(properties), IVehicleIn
         flag: TooltipFlag
     ) {
         val tag = NBTTool.getTag(stack)
-        val level = context.level()
+        // Item.TooltipContext из ванили уровня не отдаёт (level() добавлял NeoForge), а подсказка
+        // всё равно рисуется только на клиенте.
+        val level = clientLevel
         if (!tag.contains(TAG_UUID)) {
             tooltip.add(Component.translatable("des.superbwarfare.vehicle_key.empty").withStyle(ChatFormatting.GRAY))
         } else {

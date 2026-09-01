@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import com.atsuishio.superbwarfare.client.boundKey
 
 @Environment(EnvType.CLIENT)
 object DecoyOverlayHelper {
@@ -21,7 +22,7 @@ object DecoyOverlayHelper {
                 guiGraphics.drawString(
                     font,
                     Component.translatable("tips.superbwarfare.$key.ready").append(
-                        Component.literal(" ${entity.decoyCount} [${ModKeyMappings.RELEASE_DECOY.key.displayName.string}]")
+                        Component.literal(" ${entity.decoyCount} [${ModKeyMappings.RELEASE_DECOY.boundKey.displayName.string}]")
                     ),
                     x,
                     y,
@@ -60,7 +61,7 @@ object DecoyOverlayHelper {
 
             if (entity.decoyCount > 0) {
                 val componentReady = Component.translatable("tips.superbwarfare.$key.ready").append(
-                    Component.literal(" ${entity.decoyCount} [${ModKeyMappings.RELEASE_DECOY.key.displayName.string}]")
+                    Component.literal(" ${entity.decoyCount} [${ModKeyMappings.RELEASE_DECOY.boundKey.displayName.string}]")
                 )
                 val length = font.width(componentReady)
 

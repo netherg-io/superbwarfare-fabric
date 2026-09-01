@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
+import com.atsuishio.superbwarfare.mixins.LevelEntitiesAccessor
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
@@ -18,11 +19,8 @@ object EntityFindUtil {
      */
     @JvmStatic
     fun getEntities(level: Level): LevelEntityGetter<Entity>? {
-        if (level is ServerLevel) {
-            return level.entities
-        }
-        if (level is ClientLevel) {
-            return level.entities
+        if (level is ServerLevel || level is ClientLevel) {
+            return (level as LevelEntitiesAccessor).`sbw$callGetEntities`()
         }
         return null
     }
@@ -55,7 +53,7 @@ object EntityFindUtil {
         return if (level is ServerLevel) {
             level.getEntity(uuid)
         } else {
-            (level as? ClientLevel)?.entities?.get(uuid)
+            getEntities(level)?.get(uuid)
         }
     }
 

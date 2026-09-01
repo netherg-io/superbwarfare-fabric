@@ -141,15 +141,16 @@ class VehicleAssemblingScreen(pMenu: VehicleAssemblingMenu, pPlayerInventory: In
             this.renderIngredients(guiGraphics, mouseX, mouseY)
         }
 
-        this.renderables.stream().filter { w: Renderable? -> w is RecipeButton || w is CategoryButton }
-            .forEach { w: Renderable? ->
-                if (w is RecipeButton) {
-                    w.renderTooltips(guiGraphics, mouseX, mouseY)
-                }
-                if (w is CategoryButton) {
-                    w.renderTooltips(guiGraphics, mouseX, mouseY)
-                }
+        // Screen.renderables приватен в ваниле (публичным его делал патч NeoForge), но кнопки
+        // добавлены через addRenderableWidget, поэтому они же лежат в children().
+        this.children().forEach { w ->
+            if (w is RecipeButton) {
+                w.renderTooltips(guiGraphics, mouseX, mouseY)
             }
+            if (w is CategoryButton) {
+                w.renderTooltips(guiGraphics, mouseX, mouseY)
+            }
+        }
     }
 
     override fun renderBg(pGuiGraphics: GuiGraphics, pPartialTick: Float, pMouseX: Int, pMouseY: Int) {
@@ -356,18 +357,8 @@ class VehicleAssemblingScreen(pMenu: VehicleAssemblingMenu, pPlayerInventory: In
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        val list = this.getIngredientAreas()
-        if (list.isNotEmpty() && pMouseX >= this.leftPos + 214 && pMouseY >= this.topPos + 117 && pMouseX <= this.leftPos + 350 && pMouseY <= this.topPos + 160) {
-            if (hasJEI()) {
-                val ingredientArea = list.stream().filter { area -> area.contains(pMouseX, pMouseY) }.findFirst()
-                if (ingredientArea.isPresent) {
-                    val items = ingredientArea.get().ingredient!!.getItems()
-                    val itemIndex = (System.currentTimeMillis() / 1000L).toInt() % items.size
-                    SbwJEIPlugin.showRecipes(items[itemIndex]!!)
-                    return true
-                }
-            }
-        }
+        // ponytail: клик по ингредиенту открывал рецепт в JEI, но JEI-совместимость из порта
+        // выкинута вместе с зависимостью. Вернуть вместе с плагином JEI/REI, если он появится.
         return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 

@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.perk.Perk
 import com.atsuishio.superbwarfare.serialization.kserializer.SerializedUUID
 import com.atsuishio.superbwarfare.tools.EntityFindUtil
 import com.atsuishio.superbwarfare.tools.sendPacketTo
+import io.github.fabricators_of_create.porting_lib.entity.events.player.AttackEntityEvent
 import kotlinx.serialization.Serializable
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket
 import net.minecraft.server.level.ServerLevel
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.enchantment.EnchantmentHelper
-import net.neoforged.neoforge.common.CommonHooks
 import kotlin.math.*
 import kotlin.random.Random
 
@@ -52,7 +52,7 @@ data class MeleeAttackMessage(val uuidList: List<SerializedUUID>) : ServerPacket
     fun attack(attacker: Player, targets: List<Entity>) {
         var hurtCount = 0
         targets.forEachIndexed { index, target ->
-            if (!CommonHooks.onPlayerAttackTarget(attacker, target)) return@forEachIndexed
+            if (AttackEntityEvent(attacker, target).post()) return@forEachIndexed
             if (!target.isAttackable) return@forEachIndexed
             if (target.skipAttackInteraction(attacker)) return@forEachIndexed
 

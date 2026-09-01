@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import org.lwjgl.glfw.GLFW
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 /**
  * 自动绕点盘旋配置 GUI
@@ -213,7 +214,7 @@ class LoiterConfigScreen(private val vehicle: VehicleEntity) :
 
     @Environment(EnvType.CLIENT)
     private inner class ToggleButton(x: Int, y: Int, width: Int, height: Int) :
-        AbstractButton(x, y, width, height, Component.empty()) {
+        AbstractButton(x, y, width, height, Component.empty()), AccessoriesButtonStub {
 
         override fun onPress() {
             this@LoiterConfigScreen.active = !this@LoiterConfigScreen.active
@@ -232,7 +233,7 @@ class LoiterConfigScreen(private val vehicle: VehicleEntity) :
 
     @Environment(EnvType.CLIENT)
     private inner class ConfirmButton(x: Int, y: Int, width: Int, height: Int) :
-        AbstractButton(x, y, width, height, Component.empty()) {
+        AbstractButton(x, y, width, height, Component.empty()), AccessoriesButtonStub {
 
         override fun onPress() {
             this@LoiterConfigScreen.sendLoiterConfigToServer()
@@ -250,7 +251,7 @@ class LoiterConfigScreen(private val vehicle: VehicleEntity) :
 
     @Environment(EnvType.CLIENT)
     private inner class TerrainCheckbox(x: Int, y: Int, size: Int) :
-        AbstractButton(x, y, size, size, Component.empty()) {
+        AbstractButton(x, y, size, size, Component.empty()), AccessoriesButtonStub {
 
         override fun onPress() {
             this@LoiterConfigScreen.skipTerrain = !this@LoiterConfigScreen.skipTerrain

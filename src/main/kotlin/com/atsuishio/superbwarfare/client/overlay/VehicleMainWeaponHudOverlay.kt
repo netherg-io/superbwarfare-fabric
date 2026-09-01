@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import com.atsuishio.superbwarfare.client.boundKey
 
 /**
  * 控制载具主武器的玩家显示的HUD
@@ -386,7 +387,7 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
                         if (ClientEventHandler.seekingTimeVehicle == 0) {
                             poseStack.pushPose()
                             poseStack.translate(x, y, 0f)
-                            val string = "[" + ModKeyMappings.VEHICLE_SEEK.key.displayName.string + "]"
+                            val string = "[" + ModKeyMappings.VEHICLE_SEEK.boundKey.displayName.string + "]"
                             val width = mc.font.width(string)
                             guiGraphics.drawString(
                                 mc.font,
@@ -512,7 +513,7 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
                     if (ClientEventHandler.seekingTimeVehicle == 0) {
                         poseStack.pushPose()
                         poseStack.translate(x, y, 0f)
-                        val string = "[" + ModKeyMappings.VEHICLE_SEEK.key.displayName.string + "]"
+                        val string = "[" + ModKeyMappings.VEHICLE_SEEK.boundKey.displayName.string + "]"
                         val width = mc.font.width(string)
                         guiGraphics.drawString(
                             mc.font,
@@ -557,7 +558,7 @@ object VehicleMainWeaponHudOverlay : CommonOverlay("vehicle_main_weapon_hud") {
                     24f,
                 )
 
-                val string = "[" + ModKeyMappings.VEHICLE_SEEK.key.displayName.string + "]"
+                val string = "[" + ModKeyMappings.VEHICLE_SEEK.boundKey.displayName.string + "]"
                 val width = mc.font.width(string)
                 guiGraphics.drawString(
                     mc.font,

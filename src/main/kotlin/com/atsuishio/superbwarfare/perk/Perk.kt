@@ -28,7 +28,7 @@ open class Perk(val descriptionId: String, val type: Type) : PropertyModifier<Gu
     override fun modifyProperty(modifier: PMC<GunData, DefaultGunData>) {}
 
     fun getItem(): DeferredHolder<Item, out Item> {
-        val result = ModItems.PERKS.getEntries().filter {
+        val result = ModItems.PERKS.entries.filter {
             val item = it.get()
             if (item is PerkItem) {
                 return@filter item.perk == this

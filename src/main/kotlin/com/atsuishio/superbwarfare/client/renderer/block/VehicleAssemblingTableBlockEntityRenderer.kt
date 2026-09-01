@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.core.Direction
-import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
 class VehicleAssemblingTableBlockEntityRenderer : BlockEntityRenderer<VehicleAssemblingTableBlockEntity> {
@@ -61,20 +60,12 @@ class VehicleAssemblingTableBlockEntityRenderer : BlockEntityRenderer<VehicleAss
         return blockEntity.blockState.getValue(VehicleAssemblingTableBlock.BLOCK_PART) == BlockPart.FLB
     }
 
-    override fun getRenderBoundingBox(blockEntity: VehicleAssemblingTableBlockEntity): AABB {
-        // 创建一个更大的边界框（示例：覆盖从方块底部到顶部上方2格的范围）
-        val expansion = 2.0 // 根据模型实际大小调整
-
-        val worldPosition = blockEntity.blockPos
-        return AABB(
-            (worldPosition.x - 1).toDouble(),
-            worldPosition.y.toDouble(),
-            (worldPosition.z - 1).toDouble(),
-            (worldPosition.x + 2).toDouble(),
-            worldPosition.y + expansion,
-            (worldPosition.z + 2).toDouble()
-        )
-    }
+    /**
+     * ponytail: getRenderBoundingBox -- расширение NeoForge, у ванильного BlockEntityRenderer
+     * его нет. Раздутый AABB нужен был только чтобы модель не отсекалась по краю экрана,
+     * поэтому просто выключаем отсечение. Вернуть точный бокс, если он начнёт стоить кадров.
+     */
+    override fun shouldRenderOffScreen(blockEntity: VehicleAssemblingTableBlockEntity): Boolean = true
 
     companion object {
         val TEXTURE = loc("textures/bedrock/block/vehicle_assembling_table.png")

@@ -41,9 +41,7 @@ object ModEventBus {
 open class CancellableEvent {
     var canceled: Boolean = false
 
+    // Только isCanceled(): setCanceled(boolean) для Java уже генерирует сам сеттер свойства,
+    // а явный метод дал бы вторую функцию с той же JVM-сигнатурой.
     fun isCanceled(): Boolean = canceled
-
-    fun setCanceled(value: Boolean) {
-        canceled = value
-    }
 }

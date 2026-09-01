@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.init.ModKeyMappings
 import net.minecraft.ChatFormatting
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
+import com.atsuishio.superbwarfare.client.boundKey
 
 object TooltipTool {
     @JvmStatic
@@ -24,7 +25,7 @@ object TooltipTool {
     fun addScreenProviderText(tooltip: MutableList<Component>) {
         tooltip += Component.translatable(
             "des.superbwarfare.item_screen_provider",
-            "[${ModKeyMappings.EDIT_MODE.key.displayName.string}]"
+            "[${ModKeyMappings.EDIT_MODE.boundKey.displayName.string}]"
         ).withStyle(ChatFormatting.AQUA)
     }
 }

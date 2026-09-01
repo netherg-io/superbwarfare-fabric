@@ -12,10 +12,9 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.client.IItemDecorator
 
 @Environment(EnvType.CLIENT)
-class VehicleKeyItemDecorator : IItemDecorator {
+class VehicleKeyItemDecorator : ItemDecorator {
     override fun render(guiGraphics: GuiGraphics, font: Font, stack: ItemStack, xOffset: Int, yOffset: Int): Boolean {
         if (stack.item !is VehicleKeyItem) return false
         val tag = NBTTool.getTag(stack)

@@ -13,8 +13,6 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.neoforged.fml.loading.LoadingModList
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 
 @Environment(EnvType.CLIENT)
 class SnapshotWarningScreen(val lastScreen: Screen) : Screen(
@@ -96,15 +94,15 @@ class SnapshotWarningScreen(val lastScreen: Screen) : Screen(
             if (!!FabricLoader.getInstance().isDevelopmentEnvironment) return
             if (firstTimeStart || screen !is TitleScreen) return
             val version = getVersion() ?: return
-            if (!version.toString().lowercase().contains("snapshot")) return
+            if (!version.lowercase().contains("snapshot")) return
 
             mc.setScreen(SnapshotWarningScreen(screen))
             firstTimeStart = true
         }
 
-        fun getVersion(): DefaultArtifactVersion? {
-            val modFile = LoadingModList.get().getModFileById(com.atsuishio.superbwarfare.Mod.MODID) ?: return null
-            return DefaultArtifactVersion(modFile.versionString())
-        }
+        fun getVersion(): String? = FabricLoader.getInstance()
+            .getModContainer(com.atsuishio.superbwarfare.Mod.MODID)
+            .map { it.metadata.version.friendlyString }
+            .orElse(null)
     }
 }

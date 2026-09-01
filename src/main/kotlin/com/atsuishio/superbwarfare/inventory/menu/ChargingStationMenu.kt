@@ -9,8 +9,9 @@ import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.Slot
+import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.crafting.RecipeType
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.world.level.Level
 import com.atsuishio.superbwarfare.fabric.Capabilities
 import com.atsuishio.superbwarfare.fabric.getCapability
@@ -62,9 +63,10 @@ open class ChargingStationMenu @JvmOverloads constructor(
                     if (!this.moveItemStackTo(itemstack1, 1, 2, true)) {
                         return ItemStack.EMPTY
                     }
-                } else if (itemstack1.getBurnTime(RecipeType.SMELTING) > 0 || itemstack1.getFoodProperties(
-                        null
-                    ) != null
+                    // isFuel читает ту же карту топлива, в которую Fabric API добавляет
+                    // модовое топливо через FuelRegistry, так что аналог ItemStack.getBurnTime.
+                } else if (AbstractFurnaceBlockEntity.isFuel(itemstack1) ||
+                    itemstack1.get(DataComponents.FOOD) != null
                 ) {
                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY

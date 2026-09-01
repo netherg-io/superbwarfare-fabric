@@ -15,7 +15,6 @@ import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.NonNullList
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.Connection
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -318,18 +317,6 @@ open class BlueprintResearchTableBlockEntity(pos: BlockPos, state: BlockState) :
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener> {
         return ClientboundBlockEntityDataPacket.create(this)
-    }
-
-    override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
-        tag.let { this.loadAdditional(it, lookupProvider) }
-    }
-
-    override fun onDataPacket(
-        net: Connection,
-        pkt: ClientboundBlockEntityDataPacket,
-        lookupProvider: HolderLookup.Provider
-    ) {
-        this.handleUpdateTag(pkt.tag, lookupProvider)
     }
 
     companion object {

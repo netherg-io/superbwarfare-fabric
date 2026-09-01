@@ -2,8 +2,12 @@ package com.atsuishio.superbwarfare.capability.player
 
 import com.atsuishio.superbwarfare.data.gun.Ammo
 import com.atsuishio.superbwarfare.init.ModAttachments
+import com.atsuishio.superbwarfare.init.getData
+import com.atsuishio.superbwarfare.init.hasData
+import com.atsuishio.superbwarfare.init.setData
 import com.atsuishio.superbwarfare.network.message.receive.PlayerVariablesSyncMessage
-import net.minecraft.core.HolderLookup
+import com.atsuishio.superbwarfare.tools.sendPacket
+import com.mojang.serialization.Codec
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
@@ -11,12 +15,10 @@ import net.minecraft.world.entity.player.Player
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
-import net.neoforged.neoforge.common.util.INBTSerializable
-import net.neoforged.neoforge.network.PacketDistributor
 import java.util.*
 import java.util.function.Consumer
 
-class PlayerVariable : INBTSerializable<CompoundTag> {
+class PlayerVariable {
     private var old: PlayerVariable? = null
 
     @JvmField
@@ -30,7 +32,7 @@ class PlayerVariable : INBTSerializable<CompoundTag> {
         if (old != null && old == newVariable) return
 
         if (entity is ServerPlayer) {
-            PacketDistributor.sendToPlayer(entity, PlayerVariablesSyncMessage(entity.id, compareAndUpdate()))
+            entity.sendPacket(PlayerVariablesSyncMessage(entity.id, compareAndUpdate()))
         }
     }
 
@@ -113,15 +115,14 @@ class PlayerVariable : INBTSerializable<CompoundTag> {
         return activeThermalImaging == other.activeThermalImaging
     }
 
-    override fun serializeNBT(provider: HolderLookup.Provider): CompoundTag {
-        return writeToNBT()
-    }
-
-    override fun deserializeNBT(provider: HolderLookup.Provider, nbt: CompoundTag) {
-        readFromNBT(nbt)
-    }
-
     companion object {
+        /** Хранится тем же тегом, что и на NeoForge, — чтобы старые миры читались без миграции. */
+        @JvmField
+        val CODEC: Codec<PlayerVariable> = CompoundTag.CODEC.xmap(
+            { tag -> PlayerVariable().apply { readFromNBT(tag) } },
+            PlayerVariable::writeToNBT
+        )
+
         fun init() {
             ServerPlayConnectionEvents.JOIN.register { handler, _, _ -> onPlayerLoggedIn(handler.player) }
             ServerPlayerEvents.AFTER_RESPAWN.register { _, newPlayer, _ -> onPlayerRespawn(newPlayer) }
@@ -144,28 +145,18 @@ class PlayerVariable : INBTSerializable<CompoundTag> {
         }
 
         private fun onPlayerLoggedIn(player: ServerPlayer) {
-            PacketDistributor.sendToPlayer(
-                player,
-                PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate())
-            )
+            player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate()))
         }
 
         private fun onPlayerRespawn(player: ServerPlayer) {
-            PacketDistributor.sendToPlayer(
-                player,
-                PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate())
-            )
+            player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate()))
         }
 
         private fun onPlayerChangeDimension(player: ServerPlayer) {
-            PacketDistributor.sendToPlayer(
-                player,
-                PlayerVariablesSyncMessage(player.id, getOrDefault(player).forceUpdate())
-            )
+            player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).forceUpdate()))
         }
 
         private fun clonePlayer(oldPlayer: ServerPlayer, newPlayer: ServerPlayer) {
-            oldPlayer.revive()
             val original = oldPlayer.getData(ModAttachments.PLAYER_VARIABLE)
             if (newPlayer.level().isClientSide()) return
             newPlayer.setData(ModAttachments.PLAYER_VARIABLE, original.copy())

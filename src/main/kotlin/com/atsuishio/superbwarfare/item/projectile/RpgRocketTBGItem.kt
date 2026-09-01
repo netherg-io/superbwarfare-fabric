@@ -20,10 +20,11 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import net.minecraft.world.level.Level
+import com.atsuishio.superbwarfare.item.StackAttributeItem
 
-open class RpgRocketTBGItem : Item(Properties().stacksTo(16)), DispenserLaunchable {
+open class RpgRocketTBGItem : Item(Properties().stacksTo(16)), DispenserLaunchable, StackAttributeItem {
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val list = ArrayList(super.getDefaultAttributeModifiers(stack).modifiers())
+        val list = ArrayList(baseAttributeModifiers(stack).modifiers())
 
         list.addAll(
             listOf(

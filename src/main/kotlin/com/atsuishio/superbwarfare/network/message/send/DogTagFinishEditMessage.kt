@@ -22,7 +22,7 @@ data class DogTagFinishEditMessage(
         if (!stack.`is`(ModItems.DOG_TAG.get())) return
 
         val colors = colors.map { it.toList() }
-        stack.set(ModDataComponents.DOG_TAG_IMAGE, colors)
+        stack.set(ModDataComponents.DOG_TAG_IMAGE.get(), colors)
 
         if (!name.isEmpty()) {
             stack.set(DataComponents.CUSTOM_NAME, Component.literal(name))

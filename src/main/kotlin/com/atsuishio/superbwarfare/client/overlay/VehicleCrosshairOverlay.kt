@@ -24,6 +24,7 @@ import net.minecraft.util.Mth
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import org.joml.Math
+import com.atsuishio.superbwarfare.client.drawString
 
 @Environment(EnvType.CLIENT)
 object VehicleCrosshairOverlay : CommonOverlay("vehicle_crosshair") {

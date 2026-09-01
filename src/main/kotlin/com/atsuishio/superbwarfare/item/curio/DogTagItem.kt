@@ -65,11 +65,13 @@ class DogTagItem : Item(Properties().stacksTo(1)), Accessory, ItemScreenProvider
                 Arrays.fill(el, (-1).toShort())
             }
 
-            val data = stack.get(ModDataComponents.DOG_TAG_IMAGE).takeIf { !it.isNullOrEmpty() } ?: return colors
+            val data = stack.get(ModDataComponents.DOG_TAG_IMAGE.get()).takeIf { !it.isNullOrEmpty() } ?: return colors
 
-            for (i in data.indices union colors.indices) {
+            // intersect, а не union: индекс за пределами более короткого массива -- это падение,
+            // а не пустой цвет. Компонент приходит с клиента (DogTagFinishEditMessage).
+            for (i in data.indices intersect colors.indices) {
                 val color = data[i].takeIf { it.isNotEmpty() } ?: continue
-                for (j in color.indices union colors[i].indices) {
+                for (j in color.indices intersect colors[i].indices) {
                     colors[i][j] = color[j]
                 }
             }

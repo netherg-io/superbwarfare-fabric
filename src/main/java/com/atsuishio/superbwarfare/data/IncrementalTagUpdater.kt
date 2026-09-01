@@ -273,7 +273,7 @@ object IncrementalTagUpdater {
 
             if (it.operation != Operation.REMOVE) {
                 val tag = it.value!!
-                writeByte(tag.id)
+                writeByte(tag.id.toInt())
                 tag.write(ByteBufWrapper(this))
             }
         }

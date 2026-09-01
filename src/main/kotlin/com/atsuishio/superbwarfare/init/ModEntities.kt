@@ -30,87 +30,87 @@ object ModEntities {
     val TARGET = register(
         "target",
         EntityType.Builder.of(::TargetEntity, MobCategory.CREATURE)
-            .setTrackingRange(64).setUpdateInterval(3).fireImmune().eyeHeight(1.57f).sized(0.875f, 2f)
+            .clientTrackingRange(64).updateInterval(3).fireImmune().eyeHeight(1.57f).sized(0.875f, 2f)
     )
 
     @JvmField
     val DPS_GENERATOR = register(
         "dps_generator",
         EntityType.Builder.of(::DPSGeneratorEntity, MobCategory.CREATURE)
-            .setTrackingRange(64).setUpdateInterval(3).fireImmune().eyeHeight(1.57f).sized(0.875f, 2f)
+            .clientTrackingRange(64).updateInterval(3).fireImmune().eyeHeight(1.57f).sized(0.875f, 2f)
     )
 
     @JvmField
     val SENPAI = register(
         "senpai",
         EntityType.Builder.of(::SenpaiEntity, MobCategory.MONSTER)
-            .setTrackingRange(64).setUpdateInterval(3).sized(0.65f, 2f).eyeHeight(1.75f)
+            .clientTrackingRange(64).updateInterval(3).sized(0.65f, 2f).eyeHeight(1.75f)
     )
 
     @JvmField
     val STEEL_COIL = register(
         "steel_coil", EntityType.Builder.of(::SteelCoilEntity, MobCategory.MONSTER)
-            .setTrackingRange(64).setUpdateInterval(3).sized(2f, 2f).fireImmune()
+            .clientTrackingRange(64).updateInterval(3).sized(2f, 2f).fireImmune()
     )
 
     // Misc Entities
     @JvmField
     val FLARE_DECOY = register(
         "flare_decoy",
-        misc(::FlareDecoyEntity).setTrackingRange(64).setUpdateInterval(1).noSave().sized(1f, 1f)
+        misc(::FlareDecoyEntity).clientTrackingRange(64).updateInterval(1).noSave().sized(1f, 1f)
     )
 
     @JvmField
     val CATAPULT_SHUTTLE = register(
         "catapult_shuttle",
-        misc(::CatapultShuttleEntity).setTrackingRange(64).setUpdateInterval(1).sized(1.0f, 1.2f)
+        misc(::CatapultShuttleEntity).clientTrackingRange(64).updateInterval(1).sized(1.0f, 1.2f)
     )
 
     @JvmField
     val PRISMATIC_BOLT = register(
         "prismatic_bolt",
-        misc(::PrismaticBoltEntity).setTrackingRange(64).setUpdateInterval(1).noSave().noSummon().fireImmune()
+        misc(::PrismaticBoltEntity).clientTrackingRange(64).updateInterval(1).noSave().noSummon().fireImmune()
             .sized(0.05f, 0.05f)
     )
 
     @JvmField
     val SMOKE_DECOY = register(
         "smoke_decoy",
-        misc(::SmokeDecoyEntity).setTrackingRange(64).setUpdateInterval(1).noSave().sized(5.5f, 5.5f)
+        misc(::SmokeDecoyEntity).clientTrackingRange(64).updateInterval(1).noSave().sized(5.5f, 5.5f)
     )
 
     @JvmField
     val CLAYMORE = register(
         "claymore",
-        misc(::ClaymoreEntity).setTrackingRange(64).setUpdateInterval(1).sized(0.25f, 0.25f)
+        misc(::ClaymoreEntity).clientTrackingRange(64).updateInterval(1).sized(0.25f, 0.25f)
     )
 
     @JvmField
     val BLU_43 = register(
         "blu_43",
-        misc(::Blu43Entity).setTrackingRange(32).setUpdateInterval(1).sized(0.12f, 0.05f)
+        misc(::Blu43Entity).clientTrackingRange(32).updateInterval(1).sized(0.12f, 0.05f)
     )
 
     @JvmField
-    val TM_62 = register("tm_62", misc(::Tm62Entity).setTrackingRange(32).setUpdateInterval(1).sized(0.5f, 0.15f))
+    val TM_62 = register("tm_62", misc(::Tm62Entity).clientTrackingRange(32).updateInterval(1).sized(0.5f, 0.15f))
 
     @JvmField
     val PTKM_1R = register(
         "ptkm_1r",
-        misc(::Ptkm1rEntity).setTrackingRange(64).setUpdateInterval(1).sized(0.2f, 0.7f)
+        misc(::Ptkm1rEntity).clientTrackingRange(64).updateInterval(1).sized(0.2f, 0.7f)
     )
 
     @JvmField
-    val C4 = register("c4", misc(::C4Entity).setTrackingRange(64).setUpdateInterval(1).sized(0.25f, 0.25f))
+    val C4 = register("c4", misc(::C4Entity).clientTrackingRange(64).updateInterval(1).sized(0.25f, 0.25f))
 
     @JvmField
     val MEDICAL_KIT = register(
         "medical_kit",
-        misc(::MedicalKitEntity).setTrackingRange(64).setUpdateInterval(1).sized(0.4f, 0.2f)
+        misc(::MedicalKitEntity).clientTrackingRange(64).updateInterval(1).sized(0.4f, 0.2f)
     )
 
     @JvmField
-    val EDD = register("edd", misc(::EDDEntity).setTrackingRange(10).eyeHeight(0f).setUpdateInterval(Int.MAX_VALUE).sized(0.5f, 0.5f))
+    val EDD = register("edd", misc(::EDDEntity).clientTrackingRange(10).eyeHeight(0f).updateInterval(Int.MAX_VALUE).sized(0.5f, 0.5f))
 
     // Projectiles
     @JvmField
@@ -333,7 +333,7 @@ object ModEntities {
 
     // Special
     @JvmField
-    val DRONE = register("drone", misc(::DroneEntity).setTrackingRange(512).setUpdateInterval(1).sized(0.6f, 0.2f))
+    val DRONE = register("drone", misc(::DroneEntity).clientTrackingRange(512).updateInterval(1).sized(0.6f, 0.2f))
 
     @JvmField
     val MORTAR = register("mortar", vehicle(::MortarEntity).sized(0.8f, 1.4f))
@@ -372,24 +372,29 @@ object ModEntities {
     ): EntityType.Builder<T> = EntityType.Builder.of(entity, MobCategory.MISC)
 
     private fun vehicle(): EntityType.Builder<VehicleEntity> = misc(::VehicleEntity)
-        .setTrackingRange(512)
-        .setUpdateInterval(1)
+        .clientTrackingRange(512)
+        .updateInterval(1)
         .fireImmune()
 
     private fun <T : Entity> vehicle(
         entity: (EntityType<T>, Level) -> T
     ): EntityType.Builder<T> = misc(entity)
-        .setTrackingRange(512)
-        .setUpdateInterval(1)
+        .clientTrackingRange(512)
+        .updateInterval(1)
         .fireImmune()
 
+    // ponytail: аргумент receiveVelocityUpdates игнорируется -- setShouldReceiveVelocityUpdates
+    // это ручка NeoForge над ServerEntity, ванильного и фабричного аналога у неё нет.
+    // Ваниль шлёт velocity-пакеты сама, когда у сущности меняется импульс, так что для снарядов
+    // поведение то же. Вернуть, если появятся жалобы на рывки быстрых снарядов у клиента --
+    // тогда нужен миксин в ServerEntity.sendChanges.
+    @Suppress("UNUSED_PARAMETER")
     private fun <T : Entity> fastProjectile(
         entity: (EntityType<T>, Level) -> T,
         receiveVelocityUpdates: Boolean = false
     ): EntityType.Builder<T> = misc(entity)
-        .setShouldReceiveVelocityUpdates(receiveVelocityUpdates)
-        .setTrackingRange(64)
-        .setUpdateInterval(1)
+        .clientTrackingRange(64)
+        .updateInterval(1)
 
     fun init() {
         REGISTRY.register(null)

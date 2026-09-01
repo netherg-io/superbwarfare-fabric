@@ -20,7 +20,7 @@ class ItemEnergyStorage(
         { _ -> maxExtract })
 
     init {
-        val component = stack.get(ModDataComponents.ENERGY)
+        val component = stack.get(ModDataComponents.ENERGY.get())
         this.energy = component ?: 0
     }
 
@@ -28,7 +28,7 @@ class ItemEnergyStorage(
         val received = super.receiveEnergy(maxReceive, simulate)
 
         if (received > 0 && !simulate) {
-            stack.set<Int?>(ModDataComponents.ENERGY, energyStored)
+            stack.set(ModDataComponents.ENERGY.get(), energyStored)
         }
 
         return received
@@ -38,7 +38,7 @@ class ItemEnergyStorage(
         val extracted = super.extractEnergy(maxExtract, simulate)
 
         if (extracted > 0 && !simulate) {
-            stack.set(ModDataComponents.ENERGY, energyStored)
+            stack.set(ModDataComponents.ENERGY.get(), energyStored)
         }
 
         return extracted

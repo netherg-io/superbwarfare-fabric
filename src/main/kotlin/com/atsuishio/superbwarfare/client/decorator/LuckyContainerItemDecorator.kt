@@ -9,10 +9,9 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.client.IItemDecorator
 
 @Environment(EnvType.CLIENT)
-class LuckyContainerItemDecorator : IItemDecorator {
+class LuckyContainerItemDecorator : ItemDecorator {
     override fun render(guiGraphics: GuiGraphics, font: Font, stack: ItemStack, xOffset: Int, yOffset: Int): Boolean {
         if (stack.item !is LuckyContainerBlockItem) return false
         val tag = stack.get(DataComponents.BLOCK_ENTITY_DATA)?.copyTag() ?: return false

@@ -25,8 +25,9 @@ import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.DispenserBlock
 import net.minecraft.world.phys.Vec3
+import io.github.fabricators_of_create.porting_lib.item.extensions.CustomFuelItem
 
-open class C4BombItem : Item(Properties()), DispenserLaunchable {
+open class C4BombItem : Item(Properties()), DispenserLaunchable, CustomFuelItem {
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResultHolder<ItemStack?> {
         val stack = player.getItemInHand(hand)
 

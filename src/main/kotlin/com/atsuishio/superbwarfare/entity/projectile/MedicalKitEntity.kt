@@ -66,7 +66,7 @@ open class MedicalKitEntity(type: EntityType<MedicalKitEntity>, level: Level) : 
         if (this.onGround()) {
             this.xRot = -90f
             val pos = this.blockPosBelowThatAffectsMyMovement
-            f = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98f
+            f = this.level().getBlockState(pos).block.friction * 0.98f
         } else {
             this.updateRotation()
         }
@@ -76,7 +76,7 @@ open class MedicalKitEntity(type: EntityType<MedicalKitEntity>, level: Level) : 
             this.deltaMovement = this.deltaMovement.multiply(1.0, -0.9, 1.0)
         }
 
-        if (isInFluidType) {
+        if (isInWater || isInLava) {
             deltaMovement = deltaMovement.scale(0.75)
         }
 

@@ -726,13 +726,13 @@ object LivingEventHandler {
 
     private fun onPreSendKillMessage(event: SendKillMessage) {
         if (event.source.directEntity is AutoAimableEntity && event.target !is Player) {
-            event.setCanceled(true)
+            event.canceled = true
         }
     }
 
     private fun onPreIndicator(event: Indicator) {
         if (event.source.directEntity is AutoAimableEntity && event.target !is Player) {
-            event.setCanceled(true)
+            event.canceled = true
         }
     }
 

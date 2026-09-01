@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle.base
 
+import com.atsuishio.superbwarfare.fabric.LevelLifecycleListener
 import com.atsuishio.superbwarfare.entity.getValue
 import com.atsuishio.superbwarfare.entity.setValue
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils.getXRotFromVector
@@ -29,7 +30,7 @@ import net.minecraft.world.phys.Vec3
 import org.joml.Vector3f
 import java.util.*
 
-open class ArtilleryEntity(type: EntityType<*>, world: Level) : VehicleEntity(type, world) {
+open class ArtilleryEntity(type: EntityType<*>, world: Level) : VehicleEntity(type, world), LevelLifecycleListener {
 
     open var shootVec by SHOOT_VEC
     open var depressed by DEPRESSED
@@ -68,7 +69,6 @@ open class ArtilleryEntity(type: EntityType<*>, world: Level) : VehicleEntity(ty
     }
 
     override fun onAddedToLevel() {
-        super.onAddedToLevel()
         shootVec = forward.toVector3f()
     }
 

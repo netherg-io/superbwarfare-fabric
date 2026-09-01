@@ -35,6 +35,8 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import org.joml.Math
 import com.atsuishio.superbwarfare.fabric.findFirstEquipped
+import com.atsuishio.superbwarfare.client.boundKey
+import com.atsuishio.superbwarfare.client.drawString
 
 @Environment(EnvType.CLIENT)
 object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
@@ -353,7 +355,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         if (vehicle.gearUp) {
             if (vehicle.synchedGearRot == 1f) {
                 componentReady = Component.translatable("tips.superbwarfare.gear_retracted").append(
-                    Component.literal(" [${ModKeyMappings.MOVE_SPACE.key.displayName.string}]")
+                    Component.literal(" [${ModKeyMappings.MOVE_SPACE.boundKey.displayName.string}]")
                 )
             } else {
                 componentReady =
@@ -362,7 +364,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         } else {
             if (vehicle.synchedGearRot == 0f) {
                 componentReady = Component.translatable("tips.superbwarfare.gear_extended").append(
-                    Component.literal(" [${ModKeyMappings.MOVE_SPACE.key.displayName.string}]")
+                    Component.literal(" [${ModKeyMappings.MOVE_SPACE.boundKey.displayName.string}]")
                 )
             } else {
                 componentReady =
@@ -395,12 +397,12 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
         if (localPlayer != vehicle.firstPassenger) return
 
         var componentReady = Component.translatable("tips.superbwarfare.hover_mode_off").append(
-            Component.literal(" [${ModKeyMappings.MOVE_SPACE.key.displayName.string}]")
+            Component.literal(" [${ModKeyMappings.MOVE_SPACE.boundKey.displayName.string}]")
         )
 
         if (vehicle.hoverMode) {
             componentReady = Component.translatable("tips.superbwarfare.hover_mode_on").append(
-                Component.literal(" [${ModKeyMappings.MOVE_SPACE.key.displayName.string}]")
+                Component.literal(" [${ModKeyMappings.MOVE_SPACE.boundKey.displayName.string}]")
             )
         }
 
@@ -698,7 +700,7 @@ object VehicleHudOverlay : CommonOverlay("vehicle_hud") {
             val size = data.get(GunProp.AMMO_CONSUMER).size
             if (selected && size > 1) {
 
-                val component = Component.literal("[" + ModKeyMappings.FIRE_MODE.key.displayName.string + "] ")
+                val component = Component.literal("[" + ModKeyMappings.FIRE_MODE.boundKey.displayName.string + "] ")
                     .append(Component.translatable("tips.superbwarfare.switch_ammo"))
 
                 pose.pushPose()

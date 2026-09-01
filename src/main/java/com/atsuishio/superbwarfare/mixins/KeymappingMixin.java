@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -27,7 +28,7 @@ public class KeymappingMixin {
         if (player == null || !(player.getVehicle() instanceof VehicleEntity vehicle)) return;
 
         for (int i = 0; i < 9; i++) {
-            if (Minecraft.getInstance().options.keyHotbarSlots[i].getKey() == key) {
+            if (KeyBindingHelper.getBoundKeyOf(Minecraft.getInstance().options.keyHotbarSlots[i]).equals(key)) {
                 if (vehicle.getMaxPassengers() > 1
                         && Screen.hasShiftDown()
                         && i < vehicle.getMaxPassengers()

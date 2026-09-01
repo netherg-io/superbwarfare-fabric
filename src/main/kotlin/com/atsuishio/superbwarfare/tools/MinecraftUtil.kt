@@ -29,7 +29,10 @@ import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.phys.Vec3
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.neoforged.neoforge.network.PacketDistributor
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import com.atsuishio.superbwarfare.fabric.EntityHooks
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import org.joml.Matrix4f
 import kotlin.contracts.ExperimentalContracts
@@ -111,19 +114,21 @@ fun sendPacketTo(player: Player, packet: Packet<*>) {
 fun sendPacketTo(player: Player, packet: CustomPacketPayload) {
     if (player !is ServerPlayer) return
 
-    PacketDistributor.sendToPlayer(player, packet)
+    ServerPlayNetworking.send(player, packet)
 }
 
 fun sendPacketToAll(packet: CustomPacketPayload) {
-    PacketDistributor.sendToAllPlayers(packet)
+    val server = EntityHooks.server ?: return
+    PlayerLookup.all(server).forEach { ServerPlayNetworking.send(it, packet) }
 }
 
+@Environment(EnvType.CLIENT)
 fun sendPacketToServer(packet: CustomPacketPayload) {
-    PacketDistributor.sendToServer(packet)
+    ClientPlayNetworking.send(packet)
 }
 
 fun sendPacketToTrackingEntity(entity: Entity, packet: CustomPacketPayload) {
-    PacketDistributor.sendToPlayersTrackingEntity(entity, packet)
+    PlayerLookup.tracking(entity).forEach { ServerPlayNetworking.send(it, packet) }
 }
 
 fun Entity.sendPacketToTrackingThis(packet: CustomPacketPayload) {

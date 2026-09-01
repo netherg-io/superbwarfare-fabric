@@ -24,7 +24,7 @@ open class TranscriptItem : Item(Properties().stacksTo(1)) {
     }
 
     fun addScoresText(stack: ItemStack, tooltip: MutableList<Component>) {
-        var scores = stack.get(ModDataComponents.TRANSCRIPT_SCORE)
+        var scores = stack.get(ModDataComponents.TRANSCRIPT_SCORE.get())
         if (scores == null) scores = mutableListOf()
 
         var total = 0
@@ -58,7 +58,7 @@ open class TranscriptItem : Item(Properties().stacksTo(1)) {
     override fun use(pLevel: Level, pPlayer: Player, pUsedHand: InteractionHand): InteractionResultHolder<ItemStack> {
         if (pPlayer.isCrouching) {
             val stack = pPlayer.getItemInHand(pUsedHand)
-            stack.set(ModDataComponents.TRANSCRIPT_SCORE, listOf())
+            stack.set(ModDataComponents.TRANSCRIPT_SCORE.get(), listOf())
             return InteractionResultHolder.success(stack)
         }
         return super.use(pLevel, pPlayer, pUsedHand)

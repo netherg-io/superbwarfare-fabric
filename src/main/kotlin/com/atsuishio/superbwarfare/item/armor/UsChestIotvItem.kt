@@ -17,12 +17,13 @@ import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import kotlin.math.max
+import com.atsuishio.superbwarfare.item.StackAttributeItem
 
 class UsChestIotvItem : ArmorItem(
     ModArmorMaterial.CEMENTED_CARBIDE,
     Type.CHESTPLATE,
     Properties().durability(Type.CHESTPLATE.getDurability(50))
-) {
+), StackAttributeItem {
     companion object {
         val TEXTURE = loc("textures/bedrock/armor/us_chest_iotv.png")
         val MODEL = loc("models/bedrock/armor/us_chest_iotv.geo.json")
@@ -48,7 +49,7 @@ class UsChestIotvItem : ArmorItem(
     }
 
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val modifiers = super.getDefaultAttributeModifiers(stack)
+        val modifiers = baseAttributeModifiers(stack)
         val list = ArrayList<ItemAttributeModifiers.Entry>(modifiers.modifiers())
         list.add(
             ItemAttributeModifiers.Entry(

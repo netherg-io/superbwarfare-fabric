@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile
 
+import com.atsuishio.superbwarfare.fabric.LevelLifecycleListener
 import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
@@ -66,7 +67,7 @@ import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import com.atsuishio.superbwarfare.fabric.MultipartEntities
-import net.neoforged.neoforge.event.EventHooks
+import io.github.fabricators_of_create.porting_lib.entity.events.ProjectileImpactEvent
 import java.util.function.Predicate
 import java.util.function.Supplier
 import kotlin.math.PI
@@ -74,6 +75,7 @@ import kotlin.math.max
 
 @Suppress("unused")
 open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level: Level) : Projectile(entityType, level),
+    LevelLifecycleListener,
     IBulletProperties, IAdvancedHitDetection, IFastMotionSync {
     open val modelInstance = ProjectileModelReloadListener.getModel(MODEL)?.createInstance()
 
@@ -370,7 +372,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
                     }
                 }
                 if (result != null) {
-                    if (!EventHooks.onProjectileImpact(this, result)) this.onHit(result)
+                    if (!ProjectileImpactEvent(this, result).post()) this.onHit(result)
                     else continue  // 命中事件被取消则检查下一个命中结果
                 }
 
@@ -453,7 +455,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             }
             val resultPos = result.blockPos
             val state = level.getBlockState(resultPos)
-            val event = state.block.getSoundType(state, level, resultPos, this).breakSound
+            val event = state.soundType.breakSound
 
             val hitVec = result.location
             level.playSound(
@@ -526,7 +528,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         val state = level.getBlockState(pos)
         val location = result.location
 
-        if (postEvent(HitBlock(pos, state, face, this.owner, this, location)).isCanceled) return
+        if (postEvent(HitBlock(pos, state, face, this.owner, this, location)).canceled) return
 
         state.onProjectileHit(level, state, result, this)
 
@@ -617,7 +619,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
             )
         }
         val blockPos = BlockPos.containing(pos)
-        val soundType = state.getSoundType(serverLevel, blockPos, null)
+        val soundType = state.soundType
         if (soundType === SoundType.METAL || soundType === SoundType.ANVIL || soundType === SoundType.CHAIN || soundType === SoundType.COPPER || soundType === SoundType.NETHERITE_BLOCK) {
             serverLevel.playSound(null, pos.x, pos.y, pos.z, ModSounds.HIT.get(), SoundSource.BLOCKS, 2f, 1f)
             for (i in 0..2) {
@@ -649,7 +651,7 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
         val headshot = result.headshot
         val legShot = result.legShot
 
-        if (postEvent(HitEntity(this.owner, this, result)).isCanceled) return
+        if (postEvent(HitEntity(this.owner, this, result)).canceled) return
 
         MultipartEntities.parentOf(entity)?.let { entity = it }
 
@@ -810,7 +812,6 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     }
 
     override fun onAddedToLevel() {
-        super.onAddedToLevel()
         if (level().isClientSide) {
             ClientLightingHandler.handleProjectileAdded(this)
         }
@@ -893,7 +894,6 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
     }
 
     override fun onRemovedFromLevel() {
-        super.onRemovedFromLevel()
         if (level().isClientSide) {
             ClientLightingHandler.handleProjectileRemoved(this)
         }

@@ -61,7 +61,7 @@ object ContainerBlockPreview {
         }
         if (w == 0 || h == 0) return
 
-        val poseStack = context.matrixStack()
+        val poseStack = context.matrixStack() ?: return
         poseStack.pushPose()
         val pos = blockEntity.blockPos
         val view = mc.gameRenderer.mainCamera.position

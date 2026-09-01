@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.VoxelShape
 
@@ -164,13 +163,11 @@ open class SmallContainerBlock :
     }
 
     override fun getCloneItemStack(
-        state: BlockState,
-        target: HitResult,
         level: LevelReader,
         pos: BlockPos,
-        player: Player
+        state: BlockState
     ): ItemStack {
-        val stack = super.getCloneItemStack(state, target, level, pos, player)
+        val stack = super.getCloneItemStack(level, pos, state)
 
         level.getBlockEntity(pos, ModBlockEntities.SMALL_CONTAINER.get())
             .ifPresent { blockEntity ->

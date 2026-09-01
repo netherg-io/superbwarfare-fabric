@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.init
 import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.client.particle.*
 import com.mojang.serialization.MapCodec
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.minecraft.core.particles.ParticleOptions
 import net.minecraft.core.particles.ParticleType
 import net.minecraft.core.particles.SimpleParticleType
@@ -90,6 +91,6 @@ object ModParticleTypes {
         name: String,
         limit: Boolean = true
     ): DeferredHolder<ParticleType<*>, out SimpleParticleType> {
-        return REGISTRY.register(name, Supplier { SimpleParticleType(limit) })
+        return REGISTRY.register(name, Supplier { FabricParticleTypes.simple(limit) })
     }
 }

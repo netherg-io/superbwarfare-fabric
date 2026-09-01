@@ -119,7 +119,7 @@ open class SuperStarProjectileEntity(type: EntityType<out SuperStarProjectileEnt
         val level = this.level()
         val state = level.getBlockState(resultPos)
 
-        val event = state.block.getSoundType(state, level, resultPos, this).breakSound
+        val event = state.soundType.breakSound
         val volume = min(4f, deltaMovement.length().toFloat() / 4f + 0.5f)
 
         val location = result.location
@@ -175,7 +175,7 @@ open class SuperStarProjectileEntity(type: EntityType<out SuperStarProjectileEnt
             )
         }
 
-        val soundType = state.getSoundType(serverLevel, BlockPos.containing(pos.x, pos.y, pos.z), null)
+        val soundType = state.soundType
         if (soundType === SoundType.METAL || soundType === SoundType.ANVIL || soundType === SoundType.CHAIN || soundType === SoundType.COPPER || soundType === SoundType.NETHERITE_BLOCK) {
             serverLevel.playSound(null, pos.x, pos.y, pos.z, ModSounds.HIT.get(), SoundSource.BLOCKS, 2f, 1f)
         }

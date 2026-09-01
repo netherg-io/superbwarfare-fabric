@@ -107,7 +107,7 @@ public enum Ammo {
 
     // ItemStack
     public int get(ItemStack stack) {
-        var count = stack.get(this.dataComponent);
+        var count = stack.get(this.dataComponent.get());
         return count == null ? 0 : count;
     }
 
@@ -115,9 +115,9 @@ public enum Ammo {
         if (count > getAmmoBoxLimit()) return false;
 
         if (count <= 0) {
-            stack.remove(this.dataComponent);
+            stack.remove(this.dataComponent.get());
         } else {
-            stack.set(this.dataComponent, count);
+            stack.set(this.dataComponent.get(), count);
         }
         return true;
     }
@@ -167,15 +167,15 @@ public enum Ammo {
 
     // Entity
     public int get(Entity entity) {
-        return get(entity.getData(ModAttachments.PLAYER_VARIABLE));
+        return get(entity.getAttachedOrCreate(ModAttachments.PLAYER_VARIABLE));
     }
 
     public boolean set(Entity entity, int count) {
         if (entity.level().isClientSide || count > getLimit()) return false;
 
-        var cap = entity.getData(ModAttachments.PLAYER_VARIABLE).watch();
+        var cap = entity.getAttachedOrCreate(ModAttachments.PLAYER_VARIABLE).watch();
         set(cap, count);
-        entity.setData(ModAttachments.PLAYER_VARIABLE, cap);
+        entity.setAttached(ModAttachments.PLAYER_VARIABLE, cap);
         cap.sync(entity);
 
         return true;

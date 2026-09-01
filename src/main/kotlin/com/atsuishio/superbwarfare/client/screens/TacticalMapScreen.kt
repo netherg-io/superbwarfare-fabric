@@ -41,6 +41,7 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import java.util.*
 import kotlin.math.atan2
+import com.atsuishio.superbwarfare.client.boundKey
 
 @Environment(EnvType.CLIENT)
 class TacticalMapScreen : Screen(Component.translatable("container.superbwarfare.tactical_map")) {
@@ -2551,7 +2552,7 @@ class TacticalMapScreen : Screen(Component.translatable("container.superbwarfare
                 return true
             }
         }
-        if (pKeyCode == ModKeyMappings.TOGGLE_TACTICAL_MAP.key.value || pKeyCode == 256) {
+        if (pKeyCode == ModKeyMappings.TOGGLE_TACTICAL_MAP.boundKey.value || pKeyCode == 256) {
             onClose()
             return true
         }

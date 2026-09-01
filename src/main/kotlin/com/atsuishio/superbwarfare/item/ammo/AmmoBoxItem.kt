@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.data.gun.Ammo
 import com.atsuishio.superbwarfare.init.ModAttachments
 import com.atsuishio.superbwarfare.init.ModDataComponents
 import com.atsuishio.superbwarfare.init.ModSounds
+import com.atsuishio.superbwarfare.init.getData
+import com.atsuishio.superbwarfare.init.setData
 import com.atsuishio.superbwarfare.tools.FormatTool.format0D
 import com.atsuishio.superbwarfare.tools.SoundTool
 import com.atsuishio.superbwarfare.tools.plus
@@ -23,11 +25,12 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.Level
+import io.github.fabricators_of_create.porting_lib.item.extensions.EntitySwingListenerItem
 import kotlin.math.min
 
 var ItemStack.ammoBoxData: AmmoBoxItem.AmmoBoxData
     get() {
-        val info = get(ModDataComponents.AMMO_BOX_INFO) ?: AmmoBoxInfo("All", false)
+        val info = get(ModDataComponents.AMMO_BOX_INFO.get()) ?: AmmoBoxInfo("All", false)
 
         val map = Ammo.entries.mapNotNull {
             val count = this@ammoBoxData.get(it.dataComponent.get()) ?: return@mapNotNull null
@@ -40,14 +43,14 @@ var ItemStack.ammoBoxData: AmmoBoxItem.AmmoBoxData
         if (value == this) return
 
         val info = AmmoBoxInfo(value.type?.toString() ?: "All", value.isDrop)
-        this@ammoBoxData.set(ModDataComponents.AMMO_BOX_INFO, info)
+        this@ammoBoxData.set(ModDataComponents.AMMO_BOX_INFO.get(), info)
 
         value.storedAmmo.forEach { (ammo, count) ->
             ammo.set(this, count)
         }
     }
 
-open class AmmoBoxItem : Item(Properties().stacksTo(1)) {
+open class AmmoBoxItem : Item(Properties().stacksTo(1)), EntitySwingListenerItem {
     data class AmmoBoxData(
         val selectedType: Ammo? = null,
         val isDrop: Boolean = false,
@@ -116,7 +119,7 @@ open class AmmoBoxItem : Item(Properties().stacksTo(1)) {
         return InteractionResultHolder.consume(stack)
     }
 
-    override fun onEntitySwing(stack: ItemStack, entity: LivingEntity, hand: InteractionHand): Boolean {
+    override fun onEntitySwing(stack: ItemStack, entity: LivingEntity): Boolean {
         if (entity.isCrouching && entity is ServerPlayer) {
             stack.ammoBoxData = stack.ammoBoxData.switchToNextType()
 

@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.FabricLoader
 object CompatHolder {
     const val DMV: String = "dreamaticvoyage"
     const val VRC: String = "virtuarealcraft"
-    const val CLOTH_CONFIG: String = "cloth_config"
+    const val CLOTH_CONFIG: String = "cloth-config" // id на Fabric через дефис, не через подчёркивание
 
     fun init() {
         hasMod(CLOTH_CONFIG) {

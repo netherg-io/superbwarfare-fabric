@@ -14,6 +14,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import java.util.*
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 class ChargingStationScreen(pMenu: ChargingStationMenu, pPlayerInventory: Inventory, pTitle: Component) :
@@ -88,7 +89,7 @@ class ChargingStationScreen(pMenu: ChargingStationMenu, pPlayerInventory: Invent
         33,
         14,
         Component.translatable("container.superbwarfare.charging_station.show_range")
-    ) {
+    ), AccessoriesButtonStub {
         override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
             this.message = if (this@ChargingStationScreen.menu.showRange())
                 Component.translatable("container.superbwarfare.charging_station.hide_range")

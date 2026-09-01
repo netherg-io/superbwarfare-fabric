@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import kotlin.math.min
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
+import com.atsuishio.superbwarfare.client.boundKey
 
 @Environment(EnvType.CLIENT)
 class WeaponEditScreen(private val stack: ItemStack) : Screen(Component.empty()) {
@@ -247,7 +249,7 @@ class WeaponEditScreen(private val stack: ItemStack) : Screen(Component.empty())
     }
 
     override fun keyPressed(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
-        if (pKeyCode == ModKeyMappings.EDIT_MODE.key.value) {
+        if (pKeyCode == ModKeyMappings.EDIT_MODE.boundKey.value) {
             this.onClose()
             return true
         }
@@ -262,7 +264,7 @@ class WeaponEditScreen(private val stack: ItemStack) : Screen(Component.empty())
         pHeight: Int, // 0 = barrel, 1 = scope, 2 = grip, 3 = stock, 4 = magazine, 5 = ammoType
         var type: Int,
         var left: Boolean
-    ) : AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+    ) : AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
             pGuiGraphics.pose().pushPose()
 

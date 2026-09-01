@@ -4,8 +4,6 @@ import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.perk.Perk
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.tags.BlockTags
-import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.EntityType
@@ -15,22 +13,22 @@ import net.minecraft.world.level.block.Block
 object ModTags {
     @JvmStatic
     fun commonItemTag(name: String): TagKey<Item> {
-        return ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", name))
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", name))
     }
 
     @JvmStatic
     fun commonBlockTag(name: String): TagKey<Block> {
-        return BlockTags.create(ResourceLocation.fromNamespaceAndPath("c", name))
+        return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", name))
     }
 
     @JvmStatic
     fun modItemTag(name: String): TagKey<Item> {
-        return ItemTags.create(Mod.loc(name))
+        return TagKey.create(Registries.ITEM, Mod.loc(name))
     }
 
     @JvmStatic
     fun modBlockTag(name: String): TagKey<Block> {
-        return BlockTags.create(Mod.loc(name))
+        return TagKey.create(Registries.BLOCK, Mod.loc(name))
     }
 
     @JvmStatic

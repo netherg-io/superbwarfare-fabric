@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.phys.BlockHitResult
-import net.minecraft.world.phys.HitResult
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
 open class ChargingStationBlock :
@@ -143,13 +142,11 @@ open class ChargingStationBlock :
     }
 
     override fun getCloneItemStack(
-        state: BlockState,
-        target: HitResult,
         level: LevelReader,
         pos: BlockPos,
-        player: Player
+        state: BlockState
     ): ItemStack {
-        val itemstack = super.getCloneItemStack(state, target, level, pos, player)
+        val itemstack = super.getCloneItemStack(level, pos, state)
         level.getBlockEntity(pos, ModBlockEntities.CHARGING_STATION.get())
             .ifPresent { blockEntity ->
                 blockEntity.saveToItem(itemstack, level.registryAccess())

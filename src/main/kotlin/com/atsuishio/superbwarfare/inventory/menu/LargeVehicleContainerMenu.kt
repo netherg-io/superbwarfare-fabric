@@ -1,8 +1,9 @@
 package com.atsuishio.superbwarfare.inventory.menu
 
 import net.minecraft.world.entity.player.Inventory
+import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.world.inventory.MenuType
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 
 class LargeVehicleContainerMenu(id: Int, inventory: Inventory, entityId: Int) :
     AbstractVehicleContainerMenu(TYPE, id, inventory, entityId) {
@@ -17,8 +18,13 @@ class LargeVehicleContainerMenu(id: Int, inventory: Inventory, entityId: Int) :
     }
 
     companion object {
+        // id сущности-техники едет на клиент через данные открытия меню:
+        // фабричный аналог IMenuTypeExtension.create(IContainerFactory).
+        // Сервер обязан отдавать его из ExtendedScreenHandlerFactory<Int>.getScreenOpeningData.
         @JvmField
-        val TYPE: MenuType<LargeVehicleContainerMenu> =
-            IMenuTypeExtension.create { id, inventory, buf -> LargeVehicleContainerMenu(id, inventory, buf.readInt()) }
+        val TYPE: MenuType<LargeVehicleContainerMenu> = ExtendedScreenHandlerType<LargeVehicleContainerMenu, Int>(
+            { id, inventory, entityId -> LargeVehicleContainerMenu(id, inventory, entityId) },
+            ByteBufCodecs.VAR_INT
+        )
     }
 }

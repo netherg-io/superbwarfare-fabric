@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.Connection
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
@@ -34,15 +33,6 @@ open class CreativeChargingStationBlockEntity(pos: BlockPos, state: BlockState) 
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener?>? {
         return ClientboundBlockEntityDataPacket.create(this)
-    }
-
-    override fun onDataPacket(
-        connection: Connection,
-        packet: ClientboundBlockEntityDataPacket,
-        registries: HolderLookup.Provider
-    ) {
-        super.onDataPacket(connection, packet, registries)
-        this.showRange = packet.tag.getBoolean("ShowRange")
     }
 
     private fun chargeEntity() {

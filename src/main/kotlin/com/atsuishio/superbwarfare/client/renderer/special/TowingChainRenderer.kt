@@ -66,7 +66,7 @@ object TowingChainRenderer {
     private fun onRenderLevelStage(context: WorldRenderContext) {
         val level = clientLevel ?: return
         val camera = context.camera()
-        val poseStack = context.matrixStack()
+        val poseStack = context.matrixStack() ?: return
         val bufferSource = mc.renderBuffers().bufferSource()
         val partialTick = context.tickCounter()
 

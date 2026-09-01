@@ -25,9 +25,9 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 
 var ItemStack.firingParameters: FiringParametersItem.Parameters
-    get() = this.getOrDefault(ModDataComponents.FIRING_PARAMETERS, FiringParametersItem.Parameters())
+    get() = this.getOrDefault(ModDataComponents.FIRING_PARAMETERS.get(), FiringParametersItem.Parameters())
     set(value) {
-        set(ModDataComponents.FIRING_PARAMETERS, value)
+        set(ModDataComponents.FIRING_PARAMETERS.get(), value)
     }
 
 class FiringParametersItem : Item(Properties().stacksTo(1)), ItemScreenProvider, IVehicleInteract {

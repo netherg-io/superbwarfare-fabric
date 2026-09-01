@@ -9,13 +9,8 @@ import net.minecraft.world.item.TooltipFlag
 import javax.annotation.ParametersAreNonnullByDefault
 
 class VehicleResetKitItem : Item(Properties().rarity(Rarity.UNCOMMON).stacksTo(1)) {
-    override fun hasCraftingRemainingItem(stack: ItemStack): Boolean {
-        return true
-    }
-
-    override fun getCraftingRemainingItem(itemstack: ItemStack): ItemStack {
-        return itemstack.copy()
-    }
+    /** hasCraftingRemainingItem + getCraftingRemainingItem из NeoForge -- это FabricItem#getRecipeRemainder. */
+    override fun getRecipeRemainder(stack: ItemStack): ItemStack = stack.copy()
 
     @ParametersAreNonnullByDefault
     override fun appendHoverText(

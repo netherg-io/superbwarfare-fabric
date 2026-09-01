@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.tools.NBTTool
 import net.minecraft.server.level.ServerLevel
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
@@ -78,7 +79,7 @@ class ParachuteItem : Item(Properties().stacksTo(1).durability(600)), Accessory 
             }
 
             if (entity.tickCount % 40 == 0 && level is ServerLevel) {
-                stack.hurtAndBreak(1, level, entity) { }
+                stack.hurtAndBreak(1, level, entity as? ServerPlayer) { }
             }
             entity.resetFallDistance()
         }

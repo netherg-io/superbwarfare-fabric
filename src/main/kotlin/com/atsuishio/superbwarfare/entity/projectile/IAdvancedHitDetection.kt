@@ -271,20 +271,10 @@ interface IAdvancedHitDetection {
         if (stack.`is`(ModItems.TRANSCRIPT.get())) {
             val size = 10
 
-            var scores = stack.get(ModDataComponents.TRANSCRIPT_SCORE)
-            if (scores == null) scores = mutableListOf()
+            val type = ModDataComponents.TRANSCRIPT_SCORE.get()
+            val scores = (stack.get(type) ?: emptyList()) + com.mojang.datafixers.util.Pair(score, distance)
 
-            val queue = ArrayDeque(scores)
-            queue.offer(com.mojang.datafixers.util.Pair(score, distance))
-
-            while (queue.size > size) {
-                queue.poll()
-            }
-
-            stack.set(
-                ModDataComponents.TRANSCRIPT_SCORE,
-                queue.toList()
-            )
+            stack.set(type, scores.takeLast(size))
         }
     }
 

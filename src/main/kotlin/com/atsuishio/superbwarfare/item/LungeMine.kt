@@ -42,7 +42,8 @@ import software.bernie.geckolib.animation.RawAnimation
 import software.bernie.geckolib.util.GeckoLibUtil
 
 // 不要改这个东西，会肘击 YSM
-open class LungeMine : Item(Properties().stacksTo(4)), GeoItem, EntitySwingListenerItem, ReequipAnimationItem {
+open class LungeMine : Item(Properties().stacksTo(4)), GeoItem, EntitySwingListenerItem, ReequipAnimationItem,
+    StackAttributeItem {
     private val cache: AnimatableInstanceCache = GeckoLibUtil.createInstanceCache(this)
 
     fun getTransformType(type: ItemDisplayContext?) {
@@ -124,7 +125,7 @@ open class LungeMine : Item(Properties().stacksTo(4)), GeoItem, EntitySwingListe
     }
 
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val list = ArrayList(super.getDefaultAttributeModifiers(stack).modifiers())
+        val list = ArrayList(baseAttributeModifiers(stack).modifiers())
 
         // 移速
         list.add(

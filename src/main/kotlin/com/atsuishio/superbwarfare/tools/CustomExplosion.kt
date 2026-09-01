@@ -37,7 +37,6 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
 import net.minecraft.world.phys.shapes.CollisionContext
-import net.neoforged.neoforge.event.EventHooks
 import org.joml.Vector3d
 import java.util.function.Supplier
 import kotlin.math.cos
@@ -325,7 +324,8 @@ class CustomExplosion @JvmOverloads constructor(
             this.entity,
             AABB(x0.toDouble(), y0.toDouble(), z0.toDouble(), x1.toDouble(), y1.toDouble(), z1.toDouble())
         )
-        EventHooks.onExplosionDetonate(this.level, this, list, diameter.toDouble())
+        // ponytail: ExplosionEvent.Detonate ни в Fabric API, ни в Porting Lib нет — аддоны
+        // больше не могут вычеркнуть сущность из списка поражения. Понадобится — свой миксин.
         val position = Vec3(this.x, this.y, this.z)
 
         var hit = false
@@ -623,7 +623,7 @@ class CustomExplosion @JvmOverloads constructor(
                 .setBeast(beast)
 
             customExplosion.explode()
-            EventHooks.onExplosionStart(directSource.level(), customExplosion)
+            // ponytail: ExplosionEvent.Start на Fabric нет, отменить взрыв извне нельзя.
             customExplosion.finalizeExplosion(false)
 
             // Auto-detect particle type from radius if not explicitly set

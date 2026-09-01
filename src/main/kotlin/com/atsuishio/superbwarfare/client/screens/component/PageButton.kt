@@ -7,7 +7,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 
 class PageButton(x: Int, y: Int, private val left: Boolean, onPress: OnPress) :
-    Button(x, y, 10, 15, Component.empty(), onPress, DEFAULT_NARRATION) {
+    Button(x, y, 10, 15, Component.empty(), onPress, DEFAULT_NARRATION), AccessoriesButtonStub {
     override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
         pGuiGraphics.pose().pushPose()
         RenderSystem.enableDepthTest()

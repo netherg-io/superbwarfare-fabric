@@ -12,7 +12,6 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.RecipeType
 import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer
-import net.neoforged.bus.api.IEventBus
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
 
@@ -68,7 +67,7 @@ object ModRecipes {
             }
         })
 
-    fun register(bus: IEventBus) {
+    fun register(bus: Any?) {
         RECIPE_SERIALIZERS.register(bus)
         RECIPE_TYPES.register(bus)
     }

@@ -9,17 +9,16 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponentType
-import net.minecraft.core.registries.Registries
-import net.neoforged.bus.api.IEventBus
+import net.minecraft.core.registries.BuiltInRegistries
 import com.atsuishio.superbwarfare.fabric.DeferredHolder
 import com.atsuishio.superbwarfare.fabric.DeferredRegister
-import java.util.function.Function
+import java.util.function.Supplier
 import java.util.function.UnaryOperator
 
 object ModDataComponents {
     @JvmField
     val DATA_COMPONENT_TYPES: DeferredRegister<DataComponentType<*>> =
-        DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Mod.MODID)
+        DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, Mod.MODID)
 
     @JvmField
     val FIRING_PARAMETERS: DeferredHolder<DataComponentType<*>, DataComponentType<FiringParametersItem.Parameters>> =
@@ -62,14 +61,14 @@ object ModDataComponents {
     ): DeferredHolder<DataComponentType<*>, DataComponentType<T>> {
         return DATA_COMPONENT_TYPES.register(
             name,
-            Function { builderOperator.apply(DataComponentType.builder()).build() }
+            Supplier { builderOperator.apply(DataComponentType.builder<T>()).build() }
         )
     }
 
-    fun register(eventBus: IEventBus) {
+    fun register(bus: Any? = null) {
         for (type in Ammo.entries) {
             type.dataComponent = register("ammo_" + type.name) { it.persistent(Codec.INT) }
         }
-        DATA_COMPONENT_TYPES.register(eventBus)
+        DATA_COMPONENT_TYPES.register(bus)
     }
 }

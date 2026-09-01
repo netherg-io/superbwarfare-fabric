@@ -60,7 +60,7 @@ public class CustomGunRenderer<T extends GunGeoItem & GeoAnimatable> extends Geo
     @Override
     public RenderType getRenderType(T animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         if (texture == null) {
-            return RenderType.TRANSLUCENT;
+            return RenderType.translucent();
         }
         return RenderType.entityTranslucent(texture);
     }

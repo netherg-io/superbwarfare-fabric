@@ -26,6 +26,7 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import com.atsuishio.superbwarfare.client.boundKey
 
 open class ClientGunImageTooltip(tooltip: GunImageComponent) : ClientTooltipComponent {
     protected val tipWidth: Int = tooltip.width
@@ -316,7 +317,7 @@ open class ClientGunImageTooltip(tooltip: GunImageComponent) : ClientTooltipComp
          */
         get() = Component.translatable(
             "des.superbwarfare.guns.edit",
-            "[" + ModKeyMappings.EDIT_MODE.key.displayName.string + "]"
+            "[" + ModKeyMappings.EDIT_MODE.boundKey.displayName.string + "]"
         ).withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.ITALIC)
 
     /**

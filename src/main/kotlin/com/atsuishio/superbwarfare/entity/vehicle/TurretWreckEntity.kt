@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle
 
+import com.atsuishio.superbwarfare.fabric.LevelLifecycleListener
 import com.atsuishio.superbwarfare.client.lighting.VehicleLightingHandler
 import com.atsuishio.superbwarfare.client.particle.CustomCloudOption
 import com.atsuishio.superbwarfare.config.server.VehicleConfig
@@ -50,7 +51,8 @@ import org.joml.Quaterniond
 import org.joml.Quaternionf
 import kotlin.random.Random
 
-open class TurretWreckEntity(type: EntityType<TurretWreckEntity>, level: Level) : Entity(type, level) {
+open class TurretWreckEntity(type: EntityType<TurretWreckEntity>, level: Level) : Entity(type, level),
+    LevelLifecycleListener {
     companion object {
         @JvmField
         val QUATERNION: EntityDataAccessor<Quaternionf> =
@@ -201,7 +203,7 @@ open class TurretWreckEntity(type: EntityType<TurretWreckEntity>, level: Level) 
         var f = 0.98f
         if (this.onGround() || supportByVehicle) {
             val pos = this.blockPosBelowThatAffectsMyMovement
-            f = level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98f
+            f = level().getBlockState(pos).block.friction * 0.98f
 
             var rot = 0.6f
 
@@ -517,7 +519,6 @@ open class TurretWreckEntity(type: EntityType<TurretWreckEntity>, level: Level) 
     }
 
     override fun onRemovedFromLevel() {
-        super.onRemovedFromLevel()
         if (level().isClientSide) {
             VehicleLightingHandler.handleTurretWreckExplosion(this)
         }

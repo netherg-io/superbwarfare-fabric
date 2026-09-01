@@ -7,28 +7,16 @@ import com.atsuishio.superbwarfare.item.CustomDamageProperty
 import com.atsuishio.superbwarfare.tiers.ModItemTier
 import com.atsuishio.superbwarfare.tools.mc
 import net.minecraft.ChatFormatting
-import net.minecraft.advancements.CriteriaTriggers
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer
-import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerPlayer
-import net.minecraft.sounds.SoundEvents
-import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.*
 import net.minecraft.world.item.component.Tool
 import net.minecraft.world.item.context.UseOnContext
-import net.minecraft.world.level.block.Block
-import net.minecraft.world.level.block.LevelEvent
-import net.minecraft.world.level.block.state.BlockState
-import net.minecraft.world.level.gameevent.GameEvent
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
-import net.neoforged.neoforge.common.ItemAbilities
-import net.neoforged.neoforge.common.ItemAbility
 
 open class MilitaryShovelItem :
     AxeItem(
@@ -60,89 +48,21 @@ open class MilitaryShovelItem :
         )
     }
 
-    override fun canPerformAction(
-        stack: ItemStack,
-        itemAbility: ItemAbility
-    ): Boolean {
-        return TOOL_ACTIONS.contains(itemAbility)
-    }
-
     /**
-     * Code Based on Mekanism-Tools
+     * Апстрим повторял здесь логику Mekanism-Tools поверх NeoForge-овских ItemAbilities: лопата
+     * умеет всё, что умеют топор, лопата и мотыга. На Fabric ItemAbility нет, зато ванильные
+     * useOn у AxeItem/ShovelItem/HoeItem делают ровно эти три набора действий и сами бьют по
+     * прочности того стака, что лежит в UseOnContext, -- то есть по нашей лопате.
+     *
+     * ponytail: набор действий теперь ванильный. Если понадобится расширить его тегами блоков
+     * (снять кору с модового бревна и т.п.), придётся вернуться к своим таблицам превращений.
      */
     override fun useOn(context: UseOnContext): InteractionResult {
-        val level = context.level
-        val blockpos = context.clickedPos
-        val player = context.player ?: return InteractionResult.PASS
+        val axe = super.useOn(context)
+        if (axe != InteractionResult.PASS) return axe
 
-        val blockstate = level.getBlockState(blockpos)
-        var resultToSet = getAxeResult(blockstate, context)
-
-        if (resultToSet == null) {
-            if (player.isShiftKeyDown) {
-                val hoeRes = level.getBlockState(blockpos).getToolModifiedState(context, ItemAbilities.HOE_TILL, false)
-                    ?: return InteractionResult.PASS
-
-                level.playSound(player, blockpos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0f, 1.0f)
-                if (!level.isClientSide) {
-                    HoeItem.changeIntoState(hoeRes).accept(context)
-                }
-            } else {
-                if (context.clickedFace == Direction.DOWN) {
-                    return InteractionResult.PASS
-                }
-                val foundResult = blockstate.getToolModifiedState(context, ItemAbilities.SHOVEL_FLATTEN, false)
-                if (foundResult != null && level.isEmptyBlock(blockpos.above())) {
-                    level.playSound(player, blockpos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F)
-                    resultToSet = foundResult
-                } else {
-                    resultToSet = blockstate.getToolModifiedState(context, ItemAbilities.SHOVEL_DOUSE, false)
-                    if (resultToSet != null && !level.isClientSide) {
-                        level.levelEvent(null, LevelEvent.SOUND_EXTINGUISH_FIRE, blockpos, 0)
-                    }
-                }
-
-                if (resultToSet == null) {
-                    return InteractionResult.PASS
-                }
-
-                if (!level.isClientSide) {
-                    val stack = context.itemInHand
-                    if (player is ServerPlayer) {
-                        CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, blockpos, stack)
-                    }
-                    level.setBlock(blockpos, resultToSet, Block.UPDATE_ALL_IMMEDIATE)
-                    level.gameEvent(GameEvent.BLOCK_CHANGE, blockpos, GameEvent.Context.of(player, resultToSet))
-                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.hand))
-                }
-            }
-        }
-
-        return InteractionResult.sidedSuccess(level.isClientSide)
-    }
-
-    private fun getAxeResult(state: BlockState, context: UseOnContext): BlockState? {
-        val level = context.level
-        val pos = context.clickedPos
-        val player = context.player
-        var resultToSet = state.getToolModifiedState(context, ItemAbilities.AXE_STRIP, false)
-        if (resultToSet != null) {
-            level.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F)
-            return resultToSet
-        }
-        resultToSet = state.getToolModifiedState(context, ItemAbilities.AXE_SCRAPE, false)
-        if (resultToSet != null) {
-            level.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F)
-            level.levelEvent(player, LevelEvent.PARTICLES_SCRAPE, pos, 0)
-            return resultToSet
-        }
-        resultToSet = state.getToolModifiedState(context, ItemAbilities.AXE_WAX_OFF, false)
-        if (resultToSet != null) {
-            level.playSound(player, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F)
-            level.levelEvent(player, LevelEvent.PARTICLES_WAX_OFF, pos, 0)
-            return resultToSet
-        }
-        return null
+        val vanilla = if (context.player?.isShiftKeyDown == true) Items.IRON_HOE else Items.IRON_SHOVEL
+        return vanilla.useOn(context)
     }
 
     override fun getEnchantmentValue(): Int {
@@ -166,11 +86,5 @@ open class MilitaryShovelItem :
             )
         }
 
-        private val TOOL_ACTIONS = buildSet {
-            addAll(ItemAbilities.DEFAULT_HOE_ACTIONS)
-            addAll(ItemAbilities.DEFAULT_SHOVEL_ACTIONS)
-            addAll(ItemAbilities.DEFAULT_AXE_ACTIONS)
-            add(ItemAbilities.SWORD_SWEEP)
-        }
     }
 }

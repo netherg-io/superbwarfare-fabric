@@ -31,8 +31,10 @@ import net.minecraft.world.phys.Vec3
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import javax.annotation.ParametersAreNonnullByDefault
+import com.atsuishio.superbwarfare.item.StackAttributeItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.ReequipAnimationItem
 
-open class MonitorItem : Item(Properties().stacksTo(1)) {
+open class MonitorItem : Item(Properties().stacksTo(1)), StackAttributeItem, ReequipAnimationItem {
     private fun resetDroneData(drone: DroneEntity?) {
         if (drone == null) return
 
@@ -80,7 +82,7 @@ open class MonitorItem : Item(Properties().stacksTo(1)) {
     }
 
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val list = ArrayList(super.getDefaultAttributeModifiers(stack).modifiers())
+        val list = ArrayList(baseAttributeModifiers(stack).modifiers())
         list.addAll(
             listOf(
                 ItemAttributeModifiers.Entry(

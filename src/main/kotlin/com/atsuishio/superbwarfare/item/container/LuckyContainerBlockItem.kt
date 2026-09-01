@@ -26,13 +26,16 @@ import net.minecraft.world.phys.HitResult
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
+import com.atsuishio.superbwarfare.item.DamageFilterItem
 
 class LuckyContainerBlockItem :
-    BlockItem(ModBlocks.LUCKY_CONTAINER.get(), Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()) {
+    BlockItem(ModBlocks.LUCKY_CONTAINER.get(), Properties().stacksTo(1).rarity(Rarity.EPIC).fireResistant()),
+    DamageFilterItem {
 
-    override fun canBeHurtBy(stack: ItemStack, source: DamageSource) = super.canBeHurtBy(stack, source)
-            && !source.`is`(DamageTypeTags.IS_EXPLOSION)
-            && !source.`is`(DamageTypes.CACTUS)
+    // На NeoForge это был IItemExtension#canBeHurtBy; огнестойкость ваниль проверяет сама,
+    // поэтому от вызова super остались только иммунитеты мода.
+    override fun canBeHurtBy(stack: ItemStack, source: DamageSource) =
+        !source.`is`(DamageTypeTags.IS_EXPLOSION) && !source.`is`(DamageTypes.CACTUS)
 
     override fun useOn(context: UseOnContext): InteractionResult {
         return InteractionResult.PASS

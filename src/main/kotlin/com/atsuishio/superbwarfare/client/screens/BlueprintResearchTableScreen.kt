@@ -27,6 +27,7 @@ import net.fabricmc.api.Environment
 import com.atsuishio.superbwarfare.fabric.ItemStackHandler
 import com.atsuishio.superbwarfare.fabric.RecipeWrapper
 import kotlin.jvm.optionals.getOrNull
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 class BlueprintResearchTableScreen(
@@ -239,7 +240,7 @@ class BlueprintResearchTableScreen(
         const val PAGE_SIZE = 27
     }
 
-    private class CraftButton(x: Int, y: Int) : AbstractButton(x, y, 10, 10, Component.empty()) {
+    private class CraftButton(x: Int, y: Int) : AbstractButton(x, y, 10, 10, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             sendPacketToServer(BlueprintCraftMessage)
         }
@@ -260,7 +261,7 @@ class BlueprintResearchTableScreen(
     }
 
     private inner class PageButton(x: Int, y: Int, val forward: Boolean) :
-        AbstractButton(x, y, 25, 8, Component.empty()) {
+        AbstractButton(x, y, 25, 8, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             val recipe = this@BlueprintResearchTableScreen.getRecipe() ?: return
             val value = recipe.value ?: return

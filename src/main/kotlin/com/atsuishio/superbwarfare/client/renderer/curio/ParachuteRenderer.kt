@@ -74,7 +74,7 @@ class ParachuteRenderer : AccessoryRenderer {
             val player = localPlayer ?: return
             if (!ParachuteItem.isParachuteOpen(player)) return
             if (!ParachuteItem.isParachuteVisible(player)) return
-            val stack = context.matrixStack()
+            val stack = context.matrixStack() ?: return
 
             if (mc.options.cameraType == CameraType.FIRST_PERSON) {
                 stack.pushPose()

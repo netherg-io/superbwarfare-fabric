@@ -37,6 +37,7 @@ import com.atsuishio.superbwarfare.world.saveddata.ChunkPosSavedData
 import com.atsuishio.superbwarfare.world.saveddata.ProjectileChunkSavedData
 import com.atsuishio.superbwarfare.world.saveddata.TDMSavedData
 import com.atsuishio.superbwarfare.data.CustomData
+import com.atsuishio.superbwarfare.fabric.EntityHooks
 import com.atsuishio.superbwarfare.tools.postEvent
 import com.atsuishio.superbwarfare.init.*
 import com.atsuishio.superbwarfare.network.initializeNetwork
@@ -121,6 +122,8 @@ object Mod : ModInitializer {
         ModCommandArguments.COMMAND_ARGUMENT_TYPES.register(null)
 
         initializeNetwork()
+        // Замена onAddedToLevel/onRemovedFromLevel и IEntityWithComplexSpawn из NeoForge.
+        EntityHooks.init()
         // Подписчики уже зарегистрированы выше; рассылаем до сборки вкладок, иначе список пуст.
         postEvent(RegisterContainersEvent())
         ModDatapackRegistries.register()

@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 open class ReforgingTableScreen(pMenu: ReforgingTableMenu, pPlayerInventory: Inventory, pTitle: Component) :
@@ -94,7 +95,7 @@ open class ReforgingTableScreen(pMenu: ReforgingTableMenu, pPlayerInventory: Inv
     }
 
     @Environment(EnvType.CLIENT)
-    internal class ReforgeButton(pX: Int, pY: Int) : AbstractButton(pX, pY, 40, 16, Component.empty()) {
+    internal class ReforgeButton(pX: Int, pY: Int) : AbstractButton(pX, pY, 40, 16, Component.empty()), AccessoriesButtonStub {
         override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
             pGuiGraphics.blit(
                 TEXTURE,
@@ -119,7 +120,7 @@ open class ReforgingTableScreen(pMenu: ReforgingTableMenu, pPlayerInventory: Inv
 
     @Environment(EnvType.CLIENT)
     internal inner class UpgradeButton(pX: Int, pY: Int, var type: Perk.Type) :
-        AbstractButton(pX, pY, 9, 9, Component.empty()) {
+        AbstractButton(pX, pY, 9, 9, Component.empty()), AccessoriesButtonStub {
         override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
             pGuiGraphics.blit(
                 TEXTURE,
@@ -167,7 +168,7 @@ open class ReforgingTableScreen(pMenu: ReforgingTableMenu, pPlayerInventory: Inv
 
     @Environment(EnvType.CLIENT)
     internal inner class DowngradeButton(pX: Int, pY: Int, var type: Perk.Type) :
-        AbstractButton(pX, pY, 12, 12, Component.empty()) {
+        AbstractButton(pX, pY, 12, 12, Component.empty()), AccessoriesButtonStub {
         override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
             pGuiGraphics.blit(
                 TEXTURE,

@@ -31,15 +31,15 @@ import net.minecraft.world.phys.HitResult
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
+import com.atsuishio.superbwarfare.item.DamageFilterItem
 
-class ContainerBlockItem : BlockItem(ModBlocks.CONTAINER.get(), Properties().stacksTo(1).fireResistant()) {
+class ContainerBlockItem :
+    BlockItem(ModBlocks.CONTAINER.get(), Properties().stacksTo(1).fireResistant()), DamageFilterItem {
 
-    override fun canBeHurtBy(
-        stack: ItemStack,
-        source: DamageSource
-    ) = super.canBeHurtBy(stack, source)
-            && !source.`is`(DamageTypeTags.IS_EXPLOSION)
-            && !source.`is`(DamageTypes.CACTUS)
+    // На NeoForge это был IItemExtension#canBeHurtBy; огнестойкость ваниль проверяет сама,
+    // поэтому от вызова super остались только иммунитеты мода.
+    override fun canBeHurtBy(stack: ItemStack, source: DamageSource) =
+        !source.`is`(DamageTypeTags.IS_EXPLOSION) && !source.`is`(DamageTypes.CACTUS)
 
     override fun useOn(context: UseOnContext) = InteractionResult.PASS
 
@@ -160,7 +160,8 @@ class ContainerBlockItem : BlockItem(ModBlocks.CONTAINER.get(), Properties().sta
             val tag = if (data != null) data.copyTag() else CompoundTag()
 
             val entityTag = CompoundTag()
-            val encodedId = entity.encodeId
+            // Entity.getEncodeId() protected; повторяем его тело -- id есть только у сериализуемых.
+            val encodedId = if (entity.type.canSerialize()) EntityType.getKey(entity.type).toString() else null
             if (encodedId != null) {
                 entityTag.putString("id", encodedId)
             }

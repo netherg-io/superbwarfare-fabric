@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.block
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.Mob
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
@@ -33,6 +33,8 @@ open class DragonTeethBlock : Block(
 ) {
     init {
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false))
+        // Аналог IBlockExtension.getAdjacentBlockPathType из NeoForge: мобы обходят зубы как лаву.
+        LandPathNodeTypesRegistry.register(this, null, PathType.LAVA)
     }
 
     override fun propagatesSkylightDown(state: BlockState, reader: BlockGetter, pos: BlockPos): Boolean {
@@ -54,16 +56,6 @@ open class DragonTeethBlock : Block(
 
     override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         return Shapes.or(box(2.0, 0.0, 2.0, 14.0, 25.0, 14.0))
-    }
-
-    override fun getAdjacentBlockPathType(
-        state: BlockState,
-        level: BlockGetter,
-        pos: BlockPos,
-        mob: Mob?,
-        originalType: PathType
-    ): PathType? {
-        return PathType.LAVA
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block?, BlockState?>) {

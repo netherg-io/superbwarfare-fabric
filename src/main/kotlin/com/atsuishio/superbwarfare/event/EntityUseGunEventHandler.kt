@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.event
 import com.atsuishio.superbwarfare.config.server.SpawnConfig
 import com.atsuishio.superbwarfare.data.mob_guns.MobGunData
 import com.atsuishio.superbwarfare.entity.goal.GunShootGoal
+import com.atsuishio.superbwarfare.mixins.MobGoalSelectorAccessor
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityJoinLevelEvent
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Mob
@@ -26,7 +27,7 @@ object EntityUseGunEventHandler {
         val gunData = data.getGunData() ?: return
 
         // TODO 正确处理权重
-        entity.goalSelector.addGoal(data.goalWeight(), GunShootGoal(entity, data))
+        (entity as MobGoalSelectorAccessor).`sbw$goalSelector`().addGoal(data.goalWeight(), GunShootGoal(entity, data))
 
         if (data.backupAmmoCount() > 0) {
             gunData.virtualAmmo.set(data.backupAmmoCount())

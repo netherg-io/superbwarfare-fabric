@@ -26,6 +26,8 @@ import com.atsuishio.superbwarfare.fabric.Capabilities
 import com.atsuishio.superbwarfare.fabric.getCapability
 import java.util.regex.Pattern
 import kotlin.math.max
+import com.atsuishio.superbwarfare.client.boundKey
+import com.atsuishio.superbwarfare.client.drawString
 
 @Environment(EnvType.CLIENT)
 object AmmoBarOverlay : CommonOverlay("ammo_bar") {
@@ -69,7 +71,7 @@ object AmmoBarOverlay : CommonOverlay("ammo_bar") {
 
             // 渲染开火模式切换按键
             if (item !== ModItems.MINIGUN.get()) {
-                val str = "[${ModKeyMappings.FIRE_MODE.key.displayName.string}]"
+                val str = "[${ModKeyMappings.FIRE_MODE.boundKey.displayName.string}]"
                 guiGraphics.drawString(
                     font,
                     str,

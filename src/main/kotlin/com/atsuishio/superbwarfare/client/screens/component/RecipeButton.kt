@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 
 class RecipeButton(x: Int, y: Int, private val stack: ItemStack, onPress: OnPress) :
-    Button(x, y, 80, 18, Component.empty(), onPress, DEFAULT_NARRATION) {
+    Button(x, y, 80, 18, Component.empty(), onPress, DEFAULT_NARRATION), AccessoriesButtonStub {
     private var isSelected = false
 
     override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {

@@ -86,7 +86,6 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.ContainerHelper
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.SimpleMenuProvider
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.player.Inventory
@@ -101,25 +100,26 @@ import net.minecraft.world.item.NameTagItem
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.material.FluidState
+import net.minecraft.tags.FluidTags
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import net.fabricmc.api.EnvType
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.fabricmc.api.Environment
 import com.atsuishio.superbwarfare.fabric.Capabilities
+import com.atsuishio.superbwarfare.mixins.EntityAccessor
 import com.atsuishio.superbwarfare.fabric.getCapability
-import net.neoforged.neoforge.common.NeoForgeMod
-import net.neoforged.neoforge.common.util.FakePlayer
+import net.fabricmc.fabric.api.entity.FakePlayer
 import com.atsuishio.superbwarfare.fabric.IEnergyStorage
-import net.neoforged.neoforge.entity.IEntityWithComplexSpawn
-import net.neoforged.neoforge.fluids.FluidType
+import com.atsuishio.superbwarfare.fabric.IEntityWithComplexSpawn
 import com.atsuishio.superbwarfare.fabric.ItemHandlerHelper
 import org.joml.*
 import java.util.*
 import java.util.function.BiConsumer
-import java.util.function.BiPredicate
 import java.util.function.Consumer
 import java.util.function.Function
 import kotlin.math.*
@@ -724,14 +724,19 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
     open fun hasMenu() = computed().vehicleContainerType.hasMenu()
 
     open fun openMenu(player: Player) {
-        if (player is ServerPlayer) {
-            player.openMenu(
-                SimpleMenuProvider(
-                    { containerId, inv, player -> createMenu(containerId, inv, player) },
-                    Component.translatable(this.type.descriptionId)
-                )
-            ) { buf -> buf.writeInt(this.id) }
-        }
+        if (player !is ServerPlayer) return
+
+        // Fabric сам сериализует данные открытия по кодеку типа меню (VAR_INT — id сущности),
+        // писать в буфер вручную, как на NeoForge, нечем.
+        player.openMenu(object : ExtendedScreenHandlerFactory<Int> {
+            override fun getScreenOpeningData(serverPlayer: ServerPlayer) = this@VehicleEntity.id
+
+            override fun getDisplayName(): Component =
+                Component.translatable(this@VehicleEntity.type.descriptionId)
+
+            override fun createMenu(containerId: Int, inv: Inventory, menuPlayer: Player): AbstractContainerMenu? =
+                this@VehicleEntity.createMenu(containerId, inv, menuPlayer)
+        })
     }
 
     open fun createMenu(
@@ -822,8 +827,7 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
 
         pPassenger.persistentData.putInt(TAG_SEAT_INDEX, index)
 
-        this.passengers =
-            ImmutableList.copyOf(orderedPassengers.stream().filter { obj: Entity? -> Objects.nonNull(obj) }.toList())
+        setPassengerList(orderedPassengers)
         this.gameEvent(GameEvent.ENTITY_MOUNT, pPassenger)
 
         this.setChanged()
@@ -842,12 +846,15 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
         if (index == -1) return
 
         orderedPassengers[index] = null
-        this.passengers =
-            ImmutableList.copyOf(orderedPassengers.stream().filter { obj: Entity? -> Objects.nonNull(obj) }
-                .toList())
+        setPassengerList(orderedPassengers)
 
-        pPassenger.boardingCooldown = 60
+        (pPassenger as EntityAccessor).`sbw$setBoardingCooldown`(60)
         this.gameEvent(GameEvent.ENTITY_DISMOUNT, pPassenger)
+    }
+
+    /** Entity#passengers приватен: техника держит своё упорядоченное по местам представление. */
+    private fun setPassengerList(seats: List<Entity?>) {
+        (this as EntityAccessor).`sbw$setPassengers`(ImmutableList.copyOf(seats.filterNotNull()))
     }
 
     /**
@@ -2201,13 +2208,20 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
         return super.updateInWaterStateAndDoFluidPushing()
     }
 
-    override fun isInFluidType(predicate: BiPredicate<FluidType, Double>): Boolean {
-        val collisionOBB = getCollisionOBB() ?: return super.isInFluidType(predicate)
+    /**
+     * Замена Entity#isInFluidType из NeoForge: типов жидкостей на Fabric нет, а вопрос всегда
+     * один — касается ли техника жидкости. Для крупных корпусов центра сущности мало.
+     */
+    open val isInFluidType: Boolean
+        get() = if (getCollisionOBB() == null) isInWater || isInLava else obbTouchesFluid { !it.isEmpty }
+
+    private fun obbTouchesFluid(predicate: (FluidState) -> Boolean): Boolean {
+        val collisionOBB = getCollisionOBB() ?: return false
 
         // 对于有碰撞OBB的载具，只有当OBB接触到流体时才判定为处于流体中
         val obbAABB = OBB.getWorldAABB(collisionOBB).deflate(0.001)
         if (obbAABB.hasNaN() || obbAABB.size <= 0.0) {
-            return super.isInFluidType(predicate)
+            return false
         }
 
         val level = level()
@@ -2230,10 +2244,8 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
                                 x.toDouble(), y.toDouble(), z.toDouble(),
                                 (x + 1).toDouble(), height, (z + 1).toDouble()
                             )
-                            if (OBB.isColliding(collisionOBB, blockAABB)) {
-                                if (predicate.test(fluidState.fluidType, height)) {
-                                    return true
-                                }
+                            if (OBB.isColliding(collisionOBB, blockAABB) && predicate(fluidState)) {
+                                return true
                             }
                         }
                     }
@@ -2245,9 +2257,7 @@ open class VehicleEntity(pEntityType: EntityType<*>, pLevel: Level) : Entity(pEn
 
     override fun isInLava(): Boolean {
         if (getCollisionOBB() == null) return super.isInLava()
-        return isInFluidType { type, _ ->
-            type === NeoForgeMod.LAVA_TYPE.value()
-        }
+        return obbTouchesFluid { it.`is`(FluidTags.LAVA) }
     }
 
     open var health: Float

@@ -42,7 +42,7 @@ open class TacticalTerminalItem : Item(Properties().stacksTo(1).rarity(Rarity.UN
         tooltip.add(
             Component.translatable(
                 "des.superbwarfare.tactical_terminal",
-                Component.literal("[${ModKeyMappings.TOGGLE_TACTICAL_MAP.key.displayName.string}]")
+                Component.literal("[${ModKeyMappings.TOGGLE_TACTICAL_MAP.translatedKeyMessage.string}]")
                     .withStyle(ChatFormatting.AQUA)
             ).withStyle(ChatFormatting.GRAY)
         )

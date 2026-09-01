@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.Mod.loc
 import com.atsuishio.superbwarfare.client.screens.DogTagEditorScreen
+import com.atsuishio.superbwarfare.mixins.SpriteContentsAccessor
 import com.mojang.blaze3d.platform.NativeImage
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.client.renderer.texture.TextureAtlasSprite
@@ -29,7 +30,9 @@ object SpritePixelHelper {
         val y = RANDOM.nextInt(height)
 
         // 获取像素值
-        val colors = sprite.getPixelRGBA(frame, x, y)
+        // ponytail: берём кадр 0 -- смещения кадров анимации у SpriteContents тоже приватные,
+        // а единственный вызов (VehicleMotionUtils) всегда просит нулевой кадр.
+        val colors = (sprite.contents() as SpriteContentsAccessor).originalImage.getPixelRGBA(x, y)
 
         // 提取分量
         val blue = (colors shr 16) and 0xFF

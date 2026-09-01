@@ -13,7 +13,6 @@ import com.atsuishio.superbwarfare.tools.SeekTool
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.Connection
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
@@ -149,18 +148,6 @@ open class FuMO25BlockEntity(pPos: BlockPos, pBlockState: BlockState) :
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener> {
         return ClientboundBlockEntityDataPacket.create(this)
-    }
-
-    override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
-        tag.let { this.loadAdditional(it, lookupProvider) }
-    }
-
-    override fun onDataPacket(
-        net: Connection,
-        pkt: ClientboundBlockEntityDataPacket,
-        lookupProvider: HolderLookup.Provider
-    ) {
-        this.handleUpdateTag(pkt.tag, lookupProvider)
     }
 
     fun getEnergyStorage() = this.energyStorage

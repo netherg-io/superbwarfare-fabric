@@ -22,7 +22,6 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -32,16 +31,18 @@ import net.minecraft.world.item.SwordItem
 import net.minecraft.world.item.Tiers
 import net.minecraft.world.item.TooltipFlag
 import net.minecraft.world.level.gameevent.GameEvent
-import net.minecraft.world.phys.AABB
-import java.util.function.Consumer
+import com.atsuishio.superbwarfare.item.DamageFilterItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.DamageableItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.EntitySwingListenerItem
+import io.github.fabricators_of_create.porting_lib.item.extensions.ShieldBlockItem
 import javax.annotation.ParametersAreNonnullByDefault
 
 open class BeastItem : SwordItem(
     Tiers.NETHERITE, CustomDamageProperty(false)
         .stacksTo(1)
         .rarity(ModRarities.LEGENDARY)
-        .setNoRepair()
-) {
+), DamageableItem, DamageFilterItem, EntitySwingListenerItem, ShieldBlockItem {
+    // setNoRepair() из NeoForge-овских Properties выброшен: предмет и так UNBREAKABLE, чинить нечего.
     override fun isDamageable(stack: ItemStack): Boolean {
         return false
     }
@@ -51,9 +52,9 @@ open class BeastItem : SwordItem(
         return true
     }
 
-    override fun getSweepHitBox(stack: ItemStack, player: Player, target: Entity): AABB {
-        return super.getSweepHitBox(stack, player, target).inflate(3.0)
-    }
+    // ponytail: IItemExtension#getSweepHitBox расширял зону размашистого удара на 3 блока.
+    // Ни в Fabric API, ни в Porting Lib аналога нет; ванильный размах у меча остаётся, но обычного
+    // размера. Вернуть -- миксином в Player.attack, где считается AABB для sweep.
 
     override fun canBeHurtBy(stack: ItemStack, source: DamageSource): Boolean {
         return false
@@ -64,12 +65,12 @@ open class BeastItem : SwordItem(
     }
 
     @ParametersAreNonnullByDefault
-    override fun onEntitySwing(stack: ItemStack, entity: LivingEntity, hand: InteractionHand): Boolean {
+    override fun onEntitySwing(stack: ItemStack, entity: LivingEntity): Boolean {
         val target = TraceTool.findMeleeEntity(entity, 51.4)
         if (target != null) {
             beastKill(entity, target)
         }
-        return super.onEntitySwing(stack, entity, hand)
+        return false
     }
 
     override fun onLeftClickEntity(stack: ItemStack, player: Player, entity: Entity): Boolean {
@@ -173,11 +174,9 @@ open class BeastItem : SwordItem(
                 }
                 target.level().broadcastEntityEvent(target, 60.toByte())
 
-                target.removalReason = Entity.RemovalReason.KILLED
-                target.getPassengers().forEach(Consumer { obj: Entity? -> obj!!.stopRiding() })
-                target.stopRiding()
-
-                target.levelCallback.onRemove(Entity.RemovalReason.KILLED)
+                // Ровно то, что апстрим делал вручную: выставить причину, ссадить пассажиров и
+                // дёрнуть levelCallback. Поле levelCallback приватное, а setRemoved делает то же самое.
+                target.setRemoved(Entity.RemovalReason.KILLED)
 
                 target.gameEvent(GameEvent.ENTITY_DIE)
             }

@@ -64,7 +64,7 @@ class ThermalShaderHandler : ResourceManagerReloadListener {
 
             if (!isActive) return
 
-            prepareAndRenderEntities(context.matrixStack(), partialTick)
+            prepareAndRenderEntities(context.matrixStack() ?: return, partialTick)
         }
 
         private fun onLevelEnd(context: WorldRenderContext) {
@@ -116,10 +116,9 @@ class ThermalShaderHandler : ResourceManagerReloadListener {
             thermalBuffer.setClearColor(0.0f, 0.0f, 0.0f, 0.0f)
             thermalBuffer.clear(Minecraft.ON_OSX)
             if (!seeThroughWalls) {
-                if (mc.mainRenderTarget.isStencilEnabled && !thermalBuffer.isStencilEnabled) {
-                    thermalBuffer.enableStencil()
-                }
-
+                // ponytail: стенсиль-буфера на Fabric нет -- enableStencil/isStencilEnabled это патч
+                // NeoForge в RenderTarget, и без него у mainRenderTarget стенсиля не бывает в принципе,
+                // то есть блок и на NeoForge ничего не делал бы. Нужен -- заводить свой миксин на RenderTarget.
                 try {
                     thermalBuffer.copyDepthFrom(mc.mainRenderTarget)
                 } catch (_: Throwable) {

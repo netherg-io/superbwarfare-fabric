@@ -20,6 +20,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.Entity
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
+import com.atsuishio.superbwarfare.client.boundKey
 
 @Environment(EnvType.CLIENT)
 class VehicleSkinScreen(private val entity: Entity) : Screen(Component.empty()) {
@@ -137,7 +139,7 @@ class VehicleSkinScreen(private val entity: Entity) : Screen(Component.empty()) 
     }
 
     override fun keyPressed(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
-        if (pKeyCode == options.keyInventory.key.value) {
+        if (pKeyCode == options.keyInventory.boundKey.value) {
             this.onClose()
             return true
         }
@@ -157,7 +159,7 @@ class VehicleSkinScreen(private val entity: Entity) : Screen(Component.empty()) 
         private val previewEntity: VehicleEntity?,
         private val vehicleEntityId: Int,
         private val isSelected: Boolean
-    ) : AbstractButton(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.empty()) {
+    ) : AbstractButton(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.empty()), AccessoriesButtonStub {
 
         override fun renderWidget(graphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
             val pose = graphics.pose()
@@ -259,7 +261,7 @@ class VehicleSkinScreen(private val entity: Entity) : Screen(Component.empty()) 
         x: Int,
         y: Int,
         val forward: Boolean
-    ) : AbstractButton(x, y, 20, 94, Component.empty()) {
+    ) : AbstractButton(x, y, 20, 94, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             val page = this@VehicleSkinScreen.currentPage
             val maxPage = this@VehicleSkinScreen.maxPage

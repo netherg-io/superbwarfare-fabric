@@ -606,7 +606,7 @@ open class C4Entity : Entity, OwnableEntity {
 
         val resultPos = pResult.blockPos
         val state = this.level().getBlockState(resultPos)
-        val event = state.block.getSoundType(state, this.level(), resultPos, this).breakSound
+        val event = state.soundType.breakSound
         val speed = this.deltaMovement.length()
         if (speed > 0.1) {
             val volume = min(4f, speed.toFloat() / 4f + 0.5f)

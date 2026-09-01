@@ -38,7 +38,7 @@ object DroneHudOverlay : CommonOverlay("drone_hud") {
 
     val maxDistance: Int
         get() {
-            return (mc.connection?.serverSimulationDistance ?: 16) * 16
+            return (mc.level?.serverSimulationDistance ?: 16) * 16
         }
 
     override fun RenderContext.render() {

@@ -165,7 +165,7 @@ open class Ptkm1rEntity : Entity, OwnableEntity {
         var f = 0.98f
         if (this.onGround()) {
             val pos = this.blockPosBelowThatAffectsMyMovement
-            f = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98f
+            f = this.level().getBlockState(pos).block.friction * 0.98f
         }
 
         this.deltaMovement = this.deltaMovement.multiply(f.toDouble(), 0.98, f.toDouble())

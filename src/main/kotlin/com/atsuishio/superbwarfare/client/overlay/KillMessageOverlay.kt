@@ -30,6 +30,7 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import com.atsuishio.superbwarfare.fabric.findFirstEquipped
 import kotlin.math.pow
+import com.atsuishio.superbwarfare.client.drawString
 
 @Environment(EnvType.CLIENT)
 object KillMessageOverlay : CommonOverlay("kill_message") {

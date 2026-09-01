@@ -51,6 +51,7 @@ import com.atsuishio.superbwarfare.item.container.ContainerBlockItem
 import com.atsuishio.superbwarfare.client.renderer.ModParticleRenderTypes
 import com.atsuishio.superbwarfare.client.renderer.molang.MolangVariable
 import com.atsuishio.superbwarfare.init.ModSoundInstances
+import com.atsuishio.superbwarfare.fabric.EntityHooks
 import com.atsuishio.superbwarfare.network.initializeClientNetwork
 import com.atsuishio.superbwarfare.sound.SoundLimit
 import net.fabricmc.api.ClientModInitializer
@@ -64,6 +65,7 @@ object ModClient : ClientModInitializer {
         SoundLimit.init()
         ModParticleRenderTypes.registerShaders()
         initializeClientNetwork()
+        EntityHooks.initClient()
 
         // Клиентские обработчики и рендер: у NeoForge их поднимала шина по аннотациям.
         ThermalShaderHandler.init()

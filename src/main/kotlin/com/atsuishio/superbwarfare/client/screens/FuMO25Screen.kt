@@ -27,6 +27,7 @@ import net.minecraft.world.entity.player.Inventory
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import java.util.*
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 class FuMO25Screen(pMenu: FuMO25Menu, pPlayerInventory: Inventory, pTitle: Component) :
@@ -286,7 +287,7 @@ class FuMO25Screen(pMenu: FuMO25Menu, pPlayerInventory: Inventory, pTitle: Compo
     }
 
     @Environment(EnvType.CLIENT)
-    internal inner class LockButton(pX: Int, pY: Int) : AbstractButton(pX, pY, 29, 15, Component.empty()) {
+    internal inner class LockButton(pX: Int, pY: Int) : AbstractButton(pX, pY, 29, 15, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             if (this@FuMO25Screen.menu.funcType == 3L && this@FuMO25Screen.menu.getSlot(0).item.isEmpty) {
                 if (this@FuMO25Screen.currentTarget == null) return
@@ -330,7 +331,7 @@ class FuMO25Screen(pMenu: FuMO25Menu, pPlayerInventory: Inventory, pTitle: Compo
 
     @Environment(EnvType.CLIENT)
     internal class ModeButton(pX: Int, pY: Int, private val mode: Int) :
-        AbstractButton(pX, pY, 29, 15, Component.empty()) {
+        AbstractButton(pX, pY, 29, 15, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             sendPacketToServer(RadarChangeModeMessage(this.mode.toByte()))
         }

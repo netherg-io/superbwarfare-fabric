@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import kotlin.math.max
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 open class FiringParametersScreen(private val stack: ItemStack, private val hand: InteractionHand) :
@@ -154,7 +155,7 @@ open class FiringParametersScreen(private val stack: ItemStack, private val hand
 
     @Environment(EnvType.CLIENT)
     internal inner class ModeButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             this@FiringParametersScreen.isDepressed = !this@FiringParametersScreen.isDepressed
         }
@@ -180,7 +181,7 @@ open class FiringParametersScreen(private val stack: ItemStack, private val hand
 
     @Environment(EnvType.CLIENT)
     internal inner class DoneButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             if (!this@FiringParametersScreen.init) return
             if (this@FiringParametersScreen.minecraft != null) {

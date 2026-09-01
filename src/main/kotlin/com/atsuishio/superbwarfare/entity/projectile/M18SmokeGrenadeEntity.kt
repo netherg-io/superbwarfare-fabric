@@ -117,7 +117,7 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
         val resultPos = result.blockPos
         val state = this.level().getBlockState(resultPos)
         val block = state.block
-        val event = block.getSoundType(state, this.level(), resultPos, this).breakSound
+        val event = state.soundType.breakSound
         val speed = this.deltaMovement.length()
         if (speed > 0.5) {
             val volume = min(4f, speed.toFloat() / 4f + 0.5f)

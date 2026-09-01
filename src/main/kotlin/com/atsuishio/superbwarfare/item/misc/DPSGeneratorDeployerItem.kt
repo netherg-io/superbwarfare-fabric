@@ -122,7 +122,7 @@ class DPSGeneratorDeployerItem : Item(Properties()) {
                     }
 
                     player.awardStat(Stats.ITEM_USED.get(this))
-                    level.gameEvent(player, GameEvent.ENTITY_PLACE, entity.position())
+                    level.gameEvent(player, GameEvent.ENTITY_PLACE, blockpos)
                     return InteractionResultHolder.consume(itemstack)
                 }
             } else {

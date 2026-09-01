@@ -73,7 +73,7 @@ class BulletDecalParticle @JvmOverloads constructor(
         val clientLevel = clientLevel
         if (clientLevel != null) {
             val state = clientLevel.getBlockState(pos)
-            return mc.blockRenderer.blockModelShaper.getTexture(state, clientLevel, pos)
+            return mc.blockRenderer.blockModelShaper.getParticleIcon(state)
         }
         return mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
             .apply(MissingTextureAtlasSprite.getLocation())

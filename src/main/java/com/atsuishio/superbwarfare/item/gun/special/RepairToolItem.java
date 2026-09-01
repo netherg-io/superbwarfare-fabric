@@ -29,7 +29,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
@@ -80,7 +80,7 @@ public class RepairToolItem extends GunGeoItem {
                 vehicle.hurt(ModDamageTypes.causeRepairToolDamage(level.registryAccess(), shooter), 0.5f);
                 if (shooter instanceof ServerPlayer player) {
                     player.level().playSound(null, player.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 0.1f, 1);
-                    PacketDistributor.sendToPlayer(player, new ClientIndicatorMessage(0, 5));
+                    ServerPlayNetworking.send(player, new ClientIndicatorMessage(0, 5));
                 }
             } else if (!vehicle.isWreck()) {
                 vehicle.heal(0.5f + 0.0025f * vehicle.getMaxHealth());
@@ -104,7 +104,7 @@ public class RepairToolItem extends GunGeoItem {
 
                 if (shooter instanceof ServerPlayer player) {
                     player.level().playSound(null, player.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 0.1f, 1);
-                    PacketDistributor.sendToPlayer(player, new ClientIndicatorMessage(0, 5));
+                    ServerPlayNetworking.send(player, new ClientIndicatorMessage(0, 5));
                 }
             }
             this.summonRayHitParticle(level, null, pos, shootDirection.scale(-1).normalize());
@@ -115,7 +115,7 @@ public class RepairToolItem extends GunGeoItem {
 
             if (shooter instanceof ServerPlayer player) {
                 player.level().playSound(null, player.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 0.1f, 1);
-                PacketDistributor.sendToPlayer(player, new ClientIndicatorMessage(0, 5));
+                ServerPlayNetworking.send(player, new ClientIndicatorMessage(0, 5));
             }
 
             this.summonRayHitParticle(level, null, pos, shootDirection.scale(-1).normalize());

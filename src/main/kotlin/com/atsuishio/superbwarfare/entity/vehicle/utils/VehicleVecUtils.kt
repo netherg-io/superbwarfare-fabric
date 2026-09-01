@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle.utils
 
+import net.minecraft.tags.FluidTags
+import kotlin.math.max
 import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.event.ClientEventHandler
@@ -29,9 +31,10 @@ object VehicleVecUtils {
     fun getXRotFromVector(vec3: Vec3) =
         Mth.atan2(vec3.y, vec3.horizontalDistance()) * (180f / Math.PI)
 
+    /** Вместо NeoForge-типов жидкости берём максимум из двух ванильных: вода и лава. */
     @JvmStatic
     fun getSubmergedHeight(entity: Entity) =
-        entity.getFluidTypeHeight(entity.level().getFluidState(entity.blockPosition()).fluidType)
+        max(entity.getFluidHeight(FluidTags.WATER), entity.getFluidHeight(FluidTags.LAVA))
 
     /**
      * 获取四元数实体的局部Y轴（上方向）在世界空间中的单位向量

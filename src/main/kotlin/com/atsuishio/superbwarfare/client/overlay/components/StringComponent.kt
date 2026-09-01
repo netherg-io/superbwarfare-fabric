@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.client.overlay.RenderContext
 import net.minecraft.client.gui.Font
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import com.atsuishio.superbwarfare.client.drawString
 
 class StringComponent(
     baseAnchorPoint: AnchorPoint = CENTER,

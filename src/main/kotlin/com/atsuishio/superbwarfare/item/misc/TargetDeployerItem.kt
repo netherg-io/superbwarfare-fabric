@@ -105,7 +105,7 @@ class TargetDeployerItem : Item(Properties()) {
                     }
 
                     pPlayer.awardStat(Stats.ITEM_USED.get(this))
-                    pLevel.gameEvent(pPlayer, GameEvent.ENTITY_PLACE, entity.position())
+                    pLevel.gameEvent(pPlayer, GameEvent.ENTITY_PLACE, blockpos)
                     return InteractionResultHolder.consume(itemstack)
                 }
             } else {

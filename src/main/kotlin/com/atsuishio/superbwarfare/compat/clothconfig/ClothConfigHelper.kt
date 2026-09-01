@@ -8,8 +8,6 @@ import com.atsuishio.superbwarfare.compat.clothconfig.common.GameplayClothConfig
 import me.shedaniel.clothconfig2.api.ConfigBuilder
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
-import net.neoforged.fml.ModLoadingContext
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory
 import net.neoforged.neoforge.common.ModConfigSpec
 import java.util.function.Consumer
 
@@ -31,10 +29,13 @@ object ClothConfigHelper {
             return root
         }
 
+    /**
+     * ponytail: кнопки конфига в списке модов нет -- IConfigScreenFactory это NeoForge, а на Fabric
+     * экран отдают через entrypoint "modmenu", то есть через ещё одну зависимость. Экран открывается
+     * с клавиши (ClickEventHandler.handleConfigScreen), поэтому регистрация здесь пустая.
+     * Заводить ModMenuApi, если конфиг понадобится из списка модов.
+     */
     fun registerScreen() {
-        ModLoadingContext.get().registerExtensionPoint(
-            IConfigScreenFactory::class.java
-        ) { IConfigScreenFactory { _, parent -> getConfigScreen(parent) } }
     }
 
     fun getConfigScreen(parent: Screen?): Screen {

@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import com.atsuishio.superbwarfare.client.screens.component.AccessoriesButtonStub
 
 @Environment(EnvType.CLIENT)
 open class MissilePosInputScreen : Screen(Component.translatable("container.superbwarfare.missile_pos_input")) {
@@ -104,7 +105,7 @@ open class MissilePosInputScreen : Screen(Component.translatable("container.supe
 
     @Environment(EnvType.CLIENT)
     internal inner class DoneButton(pX: Int, pY: Int, pWidth: Int, pHeight: Int) :
-        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()) {
+        AbstractButton(pX, pY, pWidth, pHeight, Component.empty()), AccessoriesButtonStub {
         override fun onPress() {
             if (!this@MissilePosInputScreen.init) return
             if (this@MissilePosInputScreen.minecraft != null) {

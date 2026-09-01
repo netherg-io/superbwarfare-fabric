@@ -8,7 +8,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
 
 class AssembleButton(x: Int, y: Int, onPress: OnPress) :
-    Button(x, y, 56, 13, Component.empty(), onPress, DEFAULT_NARRATION) {
+    Button(x, y, 56, 13, Component.empty(), onPress, DEFAULT_NARRATION), AccessoriesButtonStub {
     override fun renderWidget(pGuiGraphics: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTick: Float) {
         pGuiGraphics.pose().pushPose()
         RenderSystem.enableDepthTest()

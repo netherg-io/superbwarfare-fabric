@@ -17,9 +17,11 @@ import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
 import kotlin.math.max
+import com.atsuishio.superbwarfare.item.StackAttributeItem
 
 class UsHelmetPasgtItem :
-    ArmorItem(ModArmorMaterial.CEMENTED_CARBIDE, Type.HELMET, Properties().durability(Type.HELMET.getDurability(50))) {
+    ArmorItem(ModArmorMaterial.CEMENTED_CARBIDE, Type.HELMET, Properties().durability(Type.HELMET.getDurability(50))),
+    StackAttributeItem {
     companion object {
         val TEXTURE = loc("textures/bedrock/armor/us_helmet_pasgt.png")
         val MODEL = loc("models/bedrock/armor/us_helmet_pasgt.geo.json")
@@ -45,7 +47,7 @@ class UsHelmetPasgtItem :
     }
 
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val modifiers = super.getDefaultAttributeModifiers(stack)
+        val modifiers = baseAttributeModifiers(stack)
         val list = ArrayList<ItemAttributeModifiers.Entry>(modifiers.modifiers())
         list.add(
             ItemAttributeModifiers.Entry(

@@ -335,7 +335,7 @@ object InventoryTool {
         if (itemList == null || count <= 0) return count
 
         val defaultStack = ItemStack(item)
-        maxStackSize = Math.min(maxStackSize, item.getMaxStackSize(defaultStack))
+        maxStackSize = Math.min(maxStackSize, defaultStack.maxStackSize)
 
         for (i in itemList.indices) {
             val stack = itemList[i]
@@ -360,7 +360,7 @@ object InventoryTool {
     fun insertItem(itemList: NonNullList<ItemStack>?, stack: ItemStack): Int {
         if (itemList == null) return stack.count
 
-        val maxStackSize = stack.item.getMaxStackSize(stack)
+        val maxStackSize = stack.maxStackSize
         val originalCount = stack.count
 
         for (i in itemList.indices) {

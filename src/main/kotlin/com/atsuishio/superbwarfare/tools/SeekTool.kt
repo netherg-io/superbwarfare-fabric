@@ -19,9 +19,13 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.common.util.TriPredicate
 import java.util.function.BiPredicate
 import java.util.function.Predicate
+
+/** Замена TriPredicate из NeoForge: используется одним фильтром высоты, форма вызова та же. */
+fun interface TriPredicate<A, B, C> {
+    fun test(a: A, b: B, c: C): Boolean
+}
 
 infix fun <T> Predicate<T>.and(other: Predicate<T>): Predicate<T> =
     Predicate { this.test(it) && other.test(it) }

@@ -10,12 +10,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.tags.ItemTags
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -171,7 +171,7 @@ class ResearchingRecipe(
             if (this.list != null && !this.list!!.isEmpty()) return this.list!!
             if (this.tag.isEmpty()) return mutableListOf()
 
-            val tagKey = ItemTags.create(ResourceLocation.parse(this.tag))
+            val tagKey = TagKey.create(Registries.ITEM, ResourceLocation.parse(this.tag))
             val itemTag = BuiltInRegistries.ITEM.getTag(tagKey)
                 .map { items -> items.map { it.value() } }.getOrNull() ?: return mutableListOf()
 

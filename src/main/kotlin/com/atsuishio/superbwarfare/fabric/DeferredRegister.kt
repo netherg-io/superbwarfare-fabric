@@ -25,11 +25,13 @@ class DeferredHolder<R, T : R>(
 
     override fun get(): T = value
 
-    fun getKey(): ResourceKey<R>? = reference.key()
+    // Свойствами, а не функциями: Java по-прежнему видит getKey()/getId(), а Kotlin
+    // получает holder.id -- форму, которой пользуется апстрим.
+    val key: ResourceKey<R>? get() = reference.key()
 
-    fun getId(): ResourceLocation = reference.key().location()
+    val id: ResourceLocation get() = reference.key().location()
 
-    override fun toString(): String = "DeferredHolder[${getId()}]"
+    override fun toString(): String = "DeferredHolder[$id]"
 }
 
 open class DeferredRegister<T> protected constructor(
@@ -50,6 +52,7 @@ open class DeferredRegister<T> protected constructor(
         return holder
     }
 
+    /** Только Supplier и (ResourceLocation) -> U; java.util.function.Function сюда не подходит. */
     fun <U : T> register(name: String, factory: (ResourceLocation) -> U): DeferredHolder<T, U> =
         register(name) { factory(ResourceLocation.fromNamespaceAndPath(namespace, name)) }
 

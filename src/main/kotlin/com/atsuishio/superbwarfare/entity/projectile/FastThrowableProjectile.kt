@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile
 
+import com.atsuishio.superbwarfare.fabric.LevelLifecycleListener
 import com.atsuishio.superbwarfare.Mod.queueServerWork
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
@@ -50,12 +51,13 @@ import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.neoforged.neoforge.entity.IEntityWithComplexSpawn
+import com.atsuishio.superbwarfare.fabric.IEntityWithComplexSpawn
 import com.atsuishio.superbwarfare.fabric.MultipartEntities
 import java.util.function.Consumer
 import java.util.function.Predicate
 
 abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSync, IEntityWithComplexSpawn,
+    LevelLifecycleListener,
     IBulletProperties, IAdvancedHitDetection {
     protected var damageValue: Float = 0f
     protected var explosionDamageValue: Float = 0f
@@ -374,7 +376,7 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
             }
             val resultPos = result.blockPos
             val state = level.getBlockState(resultPos)
-            val event = state.block.getSoundType(state, level, resultPos, this).breakSound
+            val event = state.soundType.breakSound
 
             val hitVec = result.location
             level.playSound(
@@ -423,7 +425,7 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
         val headshot = result.headshot
         val legShot = result.legShot
 
-        if (postEvent(HitEntity(this.owner, this, result)).isCanceled) return
+        if (postEvent(HitEntity(this.owner, this, result)).canceled) return
 
         MultipartEntities.parentOf(entity)?.let { entity = it }
 
@@ -495,7 +497,7 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
         val face = result.direction
         val state = level.getBlockState(pos)
         val location = result.location
-        if (postEvent(HitBlock(pos, state, face, this.owner, this, location)).isCanceled) return
+        if (postEvent(HitBlock(pos, state, face, this.owner, this, location)).canceled) return
         state.onProjectileHit(level, state, result, this)
 
         this.afterHitBlock(result)
@@ -815,7 +817,6 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
     }
 
     override fun onAddedToLevel() {
-        super.onAddedToLevel()
         if (level().isClientSide) {
             ClientLightingHandler.handleProjectileAdded(this)
         } else if (forceLoadChunk()) {
@@ -824,7 +825,6 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
     }
 
     override fun onRemovedFromLevel() {
-        super.onRemovedFromLevel()
         if (level().isClientSide) {
             ClientLightingHandler.handleProjectileRemoved(this)
         } else if (forceLoadChunk()) {

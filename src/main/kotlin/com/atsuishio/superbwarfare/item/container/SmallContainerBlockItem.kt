@@ -20,12 +20,15 @@ import net.minecraft.world.level.storage.loot.LootTable
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry
+import com.atsuishio.superbwarfare.item.DamageFilterItem
 
-class SmallContainerBlockItem : BlockItem(ModBlocks.SMALL_CONTAINER.get(), Properties().stacksTo(1).fireResistant()) {
+class SmallContainerBlockItem :
+    BlockItem(ModBlocks.SMALL_CONTAINER.get(), Properties().stacksTo(1).fireResistant()), DamageFilterItem {
 
-    override fun canBeHurtBy(stack: ItemStack, source: DamageSource) = super.canBeHurtBy(stack, source)
-            && !source.`is`(DamageTypeTags.IS_EXPLOSION)
-            && !source.`is`(DamageTypes.CACTUS)
+    // На NeoForge это был IItemExtension#canBeHurtBy; огнестойкость ваниль проверяет сама,
+    // поэтому от вызова super остались только иммунитеты мода.
+    override fun canBeHurtBy(stack: ItemStack, source: DamageSource) =
+        !source.`is`(DamageTypeTags.IS_EXPLOSION) && !source.`is`(DamageTypes.CACTUS)
 
 
     companion object {
