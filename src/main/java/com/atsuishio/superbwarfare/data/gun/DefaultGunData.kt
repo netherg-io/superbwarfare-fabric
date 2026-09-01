@@ -67,9 +67,13 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
     var recoilForce = 0f
 
     // x:范围，y：振动时长，z：振幅
+    // DoubleArray, а не SerializedVec3: свойство читается через kotlin-reflect, а ссылка на
+    // свойство хранит JVM-сигнатуру геттера обычной строкой, которую ремаппер не трогает.
+    // С ванильным типом в сигнатуре ссылка не разрешается в собранном jar (в dev-запуске --
+    // разрешается, имена там уже named). Формат JSON тот же: Vec3Serializer и так пишет [x,y,z].
     @ServerOnly
     @SerialName("ShootShake")
-    var shootShake: SerializedVec3? = null
+    var shootShake: DoubleArray? = null
 
     @SerialName("DefaultZoom")
     var defaultZoom = 1.25
@@ -408,7 +412,9 @@ class DefaultGunData : IDBasedData<DefaultGunData> {
     var addShooterDeltaMovement = false
 
     @SerialName("Icon")
-    var icon: SerializedResourceLocation = DEFAULT_ICON
+    // String, а не SerializedResourceLocation: см. комментарий у shootShake -- ванильный тип
+    // в сигнатуре геттера ломает kotlin-reflect в собранном jar. Формат JSON тот же, строка.
+    var icon: String = DEFAULT_ICON.toString()
 
     /*
      * 准星类型

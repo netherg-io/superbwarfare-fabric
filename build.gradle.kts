@@ -72,7 +72,6 @@ dependencies {
     modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1-bf1.jar")) // см. libs/patch-simplebedrockmodel.sh
 
     modImplementation("software.bernie.geckolib:geckolib-fabric-1.21.1:4.7.5")
-    modImplementation("dev.engine-room.flywheel:flywheel-fabric-${project.property("minecraft_version")}:${project.property("flywheel_version")}")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")
 
     // Отдаёт net.neoforged.neoforge.common.ModConfigSpec под Fabric с тем же именем пакета,
@@ -121,13 +120,26 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     exclude(portExcludes)
 }
 
+// Значение снимается здесь, а не внутри filesMatching: с configuration cache тело действия
+// выполняется без доступа к project и project.version отдаёт "unspecified".
+val modVersion = version.toString()
+
+// Rhino шейднут в пакет org.mozillaa и модом не является, поэтому ни include (jar-in-jar,
+// нужен fabric.mod.json), ни отдельная запись в паке не годятся -- классы кладутся внутрь jar.
+tasks.jar {
+    from(zipTree(file("libs/rhino-1.8.1-SNAPSHOT.jar"))) {
+        exclude("META-INF/**")
+    }
+}
+
 tasks.processResources {
     from("COPYING", "COPYING.LESSER")
-    // fabric.mod.json держит ${version}; без подстановки загрузчик ругается на несемвер и
-    // не может проверять зависимости от мода.
-    inputs.property("version", project.version)
+    // fabric.mod.json держит ${version}; без подстановки загрузчик не может проверять
+    // зависимости от мода и ругается на несемвер.
+    val v = modVersion
+    inputs.property("version", v)
     filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
+        expand("version" to v)
     }
 }
 

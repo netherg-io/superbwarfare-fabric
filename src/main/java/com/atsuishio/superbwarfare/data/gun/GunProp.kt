@@ -6,6 +6,8 @@ import com.atsuishio.superbwarfare.data.Prop
 import com.atsuishio.superbwarfare.data.gun.GunData.Companion.getPerkPriority
 import com.atsuishio.superbwarfare.init.ModPerks
 import com.atsuishio.superbwarfare.perk.Perk
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.world.phys.Vec3
 import kotlin.math.min
 import kotlin.reflect.KMutableProperty1
 
@@ -65,7 +67,7 @@ class GunProp<T, R>(
         val RECOIL_FORCE = plainProp(DefaultGunData::recoilForce)
 
         @JvmField
-        val SHOOT_SHAKE = plainProp(DefaultGunData::shootShake)
+        val SHOOT_SHAKE = complexProp(DefaultGunData::shootShake) { it?.let { a -> Vec3(a[0], a[1], a[2]) } }
 
         @JvmField
         val SPREAD = plainProp(DefaultGunData::spread)
@@ -322,7 +324,7 @@ class GunProp<T, R>(
         }
 
         @JvmField
-        val ICON = complexProp(DefaultGunData::icon) { it }
+        val ICON = complexProp(DefaultGunData::icon) { ResourceLocation.parse(it) }
 
         @JvmField
         val CROSSHAIR = complexProp(DefaultGunData::crosshair) { it.ifEmpty { "@GunDefault" } }

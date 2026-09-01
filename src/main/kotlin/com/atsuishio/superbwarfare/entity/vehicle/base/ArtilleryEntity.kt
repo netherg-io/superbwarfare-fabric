@@ -114,10 +114,10 @@ open class ArtilleryEntity(type: EntityType<*>, world: Level) : VehicleEntity(ty
             radius = compound.getInt("Radius")
         }
         if (compound.contains("TargetX") && compound.contains("TargetY") && compound.contains("TargetZ")) {
-            targetPos = BlockPos(compound.getInt("TargetX"), compound.getInt("TargetX"), compound.getInt("TargetZ"))
+            targetPos = BlockPos(compound.getInt("TargetX"), compound.getInt("TargetY"), compound.getInt("TargetZ"))
         }
         if (compound.contains("OriginX") && compound.contains("OriginY") && compound.contains("OriginZ")) {
-            originPos = BlockPos(compound.getInt("OriginX"), compound.getInt("OriginX"), compound.getInt("OriginZ"))
+            originPos = BlockPos(compound.getInt("OriginX"), compound.getInt("OriginY"), compound.getInt("OriginZ"))
         }
     }
 

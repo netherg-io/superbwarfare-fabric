@@ -30,6 +30,14 @@
     "minecraft": "~1.21.1",
     "java": ">=21",
     "forgeconfigapiport": "*",
-    "accessories": "*"
+    "accessories": "*",
+    "geckolib": "*",
+    "simplebedrockmodel": "*",
+    "porting_lib_core": "*",
+    "porting_lib_entity": "*",
+    "porting_lib_items": "*",
+    "porting_lib_level_events": "*",
+    "porting_lib_client_events": "*",
+    "porting_lib_transfer": "*"
   }
 }
