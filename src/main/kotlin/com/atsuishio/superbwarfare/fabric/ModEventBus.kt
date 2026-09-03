@@ -8,23 +8,26 @@ package com.atsuishio.superbwarfare.fabric
  * их публичную форму. Здесь сохранена семантика NeoForge: подписка по классу события,
  * рассылка возвращает то же событие, отменяемые события несут флаг.
  *
- * ponytail: подписчики вызываются в порядке регистрации, приоритетов нет. Если аддонам
- * понадобится порядок — добавить приоритет в register().
+ * Приоритет -- замена EventPriority: больше число -- раньше вызов, при равном -- порядок
+ * регистрации. 0 соответствует NORMAL.
  */
 object ModEventBus {
-    private val listeners = mutableMapOf<Class<*>, MutableList<(Any) -> Unit>>()
+    private val listeners = mutableMapOf<Class<*>, MutableList<Pair<Int, (Any) -> Unit>>>()
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any> register(type: Class<T>, listener: (T) -> Unit) {
-        listeners.getOrPut(type) { mutableListOf() }.add(listener as (Any) -> Unit)
+    fun <T : Any> register(type: Class<T>, priority: Int = 0, listener: (T) -> Unit) {
+        val list = listeners.getOrPut(type) { mutableListOf() }
+        val index = list.indexOfFirst { it.first < priority }.takeIf { it >= 0 } ?: list.size
+        list.add(index, priority to (listener as (Any) -> Unit))
     }
 
-    inline fun <reified T : Any> register(noinline listener: (T) -> Unit) = register(T::class.java, listener)
+    inline fun <reified T : Any> register(priority: Int = 0, noinline listener: (T) -> Unit) =
+        register(T::class.java, priority, listener)
 
     fun <T : Any> post(event: T): T {
         var type: Class<*>? = event::class.java
         while (type != null && type != Any::class.java) {
-            listeners[type]?.forEach { it(event) }
+            listeners[type]?.forEach { it.second(event) }
             type = type.superclass
         }
         return event

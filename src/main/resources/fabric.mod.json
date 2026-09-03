@@ -18,6 +18,9 @@
         "adapter": "kotlin",
         "value": "com.atsuishio.superbwarfare.ModClient"
       }
+    ],
+    "jei_mod_plugin": [
+      "com.atsuishio.superbwarfare.compat.jei.SbwJEIPlugin"
     ]
   },
   "mixins": [

@@ -16,10 +16,10 @@ import org.joml.Quaternionf
 
 @Environment(EnvType.CLIENT)
 object PhosphorusFireRenderer {
-    // ponytail: у Fabric API нет аналога RenderLivingEvent.Pre, поэтому вызывать пока некому.
-    // Подключить, когда появится миксин на LivingEntityRenderer.render или свой RenderLayer.
-    @Suppress("DEPRECATION", "unused")
-    private fun onRenderCurseFlame(
+    /** RenderLivingEvent.Pre: зовётся из LivingEntityRendererMixin перед рендером сущности. */
+    @Suppress("DEPRECATION")
+    @JvmStatic
+    fun onRenderCurseFlame(
         entity: LivingEntity,
         stack: PoseStack,
         multiBufferSource: MultiBufferSource

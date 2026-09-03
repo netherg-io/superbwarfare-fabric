@@ -6,6 +6,8 @@ import com.atsuishio.superbwarfare.client.RenderHelper
 import com.atsuishio.superbwarfare.client.animation.AnimationCurves
 import com.atsuishio.superbwarfare.client.animation.ValueAnimator
 import com.atsuishio.superbwarfare.client.screens.component.*
+import com.atsuishio.superbwarfare.compat.jei.JeiCompatHolder.hasJEI
+import com.atsuishio.superbwarfare.compat.jei.SbwJEIPlugin
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModRecipes
 import com.atsuishio.superbwarfare.inventory.menu.VehicleAssemblingMenu
@@ -357,8 +359,18 @@ class VehicleAssemblingScreen(pMenu: VehicleAssemblingMenu, pPlayerInventory: In
     }
 
     override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
-        // ponytail: клик по ингредиенту открывал рецепт в JEI, но JEI-совместимость из порта
-        // выкинута вместе с зависимостью. Вернуть вместе с плагином JEI/REI, если он появится.
+        val list = this.getIngredientAreas()
+        if (list.isNotEmpty() && pMouseX >= this.leftPos + 214 && pMouseY >= this.topPos + 117 && pMouseX <= this.leftPos + 350 && pMouseY <= this.topPos + 160) {
+            if (hasJEI()) {
+                val ingredientArea = list.stream().filter { area -> area.contains(pMouseX, pMouseY) }.findFirst()
+                if (ingredientArea.isPresent) {
+                    val items = ingredientArea.get().ingredient!!.getItems()
+                    val itemIndex = (System.currentTimeMillis() / 1000L).toInt() % items.size
+                    SbwJEIPlugin.showRecipes(items[itemIndex]!!)
+                    return true
+                }
+            }
+        }
         return super.mouseClicked(pMouseX, pMouseY, pButton)
     }
 

@@ -2,11 +2,14 @@ package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.item.curio.ParachuteItem;
+import com.atsuishio.superbwarfare.item.weapon.BeastItem;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,5 +42,17 @@ public abstract class PlayerMixin extends Entity {
         if (ParachuteItem.isParachuteOpen(player)) {
             this.setPose(Pose.STANDING);
         }
+    }
+
+    /**
+     * Замена IItemExtension#getSweepHitBox из BeastItem: единственный inflate(DDD) в attack --
+     * это бокс размашистого удара.
+     */
+    @ModifyExpressionValue(
+            method = "attack",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/AABB;inflate(DDD)Lnet/minecraft/world/phys/AABB;")
+    )
+    private AABB sbw$beastSweepHitBox(AABB box) {
+        return ((Player) (Object) this).getMainHandItem().getItem() instanceof BeastItem ? box.inflate(3.0) : box;
     }
 }

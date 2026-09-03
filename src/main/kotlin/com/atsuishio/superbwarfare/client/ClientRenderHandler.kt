@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client
 
 import com.atsuishio.superbwarfare.client.animation.AnimationCurves
 import com.atsuishio.superbwarfare.client.decorator.ContainerItemDecorator
+import com.atsuishio.superbwarfare.client.decorator.ItemDecorator
 import com.atsuishio.superbwarfare.client.decorator.LuckyContainerItemDecorator
 import com.atsuishio.superbwarfare.client.decorator.VehicleKeyItemDecorator
 import com.atsuishio.superbwarfare.client.model.curio.ParachuteModel
@@ -15,7 +16,12 @@ import com.atsuishio.superbwarfare.client.tooltip.component.*
 import com.atsuishio.superbwarfare.init.ModBlockEntities
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.tools.localPlayer
+import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
+import net.minecraft.client.gui.Font
+import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.phys.Vec3
@@ -139,15 +145,28 @@ object ClientRenderHandler {
         }
     }
 
-    // ponytail: у Fabric API 1.21.1 нет аналога RegisterItemDecorationsEvent, регистрировать негде.
-    // Пары «предмет -> декоратор» сохранены дословно; подключить миксином на
-    // GuiGraphics.renderItemDecorations и удалить эту заглушку.
-    @Suppress("unused")
-    private fun registerItemDecorations() = listOf(
-        ModItems.CONTAINER.get() to ContainerItemDecorator(),
-        ModItems.LUCKY_CONTAINER.get() to LuckyContainerItemDecorator(),
-        ModItems.VEHICLE_KEY.get() to VehicleKeyItemDecorator(),
-    )
+    private val itemDecorators: Map<Item, ItemDecorator> by lazy {
+        mapOf(
+            ModItems.CONTAINER.get() to ContainerItemDecorator(),
+            ModItems.LUCKY_CONTAINER.get() to LuckyContainerItemDecorator(),
+            ModItems.VEHICLE_KEY.get() to VehicleKeyItemDecorator(),
+        )
+    }
+
+    /** RegisterItemDecorationsEvent: зовётся из GuiGraphicsMixin в хвосте renderItemDecorations. */
+    @JvmStatic
+    fun renderItemDecorations(guiGraphics: GuiGraphics, font: Font, stack: ItemStack, x: Int, y: Int) {
+        if (stack.isEmpty) return
+        val decorator = itemDecorators[stack.item] ?: return
+        resetDecoratorRenderState()
+        if (decorator.render(guiGraphics, font, stack, x, y)) resetDecoratorRenderState()
+    }
+
+    private fun resetDecoratorRenderState() {
+        RenderSystem.enableDepthTest()
+        RenderSystem.enableBlend()
+        RenderSystem.defaultBlendFunc()
+    }
 
     private fun registerAccessoryRenderers() {
         AccessoriesRendererRegistry.registerRenderer(ModItems.PARACHUTE.get()) { ParachuteRenderer() }

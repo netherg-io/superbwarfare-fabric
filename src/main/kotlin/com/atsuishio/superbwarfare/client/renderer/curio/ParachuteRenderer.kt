@@ -108,10 +108,9 @@ class ParachuteRenderer : AccessoryRenderer {
             }
         }
 
-        // ponytail: у Fabric API нет аналога RenderLivingEvent.Post, поэтому вызывать пока некому.
-        // Подключить, когда появится миксин на LivingEntityRenderer.render или свой RenderLayer.
-        @Suppress("unused")
-        private fun onRenderLiving(entity: LivingEntity, stack: PoseStack, partialTick: Float) {
+        /** RenderLivingEvent.Post: зовётся из LivingEntityRendererMixin после рендера сущности. */
+        @JvmStatic
+        fun onRenderLiving(entity: LivingEntity, stack: PoseStack, partialTick: Float) {
             if (entity is Player) return
             if (!ParachuteItem.isParachuteOpen(entity)) return
             if (!ParachuteItem.isParachuteVisible(entity)) return

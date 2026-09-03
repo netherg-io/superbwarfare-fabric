@@ -66,11 +66,8 @@ class BlueprintResearchTableBlockEntityRenderer : BlockEntityRenderer<BlueprintR
         return pBlockEntity.blockState.getValue(BlueprintResearchTableBlock.PART) == BedPart.FOOT
     }
 
-    /**
-     * ponytail: getRenderBoundingBox -- расширение NeoForge, у ванильного BlockEntityRenderer
-     * его нет. Раздутый AABB нужен был только чтобы модель не отсекалась по краю экрана,
-     * поэтому просто выключаем отсечение. Вернуть точный бокс, если он начнёт стоить кадров.
-     */
+    // getRenderBoundingBox есть только в NeoForge; ванильный способ не отсекать двухблочную модель
+    // по краю экрана -- shouldRenderOffScreen (так же поступают маяк и структурный блок).
     override fun shouldRenderOffScreen(blockEntity: BlueprintResearchTableBlockEntity): Boolean = true
 
     companion object {

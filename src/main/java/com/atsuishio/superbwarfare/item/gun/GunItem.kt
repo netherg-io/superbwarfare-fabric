@@ -186,9 +186,11 @@ abstract class GunItem(properties: Properties) : Item(properties.stacksTo(1)), I
         maxDurability(stack)
     }
 
-    // ponytail: IItemExtension#onDroppedByPlayer выкидывал ствол чуть иначе (drop(stack, true)) и
-    // отменял ванильный выброс. Аналога на Fabric нет, ствол теперь падает как обычный предмет.
-    // Вернуть -- миксином в Player.drop(ItemStack, Boolean, Boolean).
+    // ponytail: IItemExtension#onDroppedByPlayer апстрима (inventory.removeItem + drop(stack, true))
+    // на Fabric не воспроизводится намеренно: ванильный ServerPlayer.drop(boolean) делает то же
+    // самое -- removeFromSelected + drop(stack, false, true), а стволы stacksTo(1), так что
+    // «весь стек» и «один предмет» совпадают. Единственная разница -- апстрим пропускал
+    // setRemoteSlot, что игроку не видно. Миксин понадобится только если стволы станут стакаться.
 
     override fun shouldCauseReequipAnimation(oldStack: ItemStack, newStack: ItemStack, slotChanged: Boolean) = false
 

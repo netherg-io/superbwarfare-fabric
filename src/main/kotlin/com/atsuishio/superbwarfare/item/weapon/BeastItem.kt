@@ -52,9 +52,7 @@ open class BeastItem : SwordItem(
         return true
     }
 
-    // ponytail: IItemExtension#getSweepHitBox расширял зону размашистого удара на 3 блока.
-    // Ни в Fabric API, ни в Porting Lib аналога нет; ванильный размах у меча остаётся, но обычного
-    // размера. Вернуть -- миксином в Player.attack, где считается AABB для sweep.
+    // getSweepHitBox (+3 блока к размаху) живёт в PlayerMixin.sbw$beastSweepHitBox.
 
     override fun canBeHurtBy(stack: ItemStack, source: DamageSource): Boolean {
         return false

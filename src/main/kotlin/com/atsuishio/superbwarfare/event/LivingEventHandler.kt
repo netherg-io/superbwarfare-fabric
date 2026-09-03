@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.event
 
+import com.atsuishio.superbwarfare.api.event.ExplosionEvent
+import com.atsuishio.superbwarfare.api.event.ExplosionKnockbackEvent
 import com.atsuishio.superbwarfare.api.event.PreKillEvent.Indicator
 import com.atsuishio.superbwarfare.api.event.PreKillEvent.SendKillMessage
 import com.atsuishio.superbwarfare.config.common.GameplayConfig
@@ -36,6 +38,7 @@ import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingFa
 import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingHurtEvent
 import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingKnockBackEvent
 import io.github.fabricators_of_create.porting_lib.entity.events.living.MobEffectEvent.Applicable
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
 import net.minecraft.resources.ResourceLocation
@@ -73,6 +76,9 @@ object LivingEventHandler {
         Applicable.EVENT.register { onEffectApply(it) }
         ModEventBus.register<SendKillMessage> { onPreSendKillMessage(it) }
         ModEventBus.register<Indicator> { onPreIndicator(it) }
+        ServerEntityEvents.EQUIPMENT_CHANGE.register { entity, slot, from, to -> handleChangeSlot(entity, slot, from, to) }
+        ModEventBus.register<ExplosionEvent.Detonate> { onExplosionDetonate(it) }
+        ModEventBus.register<ExplosionKnockbackEvent> { onExplosionKnockback(it) }
     }
 
     private fun onLivingChangeTargetEvent(event: LivingChangeTargetEvent) {
@@ -349,9 +355,6 @@ object LivingEventHandler {
 
     /**
      * 换弹时切换枪械，取消换弹音效播放
-     *
-     * ponytail: LivingEquipmentChangeEvent аналога нет ни в Fabric API, ни в Porting Lib.
-     * Логика цела, но не зарегистрирована -- звать из миксина на LivingEntity.collectEquipmentChanges.
      */
     private fun handleChangeSlot(entity: LivingEntity, slot: EquipmentSlot, oldStack: ItemStack, newStack: ItemStack) {
         if (entity is Player && slot == EquipmentSlot.MAINHAND) {
@@ -614,12 +617,12 @@ object LivingEventHandler {
     }
 
     /**
-     * ponytail: ItemEntityPickupEvent аналога нет. Логика цела, но не зарегистрирована --
-     * звать из миксина на ItemEntity.playerTouch.
+     * Замена ItemEntityPickupEvent.Pre: зовётся из ItemEntityPickupMixin (ItemEntity.playerTouch).
      *
      * @return true, если предмет забрало транспортное средство и ванильный подбор надо отменить
      */
-    private fun onPickup(entity: Player, pickUp: ItemEntity): Boolean {
+    @JvmStatic
+    fun onPickup(entity: Player, pickUp: ItemEntity): Boolean {
         if (!VehicleConfig.VEHICLE_ITEM_PICKUP.get()) return false
         val vehicle = entity.vehicle as? VehicleEntity ?: return false
         if (!vehicle.level().isClientSide) {
@@ -747,14 +750,10 @@ object LivingEventHandler {
         }
     }
 
-    /**
-     * ponytail: ExplosionEvent.Detonate аналога нет. Логика цела, но не зарегистрирована --
-     * звать из CustomExplosion.explode вместо EventHooks.onExplosionDetonate.
-     */
-    private fun onExplosionDetonate(rawExplosion: Explosion, affectedEntities: MutableList<Entity>) {
-        val explosion = rawExplosion as? CustomExplosion ?: return
+    private fun onExplosionDetonate(event: ExplosionEvent.Detonate) {
+        val explosion = event.explosion as? CustomExplosion ?: return
 
-        val iterator = affectedEntities.iterator()
+        val iterator = event.affectedEntities.iterator()
         while (iterator.hasNext()) {
             val entity = iterator.next() as? VehicleEntity ?: continue
 
@@ -783,7 +782,9 @@ object LivingEventHandler {
         }
     }
 
-    /** ponytail: ExplosionKnockbackEvent аналога нет; звать из CustomExplosion при расчёте отброса. */
-    private fun explosionKnockbackVelocity(affectedEntity: Entity, knockbackVelocity: Vec3): Vec3 =
-        if (affectedEntity is VehicleEntity) Vec3.ZERO else knockbackVelocity
+    private fun onExplosionKnockback(event: ExplosionKnockbackEvent) {
+        if (event.affectedEntity is VehicleEntity) {
+            event.knockbackVelocity = Vec3.ZERO
+        }
+    }
 }

@@ -27,6 +27,14 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
     @Shadow
     protected abstract void setModelProperties(AbstractClientPlayer pClientPlayer);
 
+    /** RenderPlayerEvent.Pre: в самом начале render, до setModelProperties и RenderLivingEvent.Pre. */
+    @Inject(method = "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"), cancellable = true)
+    private void superbwarfare$renderPre(AbstractClientPlayer player, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+        if (ClientEventHandler.shouldHidePlayer(player)) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "renderHand(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;Lnet/minecraft/client/model/geom/ModelPart;Lnet/minecraft/client/model/geom/ModelPart;)V",
             at = @At("RETURN"), cancellable = true)
     private void renderHand(PoseStack pMatrixStack, MultiBufferSource pBuffer, int pCombinedLight, AbstractClientPlayer pPlayer, ModelPart pRendererArm, ModelPart pRendererArmwear, CallbackInfo ci) {

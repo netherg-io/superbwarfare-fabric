@@ -60,11 +60,8 @@ class VehicleAssemblingTableBlockEntityRenderer : BlockEntityRenderer<VehicleAss
         return blockEntity.blockState.getValue(VehicleAssemblingTableBlock.BLOCK_PART) == BlockPart.FLB
     }
 
-    /**
-     * ponytail: getRenderBoundingBox -- расширение NeoForge, у ванильного BlockEntityRenderer
-     * его нет. Раздутый AABB нужен был только чтобы модель не отсекалась по краю экрана,
-     * поэтому просто выключаем отсечение. Вернуть точный бокс, если он начнёт стоить кадров.
-     */
+    // getRenderBoundingBox есть только в NeoForge; ванильный способ не отсекать двухблочную модель
+    // по краю экрана -- shouldRenderOffScreen (так же поступают маяк и структурный блок).
     override fun shouldRenderOffScreen(blockEntity: VehicleAssemblingTableBlockEntity): Boolean = true
 
     companion object {

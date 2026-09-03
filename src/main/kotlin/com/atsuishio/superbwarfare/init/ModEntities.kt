@@ -383,16 +383,14 @@ object ModEntities {
         .updateInterval(1)
         .fireImmune()
 
-    // ponytail: аргумент receiveVelocityUpdates игнорируется -- setShouldReceiveVelocityUpdates
-    // это ручка NeoForge над ServerEntity, ванильного и фабричного аналога у неё нет.
-    // Ваниль шлёт velocity-пакеты сама, когда у сущности меняется импульс, так что для снарядов
-    // поведение то же. Вернуть, если появятся жалобы на рывки быстрых снарядов у клиента --
-    // тогда нужен миксин в ServerEntity.sendChanges.
-    @Suppress("UNUSED_PARAMETER")
+    // setShouldReceiveVelocityUpdates из NeoForge = alwaysUpdateVelocity из fabric-object-builder
+    // (интерфейс FabricEntityType.Builder вкручен в EntityType.Builder): false выключает
+    // velocity-пакеты ServerEntity, true -- шлёт всегда.
     private fun <T : Entity> fastProjectile(
         entity: (EntityType<T>, Level) -> T,
         receiveVelocityUpdates: Boolean = false
     ): EntityType.Builder<T> = misc(entity)
+        .alwaysUpdateVelocity(receiveVelocityUpdates)
         .clientTrackingRange(64)
         .updateInterval(1)
 

@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.tools.createStreamCodec
 import io.netty.buffer.Unpooled
 import kotlinx.serialization.Serializable
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -49,9 +50,13 @@ interface IEntityWithComplexSpawn {
 data class EntitySpawnDataMessage(val entityId: Int, val data: ByteArray) : ClientPacketPayload() {
     override fun PayloadContext.handler() {
         val level = player().level()
-        // ponytail: сущность приходит первой (START_TRACKING шлётся после пакета спавна).
-        // Если её всё же нет — данные теряются; тогда слать по запросу клиента.
-        val entity = level.getEntity(entityId) as? IEntityWithComplexSpawn ?: return
+        // START_TRACKING у Fabric стреляет в HEAD ServerEntity.addPairing, то есть этот пакет
+        // приходит раньше ClientboundAddEntityPacket. Сущности ещё нет -- ждём её в ENTITY_LOAD.
+        val entity = level.getEntity(entityId) as? IEntityWithComplexSpawn
+        if (entity == null) {
+            EntityHooks.pendingSpawnData[entityId] = data
+            return
+        }
         entity.readSpawnData(RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(data), level.registryAccess()))
     }
 
@@ -68,6 +73,9 @@ object EntityHooks {
         private set
 
     val SPAWN_DATA_TYPE = CustomPacketPayload.Type<EntitySpawnDataMessage>(Mod.loc("entity_spawn_data"))
+
+    /** Клиент: данные спавна, пришедшие раньше самой сущности (см. EntitySpawnDataMessage). */
+    internal val pendingSpawnData = HashMap<Int, ByteArray>()
 
     /** Вызывается из Mod.onInitialize. */
     fun init() {
@@ -100,9 +108,15 @@ object EntityHooks {
             payload.handle { context.player() }
         }
 
-        ClientEntityEvents.ENTITY_LOAD.register { entity, _ -> (entity as? LevelLifecycleListener)?.onAddedToLevel() }
+        ClientEntityEvents.ENTITY_LOAD.register { entity, level ->
+            (entity as? LevelLifecycleListener)?.onAddedToLevel()
+            val data = pendingSpawnData.remove(entity.id) ?: return@register
+            (entity as? IEntityWithComplexSpawn)
+                ?.readSpawnData(RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(data), level.registryAccess()))
+        }
         ClientEntityEvents.ENTITY_UNLOAD.register { entity, _ ->
             (entity as? LevelLifecycleListener)?.onRemovedFromLevel()
         }
+        ClientPlayConnectionEvents.DISCONNECT.register { _, _ -> pendingSpawnData.clear() }
     }
 }

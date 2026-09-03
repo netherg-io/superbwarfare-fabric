@@ -131,13 +131,12 @@ object PlayerEventHandler {
     }
 
     /**
-     * ponytail: AnvilUpdateEvent аналога нет ни в Fabric API, ни в Porting Lib.
-     * Логика сохранена целиком, но нигде не зарегистрирована -- подключить из миксина
-     * на AnvilMenu.createResult, когда он появится.
+     * Замена AnvilUpdateEvent: зовётся из AnvilMenuMixin (AnvilMenu.createResult).
      *
      * @return output, cost, materialCost -- либо null, если пара предметов не подходит
      */
-    private fun onAnvilUpdate(left: ItemStack, right: ItemStack): Triple<ItemStack, Int, Int>? {
+    @JvmStatic
+    fun onAnvilUpdate(left: ItemStack, right: ItemStack): Triple<ItemStack, Int, Int>? {
         if (left.item is GunItem && right.item == ModItems.SHORTCUT_PACK.get()) {
             val output = left.copy()
 

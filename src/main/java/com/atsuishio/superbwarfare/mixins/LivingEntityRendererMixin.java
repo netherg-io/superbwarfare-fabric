@@ -3,11 +3,14 @@ package com.atsuishio.superbwarfare.mixins;
 import com.atsuishio.superbwarfare.data.vehicle.VehicleData;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.utils.VehicleVecUtils;
+import com.atsuishio.superbwarfare.client.renderer.curio.ParachuteRenderer;
+import com.atsuishio.superbwarfare.client.renderer.special.PhosphorusFireRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -29,6 +32,18 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
     protected LivingEntityRendererMixin(EntityRendererProvider.Context pContext) {
         super(pContext);
+    }
+
+    /** RenderLivingEvent.Pre: до pushPose, как в NeoForge. */
+    @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("HEAD"))
+    private void superbwarfare$renderPre(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+        PhosphorusFireRenderer.onRenderCurseFlame(entity, poseStack, buffer);
+    }
+
+    /** RenderLivingEvent.Post: после super.render (то есть после таблички), как в NeoForge. */
+    @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At("TAIL"))
+    private void superbwarfare$renderPost(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
+        ParachuteRenderer.onRenderLiving(entity, poseStack, partialTick);
     }
 
     @Inject(method = "setupRotations", at = @At("HEAD"), cancellable = true)

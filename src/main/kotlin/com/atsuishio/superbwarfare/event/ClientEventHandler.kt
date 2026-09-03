@@ -2902,11 +2902,9 @@ object ClientEventHandler {
         player.yRot = Mth.wrapDegrees(finalY)
     }
 
-    /**
-     * ponytail: RenderPlayerEvent.Pre аналога нет ни в Fabric API, ни в Porting Lib.
-     * Логика цела, но не зарегистрирована -- звать из миксина на PlayerRenderer.render.
-     */
-    private fun shouldHidePlayer(otherPlayer: Player): Boolean {
+    /** RenderPlayerEvent.Pre: зовётся из PlayerRendererMixin, true отменяет рендер игрока. */
+    @JvmStatic
+    fun shouldHidePlayer(otherPlayer: Player): Boolean {
         val vehicle = otherPlayer.vehicle
         return vehicle is VehicleEntity && vehicle.hidePassenger(otherPlayer)
     }
@@ -3103,11 +3101,9 @@ object ClientEventHandler {
         }
     }
 
-    /**
-     * ponytail: RenderNameTagEvent аналога нет. Логика цела, но не зарегистрирована --
-     * звать из миксина на EntityRenderer.shouldShowName.
-     */
-    private fun shouldHideNameTag(entity: Entity): Boolean {
+    /** RenderNameTagEvent: зовётся из EntityRendererMixin, true отменяет рендер таблички. */
+    @JvmStatic
+    fun shouldHideNameTag(entity: Entity): Boolean {
         if (entity !is Player) return false
         val self = localPlayer ?: return false
         if (self == entity) return false

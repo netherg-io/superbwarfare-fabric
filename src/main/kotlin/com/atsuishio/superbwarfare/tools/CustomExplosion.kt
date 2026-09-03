@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.tools
 
 import com.atsuishio.superbwarfare.Mod
+import com.atsuishio.superbwarfare.api.event.ExplosionEvent
+import com.atsuishio.superbwarfare.api.event.ExplosionKnockbackEvent
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig
 import com.atsuishio.superbwarfare.entity.OBBEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
@@ -320,12 +322,14 @@ class CustomExplosion @JvmOverloads constructor(
         val y1 = Mth.floor(this.y + diameter.toDouble() + 1)
         val z0 = Mth.floor(this.z - diameter.toDouble() - 1)
         val z1 = Mth.floor(this.z + diameter.toDouble() + 1)
-        val list = this.level.getEntities(
-            this.entity,
-            AABB(x0.toDouble(), y0.toDouble(), z0.toDouble(), x1.toDouble(), y1.toDouble(), z1.toDouble())
-        )
-        // ponytail: ExplosionEvent.Detonate ни в Fabric API, ни в Porting Lib нет — аддоны
-        // больше не могут вычеркнуть сущность из списка поражения. Понадобится — свой миксин.
+        val list = postEvent(
+            ExplosionEvent.Detonate(
+                this.level, this, this.level.getEntities(
+                    this.entity,
+                    AABB(x0.toDouble(), y0.toDouble(), z0.toDouble(), x1.toDouble(), y1.toDouble(), z1.toDouble())
+                )
+            )
+        ).affectedEntities
         val position = Vec3(this.x, this.y, this.z)
 
         var hit = false
@@ -364,8 +368,8 @@ class CustomExplosion @JvmOverloads constructor(
                         val capturedDamageSource = this.damageSource
                         val capturedFireTime = this.fireTime
 
-                        // Compute knockback force at explosion time
-                        val knockbackForce = if (entity is LivingEntity) {
+                        // Compute knockback at explosion time
+                        val knockback = if (entity is LivingEntity) {
                             var force = damageFinal * 0.015
 
                             val blockpos = BlockPos.containing(position.x, position.y, position.z)
@@ -384,7 +388,9 @@ class CustomExplosion @JvmOverloads constructor(
                             }
 
                             val vec31 = position.vectorTo(entity.boundingBox.center).normalize()
-                            force to vec31
+                            postEvent(
+                                ExplosionKnockbackEvent(level, this, entity, vec31.scale(force.coerceAtLeast(0.0)))
+                            ).knockbackVelocity
                         } else {
                             null
                         }
@@ -397,17 +403,8 @@ class CustomExplosion @JvmOverloads constructor(
                                     beastKill(this.damageSource.entity, entity)
                                 }
 
-                                if (knockbackForce != null && entity is LivingEntity) {
-                                    var (force, vec31) = knockbackForce
-
-                                    force = force.coerceAtLeast(0.0)
-                                    if (force > 0.0) {
-                                        if (entity is Player && !entity.isCreative && !entity.isSpectator) {
-                                            entity.deltaMovement = entity.deltaMovement.add(vec31.scale(force))
-                                        } else {
-                                            entity.deltaMovement = entity.deltaMovement.add(vec31.scale(force))
-                                        }
-                                    }
+                                if (knockback != null && knockback != Vec3.ZERO) {
+                                    entity.deltaMovement = entity.deltaMovement.add(knockback)
                                 }
 
                                 entity.invulnerableTime = 1
@@ -622,8 +619,9 @@ class CustomExplosion @JvmOverloads constructor(
                 .setFireTime(fireTime)
                 .setBeast(beast)
 
+            // Апстрим слал Start после explode() и игнорировал отмену; здесь -- как в NeoForge.
+            if (postEvent(ExplosionEvent.Start(level, customExplosion)).canceled) return
             customExplosion.explode()
-            // ponytail: ExplosionEvent.Start на Fabric нет, отменить взрыв извне нельзя.
             customExplosion.finalizeExplosion(false)
 
             // Auto-detect particle type from radius if not explicitly set

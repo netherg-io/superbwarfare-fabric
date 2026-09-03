@@ -36,6 +36,10 @@ repositories {
     maven { url = uri("https://maven.createmod.net") }
     maven { url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") }
     maven { url = uri("https://maven.shedaniel.me/") }
+    maven {
+        url = uri("https://maven.blamejared.com/")
+        content { includeGroup("mezz.jei") }
+    }
     maven { url = uri("https://mvn.devos.one/snapshots/") }
     maven { url = uri("https://jitpack.io") }   // Fabric-ASM, транзитивная у Porting Lib
     maven { url = uri("https://maven.wispforest.io") }   // Accessories
@@ -76,6 +80,10 @@ dependencies {
 
     modImplementation("software.bernie.geckolib:geckolib-fabric-1.21.1:4.7.5")
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")
+
+    // JEI опционален: плагин compat/jei подхватывается через entrypoint jei_mod_plugin.
+    // common-api лежит в mojmap-именах, как и наши маппинги, поэтому обычный compileOnly (как у апстрима).
+    compileOnly("mezz.jei:jei-1.21.1-common-api:${project.property("jei_version")}")
 
     // Отдаёт net.neoforged.neoforge.common.ModConfigSpec под Fabric с тем же именем пакета,
     // поэтому весь пакет config едет без правок: ModConfigBuilder там -- typealias на его Builder.

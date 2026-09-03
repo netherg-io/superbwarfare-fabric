@@ -89,11 +89,10 @@ class ContainerBlockItem :
     companion object {
         /** Общий. */
         fun init() {
-            ModEventBus.register<RegisterContainersEvent> { registerContainers(it) }
+            // Как EventPriority.HIGH в апстриме: техника мода в списке раньше аддонов.
+            ModEventBus.register<RegisterContainersEvent>(priority = 1) { registerContainers(it) }
         }
 
-        // ponytail: приоритета HIGH из NeoForge нет -- ModEventBus зовёт подписчиков в порядке регистрации.
-        // Если аддонам понадобится встать после этого списка, добавлять приоритет в ModEventBus.
         private fun registerContainers(event: RegisterContainersEvent) {
             event.add(ModEntities.WHEEL_CHAIR)
             event.add(ModEntities.SODAYO_PICK_UP)
