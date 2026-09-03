@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
+import com.atsuishio.superbwarfare.init.ModEnumExtensions;
 import com.atsuishio.superbwarfare.item.curio.ParachuteItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Final;
@@ -45,6 +47,25 @@ public class HumanoidModelMixin {
     @Shadow
     @Final
     public ModelPart hat;
+
+    /**
+     * Место IArmPoseTransformer из NeoForge: ванильный switch по ArmPose не знает наших четырёх
+     * поз (расширить енум нечем), поэтому углы рук выставляем сами и отменяем ванильную позу.
+     * Правая рука ставит обе -- у левой достаточно отменить, чтобы её не затёрло.
+     */
+    @Inject(method = "poseRightArm", at = @At("HEAD"), cancellable = true)
+    private void superbwarfare$poseRightArm(LivingEntity entity, CallbackInfo ci) {
+        if (ModEnumExtensions.Client.applyCustomArmPose((HumanoidModel<?>) (Object) this, entity, HumanoidArm.RIGHT)) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "poseLeftArm", at = @At("HEAD"), cancellable = true)
+    private void superbwarfare$poseLeftArm(LivingEntity entity, CallbackInfo ci) {
+        if (ModEnumExtensions.Client.applyCustomArmPose((HumanoidModel<?>) (Object) this, entity, HumanoidArm.LEFT)) {
+            ci.cancel();
+        }
+    }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "TAIL"))
     private void setupAnim(LivingEntity livingEntity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {

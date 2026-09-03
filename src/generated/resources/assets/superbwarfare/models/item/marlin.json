@@ -1,5 +1,14 @@
 {
-  "parent": "superbwarfare:item/marlin_base",
+  "base": {
+    "parent": "superbwarfare:item/marlin_base"
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "gui": {
+      "parent": "superbwarfare:item/marlin_icon"
+    }
+  },
   "textures": {
     "particle": "superbwarfare:item/marlin_icon"
   }

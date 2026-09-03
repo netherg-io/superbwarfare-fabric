@@ -1,5 +1,14 @@
 {
-  "parent": "superbwarfare:item/ql_1031_base",
+  "base": {
+    "parent": "superbwarfare:item/ql_1031_base"
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "gui": {
+      "parent": "superbwarfare:item/ql_1031_icon"
+    }
+  },
   "textures": {
     "particle": "superbwarfare:item/ql_1031_icon"
   }

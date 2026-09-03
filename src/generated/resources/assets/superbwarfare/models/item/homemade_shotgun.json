@@ -1,5 +1,14 @@
 {
-  "parent": "superbwarfare:item/homemade_shotgun_base",
+  "base": {
+    "parent": "superbwarfare:item/homemade_shotgun_base"
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "gui": {
+      "parent": "superbwarfare:item/homemade_shotgun_icon"
+    }
+  },
   "textures": {
     "particle": "superbwarfare:item/homemade_shotgun_icon"
   }

@@ -52,6 +52,7 @@ import com.atsuishio.superbwarfare.client.renderer.ModParticleRenderTypes
 import com.atsuishio.superbwarfare.client.renderer.molang.MolangVariable
 import com.atsuishio.superbwarfare.init.ModSoundInstances
 import com.atsuishio.superbwarfare.fabric.EntityHooks
+import com.atsuishio.superbwarfare.fabric.NeoForgeModelLoaders
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import com.atsuishio.superbwarfare.network.initializeClientNetwork
 import com.atsuishio.superbwarfare.sound.SoundLimit
@@ -67,6 +68,7 @@ object ModClient : ClientModInitializer {
         ModSoundInstances.init()
         SoundLimit.init()
         ModParticleRenderTypes.registerShaders()
+        NeoForgeModelLoaders.init()
         initializeClientNetwork()
         EntityHooks.initClient()
 

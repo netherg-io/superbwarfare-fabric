@@ -1,5 +1,14 @@
 {
-  "parent": "superbwarfare:item/igla_9k38_base",
+  "base": {
+    "parent": "superbwarfare:item/igla_9k38_base"
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "gui": {
+      "parent": "superbwarfare:item/igla_9k38_icon"
+    }
+  },
   "textures": {
     "particle": "superbwarfare:item/igla_9k38_icon"
   }

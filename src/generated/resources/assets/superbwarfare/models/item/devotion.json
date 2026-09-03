@@ -1,5 +1,14 @@
 {
-  "parent": "superbwarfare:item/devotion_base",
+  "base": {
+    "parent": "superbwarfare:item/devotion_base"
+  },
+  "gui_light": "front",
+  "loader": "neoforge:separate_transforms",
+  "perspectives": {
+    "gui": {
+      "parent": "superbwarfare:item/devotion_icon"
+    }
+  },
   "textures": {
     "particle": "superbwarfare:item/devotion_icon"
   }

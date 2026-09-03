@@ -54,8 +54,17 @@ open class MilitaryShovelItem :
      * useOn у AxeItem/ShovelItem/HoeItem делают ровно эти три набора действий и сами бьют по
      * прочности того стака, что лежит в UseOnContext, -- то есть по нашей лопате.
      *
-     * ponytail: набор действий теперь ванильный. Если понадобится расширить его тегами блоков
-     * (снять кору с модового бревна и т.п.), придётся вернуться к своим таблицам превращений.
+     * По действиям с блоками ничего не потеряно и терять нечего: AXE_STRIP/AXE_SCRAPE/
+     * AXE_WAX_OFF/SHOVEL_FLATTEN/SHOVEL_DOUSE/HOE_TILL -- это и есть ванильные useOn, а модовые
+     * блоки на Fabric регистрируются в те же ванильные таблицы (StrippableBlockRegistry,
+     * TillableBlockRegistry, FlattenableBlockRegistry из Fabric API), которые эти useOn читают.
+     * Своя таблица превращений сделала бы хуже: она бы про чужие блоки не знала.
+     *
+     * ponytail: единственная реальная потеря -- ItemAbilities.SWORD_SWEEP: в ванили 1.21.1
+     * размашистая атака включается по `instanceof SwordItem` в Player.attack, а лопата -- AxeItem.
+     * Тегами блоков это не лечится, нужен миксин в Player.attack (@ModifyExpressionValue на
+     * INSTANCEOF). Возвращаться, если ближний бой лопатой станет важнее, чем один хрупкий
+     * инжектор в горячем методе.
      */
     override fun useOn(context: UseOnContext): InteractionResult {
         val axe = super.useOn(context)

@@ -1,5 +1,11 @@
 {
-  "parent": "superbwarfare:block/dragon_teeth",
+  "_comment": "neoforge:obj вместо parent на block/dragon_teeth: parent-цепочка ванильного BlockModel не наследует геометрию кастомного загрузчика (см. NeoForgeModelLoaders)",
+  "loader": "neoforge:obj",
+  "model": "superbwarfare:models/block/dragon_teeth.obj",
+  "textures": {
+    "#m_40ddb3f7-b960-0c4a-147f-2010aa6221ab": "superbwarfare:block/dragon_teeth",
+    "particle": "minecraft:block/smooth_stone"
+  },
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [90, 0, 0],
