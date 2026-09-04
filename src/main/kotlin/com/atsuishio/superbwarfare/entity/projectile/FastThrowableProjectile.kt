@@ -867,6 +867,11 @@ abstract class FastThrowableProjectile : ThrowableItemProjectile, IFastMotionSyn
         }
 
         internal fun manualTickRegistered(): MutableSet<FastThrowableProjectile> = manualTickSet
+
+        /** Снесённое измерение уносит сущности без onRemovedFromLevel -- иначе набор держит его вечно. */
+        internal fun forgetLevel(level: Level) {
+            for (p in manualTickSet.filter { it.level() === level }) unregisterForManualTick(p)
+        }
         internal fun unregisterForManualTickInternal(projectile: FastThrowableProjectile) {
             unregisterForManualTick(projectile)
         }

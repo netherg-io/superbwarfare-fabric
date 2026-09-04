@@ -173,9 +173,18 @@ open class AutoAimableEntity(type: EntityType<*>, world: Level) : VehicleEntity(
 
         val pTeam = owner?.team
 
-        if (pTeam != null && level() is ServerLevel) {
-            level().scoreboard.addPlayerToTeam(this.getStringUUID(), pTeam)
+        // Каждый тик заново -- это removePlayerFromTeam + addPlayerToTeam и два пакета всем игрокам,
+        // а состав команды хранится в scoreboard.dat по UUID и не чистится ничем.
+        if (pTeam != null && level() is ServerLevel && level().scoreboard.getPlayersTeam(stringUUID) !== pTeam) {
+            level().scoreboard.addPlayerToTeam(stringUUID, pTeam)
         }
+    }
+
+    override fun remove(reason: RemovalReason) {
+        if (level() is ServerLevel && level().scoreboard.getPlayersTeam(stringUUID) != null) {
+            level().scoreboard.removePlayerFromTeam(stringUUID)
+        }
+        super.remove(reason)
     }
 
     open fun autoAim() {

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.levelgen.Heightmap
 import net.minecraft.world.phys.Vec3
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -32,6 +33,13 @@ import java.util.concurrent.ConcurrentHashMap
 object ServerSyncedEntityHandler {
     fun init() {
         ServerTickEvents.END_SERVER_TICK.register { tick(it) }
+        // Записи держат сами сущности, а значит и удалённый ServerLevel: cleanAll ходит только по
+        // server.allLevels и до ключей снесённых измерений уже не добирается.
+        ServerWorldEvents.UNLOAD.register { _, level ->
+            val dim = level.dimension().location().toString()
+            entities.remove(dim)
+            pendingRemovals.remove(dim)
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity.projectile
 
 import com.atsuishio.superbwarfare.config.server.ProjectileConfig
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents
 
 /**
  * 服务端手动 tick 兜底：让 fast projectile 在未加载区块中也能继续飞行。
@@ -20,6 +21,7 @@ object FastProjectileManualTicker {
 
     fun init() {
         ServerTickEvents.END_SERVER_TICK.register { onServerTick() }
+        ServerWorldEvents.UNLOAD.register { _, level -> FastThrowableProjectile.forgetLevel(level) }
     }
 
     private fun onServerTick() {
