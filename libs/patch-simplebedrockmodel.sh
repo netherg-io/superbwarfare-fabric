@@ -3,10 +3,10 @@
 # а тот зовёт клиентский FirstPersonRenderHandler. На выделенном сервере клиентский класс
 # вырезан, и мод роняет запуск ещё в Bootstrap. Миксин отвечает только за анимацию
 # перевыбора предмета в руке, то есть ему место в клиентской секции.
-#   ./patch-simplebedrockmodel.sh simplebedrockmodel-fabric-2.5.1+mc1.21.1.jar
+#   ./patch-simplebedrockmodel.sh simplebedrockmodel-fabric-2.5.1+mc1.21.1.jar [суффикс, по умолчанию bf1]
 set -euo pipefail
 SRC=$1
-OUT=${SRC%.jar}-bf1.jar
+OUT=${SRC%.jar}-${2:-bf1}.jar
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 cp "$SRC" "$OUT"
