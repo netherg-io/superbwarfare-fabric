@@ -6,11 +6,13 @@ import com.atsuishio.superbwarfare.init.ModAttributes
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.resource.model.ArmorModelReloadListener
 import com.atsuishio.superbwarfare.tiers.ModArmorMaterial
+import com.github.mcmodderanchor.simplebedrockmodel.v1.client.handler.FirstPersonArmorHandler
 import com.github.mcmodderanchor.simplebedrockmodel.v2.client.renderer.GeoArmorRendererV2
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.item.ArmorItem
@@ -32,8 +34,7 @@ class UsChestIotvItem : ArmorItem(
         @Environment(EnvType.CLIENT)
         fun init() {
             var renderer: GeoArmorRendererV2? = null
-
-            ArmorRenderer.register({ poseStack, buffer, stack, entity, slot, light, contextModel ->
+            fun getRenderer(slot: EquipmentSlot): GeoArmorRendererV2 {
                 if (renderer == null) {
                     renderer = GeoArmorRendererV2(
                         ArmorModelReloadListener.getModel(MODEL),
@@ -41,10 +42,16 @@ class UsChestIotvItem : ArmorItem(
                         TEXTURE
                     )
                 }
+                return renderer!!
+            }
 
-                renderer!!.preparePose(entity, stack, slot, contextModel)
-                renderer!!.renderArmorToBuffer(poseStack, buffer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f)
+            ArmorRenderer.register({ poseStack, buffer, stack, entity, slot, light, contextModel ->
+                val armorRenderer = getRenderer(slot)
+                armorRenderer.preparePose(entity, stack, slot, contextModel)
+                armorRenderer.renderArmorToBuffer(poseStack, buffer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f)
             }, ModItems.US_CHEST_IOTV.get())
+
+            FirstPersonArmorHandler.register(ModItems.US_CHEST_IOTV.get()) { getRenderer(EquipmentSlot.CHEST) }
         }
     }
 
