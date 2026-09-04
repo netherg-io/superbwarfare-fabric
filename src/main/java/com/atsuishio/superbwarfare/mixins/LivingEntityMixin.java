@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.mixin.DamageAccess;
 import com.atsuishio.superbwarfare.entity.mixin.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModAttributes;
 import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,12 +16,24 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements ICustomKnockback, DamageAccess {
+
+    /**
+     * Апстрим вешал BULLET_RESISTANCE на каждый живой тип через EntityAttributeModificationEvent.
+     * На Fabric аналога нет, а DefaultAttributes.SUPPLIERS собирается из createLivingAttributes(),
+     * поэтому атрибут добавляется здесь -- одной точкой на все ванильные и модовые типы.
+     */
+    @Inject(method = "createLivingAttributes", at = @At("RETURN"))
+    private static void sbw$addBulletResistance(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
+        cir.getReturnValue().add(ModAttributes.BULLET_RESISTANCE);
+    }
 
     @Shadow
     @Nullable

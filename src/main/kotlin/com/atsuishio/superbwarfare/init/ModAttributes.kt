@@ -1,35 +1,30 @@
 package com.atsuishio.superbwarfare.init
 
 import com.atsuishio.superbwarfare.Mod
-import com.atsuishio.superbwarfare.fabric.DeferredHolder
-import com.atsuishio.superbwarfare.fabric.DeferredRegister
+import net.minecraft.core.Holder
+import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.RangedAttribute
-import java.util.function.Supplier
 
-/** Общая сторона: вызывать из ModInitializer. */
+/**
+ * Общая сторона: вызывать из ModInitializer.
+ *
+ * Здесь не DeferredHolder, а сам Holder реестра: AttributeSupplier хранит атрибуты в HashMap по
+ * Holder, а Holder.Reference сравнивается по ссылке. Обёртка DeferredHolder дала бы ключ, который
+ * не находится ни командой /attribute, ни любым другим кодом, берущим Holder из реестра.
+ *
+ * BULLET_RESISTANCE навешивается на все живые типы миксином в LivingEntity.createLivingAttributes
+ * (у NeoForge это делал EntityAttributeModificationEvent).
+ */
 object ModAttributes {
-    val ATTRIBUTES: DeferredRegister<Attribute> =
-        DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, Mod.MODID)
-
     @JvmField
-    val BULLET_RESISTANCE: DeferredHolder<Attribute, out Attribute> = ATTRIBUTES.register(
-        "bullet_resistance",
-        Supplier {
-            (RangedAttribute(
-                "attribute." + Mod.MODID + ".bullet_resistance",
-                0.0,
-                0.0,
-                1.0
-            )).setSyncable(true)
-        })
+    val BULLET_RESISTANCE: Holder<Attribute> = Registry.registerForHolder(
+        BuiltInRegistries.ATTRIBUTE,
+        ResourceLocation.fromNamespaceAndPath(Mod.MODID, "bullet_resistance"),
+        RangedAttribute("attribute." + Mod.MODID + ".bullet_resistance", 0.0, 0.0, 1.0).setSyncable(true)
+    )
 
-    // Апстрим вешал BULLET_RESISTANCE на КАЖДЫЙ тип живой сущности через
-    // EntityAttributeModificationEvent. У Fabric аналога нет: FabricDefaultAttributeRegistry задаёт
-    // набор атрибутов только для новых типов и не умеет дополнять уже собранные ванильные.
-    // Нужен миксин в DefaultAttributes.SUPPLIERS — делается вне этого файла.
-    fun init() {
-        ATTRIBUTES.register(null)
-    }
+    fun init() = Unit
 }

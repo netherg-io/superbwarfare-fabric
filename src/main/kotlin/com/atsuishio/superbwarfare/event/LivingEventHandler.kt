@@ -161,6 +161,15 @@ object LivingEventHandler {
     }
 
     /**
+     * На Fabric BULLET_RESISTANCE не навешен на ванильные типы (см. ModAttributes): у сущности без
+     * него getAttributeValue бросает IllegalArgumentException и роняет серверный поток на любом взрыве.
+     */
+    private fun LivingEntity.bulletResistance(): Double =
+        if (attributes.hasAttribute(ModAttributes.BULLET_RESISTANCE)) {
+            getAttributeValue(ModAttributes.BULLET_RESISTANCE)
+        } else 0.0
+
+    /**
      * 计算伤害减免
      */
     private fun reduceDamage(event: LivingHurtEvent) {
@@ -194,11 +203,11 @@ object LivingEventHandler {
 
         // 计算防弹护具减伤
         if (source.`is`(ModTags.DamageTypes.PROJECTILE) || source.`is`(DamageTypes.MOB_PROJECTILE)) {
-            damage *= 1 - 0.8 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE), 0.0, 1.0)
+            damage *= 1 - 0.8 * Mth.clamp(entity.bulletResistance(), 0.0, 1.0)
         }
 
         if (source.`is`(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-            damage *= 1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE), 0.0, 1.0)
+            damage *= 1 - 0.2 * Mth.clamp(entity.bulletResistance(), 0.0, 1.0)
         }
 
         if (source.`is`(ModDamageTypes.PROJECTILE_EXPLOSION) || source.`is`(ModDamageTypes.MINE) || source.`is`(
@@ -206,7 +215,7 @@ object LivingEventHandler {
             ) || source.`is`(ModDamageTypes.CUSTOM_EXPLOSION)
             || source.`is`(DamageTypes.EXPLOSION) || source.`is`(DamageTypes.PLAYER_EXPLOSION)
         ) {
-            damage *= 1 - 0.3 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE), 0.0, 1.0)
+            damage *= 1 - 0.3 * Mth.clamp(entity.bulletResistance(), 0.0, 1.0)
         }
 
         event.amount = damage.toFloat()

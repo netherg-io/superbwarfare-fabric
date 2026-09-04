@@ -22,9 +22,14 @@ import net.minecraft.world.item.component.ItemAttributeModifiers
 interface StackAttributeItem {
     fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers
 
-    /** То, что апстрим брал из `super`: модификаторы, положенные в Item.Properties. */
-    fun baseAttributeModifiers(stack: ItemStack): ItemAttributeModifiers =
-        stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
+    /**
+     * То, что апстрим брал из `super`. Порядок как в ваниле: пустой компонент означает, что
+     * модификаторы лежат в самом предмете (ArmorItem 1.21.1 отдаёт защиту только оттуда).
+     */
+    fun baseAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
+        val fromComponent = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY)
+        return if (fromComponent.modifiers().isEmpty()) stack.item.defaultAttributeModifiers else fromComponent
+    }
 }
 
 /**
