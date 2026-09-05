@@ -147,10 +147,8 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         compound.putString("DisplayEntityTag", this.entityData.get(DISPLAY_ENTITY_TAG).toString())
         compound.putString("DisplayData", this.entityData.get(DISPLAY_DATA).joinToString(","))
 
-        val item = CompoundTag()
-        if (!this.currentItem.isEmpty) {
-            this.currentItem.save(level().registryAccess(), item)
-        }
+        // ItemStack.save возвращает новый тег, переданный используется лишь как префикс
+        val item = if (this.currentItem.isEmpty) CompoundTag() else this.currentItem.save(level().registryAccess(), CompoundTag())
         compound.put("Item", item)
     }
 
