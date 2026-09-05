@@ -6,13 +6,11 @@ import com.atsuishio.superbwarfare.init.ModAttributes
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.resource.model.ArmorModelReloadListener
 import com.atsuishio.superbwarfare.tiers.ModArmorMaterial
-import com.github.mcmodderanchor.simplebedrockmodel.v1.client.handler.FirstPersonArmorHandler
 import com.github.mcmodderanchor.simplebedrockmodel.v2.client.renderer.GeoArmorRendererV2
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -22,21 +20,29 @@ import net.minecraft.world.item.component.ItemAttributeModifiers
 import kotlin.math.max
 import com.atsuishio.superbwarfare.item.StackAttributeItem
 
-class RuChest6b43Item : ArmorItem(
+/**
+ * Брюки полевые NATO: защита 6 берётся из материала, а прочность 600 и вязкость 3.0 — как в старом
+ * fracturepoint (WARBORN_ARMOR: множитель 40 при базе LEGGINGS 15, toughness 3.0). Вязкость
+ * материала (4.0) поэтому заменяется своим модификатором.
+ */
+class UsLeggingsItem : ArmorItem(
     ModArmorMaterial.CEMENTED_CARBIDE,
-    Type.CHESTPLATE,
-    Properties().durability(Type.CHESTPLATE.getDurability(50))
+    Type.LEGGINGS,
+    Properties().durability(600)
 ), StackAttributeItem {
     companion object {
-        val SHOULDERPADS_ID = loc("shoulderpads")
-        val TEXTURE = loc("textures/bedrock/armor/ru_chest_6b43.png")
-        val MODEL = loc("models/bedrock/armor/ru_chest_6b43.geo.json")
+        const val TOUGHNESS = 3.0
+
+        val TOUGHNESS_ID = loc("leggings_toughness")
+        val TEXTURE = loc("textures/bedrock/armor/us_leggings.png")
+        val MODEL = loc("models/bedrock/armor/us_leggings.geo.json")
 
         /** Клиент: аналога IClientItemExtensions#getHumanoidArmorModel на Fabric нет, модель брони отдаётся через ArmorRenderer. */
         @Environment(EnvType.CLIENT)
         fun init() {
             var renderer: GeoArmorRendererV2? = null
-            fun getRenderer(slot: EquipmentSlot): GeoArmorRendererV2 {
+
+            ArmorRenderer.register({ poseStack, buffer, stack, entity, slot, light, contextModel ->
                 if (renderer == null) {
                     renderer = GeoArmorRendererV2(
                         ArmorModelReloadListener.getModel(MODEL),
@@ -44,39 +50,33 @@ class RuChest6b43Item : ArmorItem(
                         TEXTURE
                     )
                 }
-                return renderer!!
-            }
 
-            ArmorRenderer.register({ poseStack, buffer, stack, entity, slot, light, contextModel ->
-                val armorRenderer = getRenderer(slot)
-                armorRenderer.preparePose(entity, stack, slot, contextModel)
-                armorRenderer.renderArmorToBuffer(poseStack, buffer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f)
-            }, ModItems.RU_CHEST_6B43.get())
-
-            FirstPersonArmorHandler.register(ModItems.RU_CHEST_6B43.get()) { getRenderer(EquipmentSlot.CHEST) }
+                renderer!!.preparePose(entity, stack, slot, contextModel)
+                renderer!!.renderArmorToBuffer(poseStack, buffer, light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f)
+            }, ModItems.US_LEGGINGS.get())
         }
     }
 
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
-        val modifiers = baseAttributeModifiers(stack)
-        val list = ArrayList<ItemAttributeModifiers.Entry>(modifiers.modifiers())
-        // Наплечники: в fracturepoint это был отдельный Curios-предмет на +4 брони, здесь они
-        // нарисованы прямо на жилете, поэтому +4 идут отдельным модификатором к защите 8.
+        val slotGroup = EquipmentSlotGroup.bySlot(this.type.slot)
+        val list = ArrayList<ItemAttributeModifiers.Entry>(
+            baseAttributeModifiers(stack).modifiers().filter { it.attribute() != Attributes.ARMOR_TOUGHNESS }
+        )
         list.add(
             ItemAttributeModifiers.Entry(
-                Attributes.ARMOR,
-                AttributeModifier(SHOULDERPADS_ID, 4.0, AttributeModifier.Operation.ADD_VALUE),
-                EquipmentSlotGroup.bySlot(this.type.slot)
+                Attributes.ARMOR_TOUGHNESS,
+                AttributeModifier(TOUGHNESS_ID, TOUGHNESS, AttributeModifier.Operation.ADD_VALUE),
+                slotGroup
             )
         )
         list.add(
             ItemAttributeModifiers.Entry(
                 ModAttributes.BULLET_RESISTANCE, AttributeModifier(
                     Mod.ATTRIBUTE_MODIFIER,
-                    0.5 * max(0.0, 1 - stack.damageValue.toDouble() / stack.maxDamage),
+                    0.1 * max(0.0, 1 - stack.damageValue.toDouble() / stack.maxDamage),
                     AttributeModifier.Operation.ADD_VALUE
                 ),
-                EquipmentSlotGroup.bySlot(this.type.slot)
+                slotGroup
             )
         )
         return ItemAttributeModifiers(list, true)

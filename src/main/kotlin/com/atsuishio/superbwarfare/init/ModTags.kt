@@ -54,6 +54,9 @@ object ModTags {
         @JvmField val MILITARY_ARMOR = modItemTag("military_armor")
         @JvmField val MILITARY_ARMOR_HEAVY = modItemTag("military_armor_heavy")
 
+        /** Шлемы с ПНВ (тег из fracturepoint). */
+        @JvmField val HAS_NVG = modItemTag("has_nvg")
+
         @JvmField val INGOTS_CEMENTED_CARBIDE = modItemTag("ingots/cemented_carbide")
         @JvmField val STORAGE_BLOCK_CEMENTED_CARBIDE = modItemTag("storage_blocks/cemented_carbide")
 

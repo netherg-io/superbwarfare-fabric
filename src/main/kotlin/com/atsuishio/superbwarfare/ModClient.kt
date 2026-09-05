@@ -32,6 +32,9 @@ import com.atsuishio.superbwarfare.item.armor.UsChestIotvItem
 import com.atsuishio.superbwarfare.item.armor.RuHelmet6b47Item
 import com.atsuishio.superbwarfare.item.armor.UsHelmetPasgtItem
 import com.atsuishio.superbwarfare.item.armor.HandsomeGogglesItem
+import com.atsuishio.superbwarfare.item.armor.RuLeggingsItem
+import com.atsuishio.superbwarfare.item.armor.UsLeggingsItem
+import com.atsuishio.superbwarfare.client.NvgHandler
 import com.atsuishio.superbwarfare.item.blockitem.BlueprintResearchTableBlockItem
 import com.atsuishio.superbwarfare.item.blockitem.VehicleAssemblingTableBlockItem
 import com.atsuishio.superbwarfare.item.container.SmallContainerBlockItem
@@ -105,6 +108,9 @@ object ModClient : ClientModInitializer {
         RuHelmet6b47Item.init()
         UsHelmetPasgtItem.init()
         HandsomeGogglesItem.init()
+        RuLeggingsItem.init()
+        UsLeggingsItem.init()
+        NvgHandler.init()
         BlueprintResearchTableBlockItem.init()
         VehicleAssemblingTableBlockItem.init()
         SmallContainerBlockItem.init()

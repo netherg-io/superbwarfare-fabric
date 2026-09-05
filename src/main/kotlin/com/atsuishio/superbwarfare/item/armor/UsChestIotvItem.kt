@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.EquipmentSlotGroup
 import net.minecraft.world.entity.ai.attributes.AttributeModifier
+import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.ItemAttributeModifiers
@@ -27,6 +28,7 @@ class UsChestIotvItem : ArmorItem(
     Properties().durability(Type.CHESTPLATE.getDurability(50))
 ), StackAttributeItem {
     companion object {
+        val SHOULDERPADS_ID = loc("shoulderpads")
         val TEXTURE = loc("textures/bedrock/armor/us_chest_iotv.png")
         val MODEL = loc("models/bedrock/armor/us_chest_iotv.geo.json")
 
@@ -58,6 +60,15 @@ class UsChestIotvItem : ArmorItem(
     override fun getDefaultAttributeModifiers(stack: ItemStack): ItemAttributeModifiers {
         val modifiers = baseAttributeModifiers(stack)
         val list = ArrayList<ItemAttributeModifiers.Entry>(modifiers.modifiers())
+        // Наплечники: в fracturepoint это был отдельный Curios-предмет на +4 брони, здесь они
+        // нарисованы прямо на жилете, поэтому +4 идут отдельным модификатором к защите 8.
+        list.add(
+            ItemAttributeModifiers.Entry(
+                Attributes.ARMOR,
+                AttributeModifier(SHOULDERPADS_ID, 4.0, AttributeModifier.Operation.ADD_VALUE),
+                EquipmentSlotGroup.bySlot(this.type.slot)
+            )
+        )
         list.add(
             ItemAttributeModifiers.Entry(
                 ModAttributes.BULLET_RESISTANCE, AttributeModifier(

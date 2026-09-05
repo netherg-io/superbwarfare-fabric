@@ -115,6 +115,10 @@ object ModKeyMappings {
     @JvmField
     val TOGGLE_TACTICAL_MAP = registerKey("toggle_tactical_map", GLFW.GLFW_KEY_M)
 
+    /** ПНВ шлема, как в fracturepoint. N по умолчанию занят режимом стрельбы — конфликт разрулит игрок. */
+    @JvmField
+    val TOGGLE_NVG = registerKey("toggle_nvg", GLFW.GLFW_KEY_N)
+
     private fun registerKey(
         name: String,
         code: Int,
