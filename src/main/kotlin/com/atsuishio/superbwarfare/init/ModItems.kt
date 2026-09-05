@@ -251,6 +251,8 @@ object ModItems {
     @JvmField val US_HELMET_PASGT = registerItem("us_helmet_pasgt") { UsHelmetPasgtItem() }
     @JvmField val US_CHEST_IOTV = registerItem("us_chest_iotv") { UsChestIotvItem() }
     @JvmField val GE_HELMET_M_35 = registerItem("ge_helmet_m_35") { GeHelmetM35Item() }
+    @JvmField val RU_LEGGINGS = registerItem("ru_leggings") { RuLeggingsItem() }
+    @JvmField val US_LEGGINGS = registerItem("us_leggings") { UsLeggingsItem() }
     @JvmField val PARACHUTE = registerItem("parachute") { ParachuteItem() }
     @JvmField val THERMAL_IMAGING_GOGGLES = registerItem("thermal_imaging_goggles") { ThermalImagingGogglesItem() }
     @JvmField val HANDSOME_GOGGLES = registerItem("handsome_goggles") { HandsomeGogglesItem() }
