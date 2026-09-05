@@ -336,6 +336,12 @@ object ModEntities {
     val DRONE = register("drone", misc(::DroneEntity).clientTrackingRange(512).updateInterval(1).sized(0.6f, 0.2f))
 
     @JvmField
+    val SCOUT_DRONE = register(
+        "scout_drone",
+        misc(::ScoutDroneEntity).clientTrackingRange(512).updateInterval(1).sized(0.6f, 0.2f)
+    )
+
+    @JvmField
     val MORTAR = register("mortar", vehicle(::MortarEntity).sized(0.8f, 1.4f))
 
     @JvmField

@@ -1,0 +1,7 @@
+{
+  "Model": {
+    "Animation": "superbwarfare:animations/drone.animation.json",
+    "Model": "superbwarfare:geo/scout_drone.geo.json",
+    "Texture": "superbwarfare:textures/entity/scout_drone.png"
+  }
+}

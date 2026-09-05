@@ -49,6 +49,7 @@ import net.minecraft.world.entity.MoverType
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.alchemy.Potions
@@ -64,7 +65,7 @@ import java.util.*
 import kotlin.math.abs
 
 open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVehicleEntity(type, world) {
-    var fire: Boolean = false
+    open var fire: Boolean = false
     override var collisionCoolDown: Int = 0
     override var lastTickSpeed: Double = 0.0
     override var lastTickVerticalSpeed: Double = 0.0
@@ -78,6 +79,15 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
     var holdTickZ: Int = 0
 
     private var ammoCount by AMMO
+
+    /** Дальность связи с оператором: дальше -- обрыв, взрыв и списание дрона. */
+    open val maxControlDistance: Double get() = 150.0
+
+    /** С этой дистанции оператор получает предупреждение о слабом сигнале. */
+    open val weakSignalDistance: Double get() = maxControlDistance
+
+    /** Предмет, которым дрон складывается обратно в инвентарь. */
+    open fun droneItem(): Item = ModItems.DRONE.get()
 
     fun setBodyXRot(rot: Float) {
         this.bodyPitch = rot
@@ -138,7 +148,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         compound.putString("DisplayData", this.entityData.get(DISPLAY_DATA).joinToString(","))
 
         val item = CompoundTag()
-        if (!item.isEmpty) {
+        if (!this.currentItem.isEmpty) {
             this.currentItem.save(level().registryAccess(), item)
         }
         compound.put("Item", item)
@@ -187,6 +197,20 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         }
 
         val controller = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+
+        if (controller != null && this.level() is ServerLevel && this.entityData.get(LINKED)) {
+            val distance = this.position().distanceTo(controller.position())
+            if (distance > maxControlDistance) {
+                signalLost()
+                return
+            }
+            if (distance > weakSignalDistance && this.tickCount % 20 == 0) {
+                controller.displayClientMessage(
+                    Component.translatable("tips.superbwarfare.drone.weak_signal")
+                        .withStyle(ChatFormatting.RED), true
+                )
+            }
+        }
 
         if (!this.onGround()) {
             if (controller != null) {
@@ -247,6 +271,37 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         }
 
         this.refreshDimensions()
+    }
+
+    /**
+     * Обрыв связи: отвязываем все привязанные мониторы, взрываемся и исчезаем.
+     * Радиус/урон -- как в старом аддоне wrbdrones.
+     */
+    fun signalLost() {
+        val level = this.level()
+        if (level !is ServerLevel) return
+
+        val droneId = this.getStringUUID()
+        for (player in level.players()) {
+            player.inventory.items
+                .filter { it.item === ModItems.MONITOR.get() }
+                .forEach {
+                    val tag = NBTTool.getTag(it)
+                    if (tag.getString(MonitorItem.LINKED_DRONE) == droneId) {
+                        disLink(tag, player)
+                        NBTTool.saveTag(it, tag)
+                    }
+                }
+        }
+
+        createCustomExplosion()
+            .source(this)
+            .attacker(this.getController())
+            .radius(3.5f)
+            .damage(8f)
+            .explode()
+
+        this.discard()
     }
 
     private fun droneDrop(player: Player?) {
@@ -360,7 +415,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         } else if (player.isShiftKeyDown) {
             if (stack.isEmpty || stack.`is`(ModTags.Items.TOOLS_CROWBAR)) {
                 // 无人机拆除
-                ItemHandlerHelper.giveItemToPlayer(player, ItemStack(ModItems.DRONE.get()))
+                ItemHandlerHelper.giveItemToPlayer(player, ItemStack(droneItem()))
 
                 // 返还弹药
                 repeat(this.ammoCount) {
@@ -703,7 +758,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
     }
 
     override fun getPickResult(): ItemStack? {
-        return ItemStack(ModItems.DRONE.get())
+        return ItemStack(droneItem())
     }
 
     override fun destroy() {

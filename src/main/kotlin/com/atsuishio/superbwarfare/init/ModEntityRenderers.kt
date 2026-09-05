@@ -24,6 +24,7 @@ object ModEntityRenderers {
         EntityRendererRegistry.register(ModEntities.PROJECTILE.get(), ::ProjectileEntityRenderer)
         EntityRendererRegistry.register(ModEntities.MK_42.get(), ::Mk42Renderer)
         EntityRendererRegistry.register(ModEntities.DRONE.get(), ::DroneRenderer)
+        EntityRendererRegistry.register(ModEntities.SCOUT_DRONE.get(), ::DroneRenderer)
         EntityRendererRegistry.register(ModEntities.HAND_GRENADE.get(), ::BasicProjectileRenderer)
         EntityRendererRegistry.register(ModEntities.RGO_GRENADE.get(), ::BasicProjectileRenderer)
         EntityRendererRegistry.register(ModEntities.M18_SMOKE_GRENADE.get(), ::BasicProjectileRenderer)
