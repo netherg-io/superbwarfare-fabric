@@ -45,6 +45,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.tags.DamageTypeTags
 import net.minecraft.sounds.SoundSource
 import net.minecraft.util.Mth
 import net.minecraft.world.damagesource.DamageTypes
@@ -200,7 +201,11 @@ object LivingEventHandler {
         // Пластина не спасает от попадания в голову: свои хедшоты помечены типом урона,
         // у TaCZ тип урона один на все попадания, флаг приходит отдельным событием.
         val headshot = isHeadshotDamage(source) || (CompatHolder.hasTacz && TaczHeadshotCompat.isHeadshot(source))
-        if (armor != ItemStack.EMPTY && tag.contains("ArmorPlate") && !headshot) {
+        // Плита противопульная, а не противоосколочная: пока она съедала и взрывы, граната в упор
+        // не пробивала кит (30 очков плиты против ~26 урона гранаты в упор).
+        if (armor != ItemStack.EMPTY && tag.contains("ArmorPlate") && !headshot
+            && !source.`is`(DamageTypeTags.IS_EXPLOSION)
+        ) {
             val armorValue = tag.getDouble("ArmorPlate")
             tag.putDouble("ArmorPlate", max(armorValue - damage, 0.0))
             NBTTool.saveTag(armor, tag)
