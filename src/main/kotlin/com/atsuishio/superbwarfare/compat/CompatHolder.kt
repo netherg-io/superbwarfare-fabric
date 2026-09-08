@@ -8,6 +8,10 @@ object CompatHolder {
     const val DMV: String = "dreamaticvoyage"
     const val VRC: String = "virtuarealcraft"
     const val CLOTH_CONFIG: String = "cloth-config" // id на Fabric через дефис, не через подчёркивание
+    const val TACZ: String = "tacz"
+
+    @JvmField
+    val hasTacz: Boolean = FabricLoader.getInstance().isModLoaded(TACZ)
 
     fun init() {
         hasMod(CLOTH_CONFIG) {

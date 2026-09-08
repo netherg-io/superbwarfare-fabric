@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.api.event.ExplosionEvent
 import com.atsuishio.superbwarfare.api.event.ExplosionKnockbackEvent
 import com.atsuishio.superbwarfare.api.event.PreKillEvent.Indicator
 import com.atsuishio.superbwarfare.api.event.PreKillEvent.SendKillMessage
+import com.atsuishio.superbwarfare.compat.CompatHolder
+import com.atsuishio.superbwarfare.compat.tacz.TaczHeadshotCompat
 import com.atsuishio.superbwarfare.config.common.GameplayConfig
 import com.atsuishio.superbwarfare.config.server.MiscConfig
 import com.atsuishio.superbwarfare.config.server.VehicleConfig
@@ -79,6 +81,7 @@ object LivingEventHandler {
         ServerEntityEvents.EQUIPMENT_CHANGE.register { entity, slot, from, to -> handleChangeSlot(entity, slot, from, to) }
         ModEventBus.register<ExplosionEvent.Detonate> { onExplosionDetonate(it) }
         ModEventBus.register<ExplosionKnockbackEvent> { onExplosionKnockback(it) }
+        CompatHolder.hasMod(CompatHolder.TACZ) { TaczHeadshotCompat.init() }
     }
 
     private fun onLivingChangeTargetEvent(event: LivingChangeTargetEvent) {
@@ -194,7 +197,10 @@ object LivingEventHandler {
         val armor = entity.getItemBySlot(EquipmentSlot.CHEST)
 
         val tag = NBTTool.getTag(armor)
-        if (armor != ItemStack.EMPTY && tag.contains("ArmorPlate")) {
+        // Пластина не спасает от попадания в голову: свои хедшоты помечены типом урона,
+        // у TaCZ тип урона один на все попадания, флаг приходит отдельным событием.
+        val headshot = isHeadshotDamage(source) || (CompatHolder.hasTacz && TaczHeadshotCompat.isHeadshot(source))
+        if (armor != ItemStack.EMPTY && tag.contains("ArmorPlate") && !headshot) {
             val armorValue = tag.getDouble("ArmorPlate")
             tag.putDouble("ArmorPlate", max(armorValue - damage, 0.0))
             NBTTool.saveTag(armor, tag)

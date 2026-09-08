@@ -32,7 +32,12 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url = uri("https://maven.parchmentmc.org") }
-    maven { url = uri("https://api.modrinth.com/maven") }
+    // Только этот репозиторий отдаёт maven.modrinth: иначе gradle перебирает репозитории
+    // по порядку и валит сборку на первом недоступном (тот же parchment).
+    exclusiveContent {
+        forRepository { maven { url = uri("https://api.modrinth.com/maven") } }
+        filter { includeGroup("maven.modrinth") }
+    }
     maven { url = uri("https://maven.createmod.net") }
     maven { url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/") }
     maven { url = uri("https://maven.shedaniel.me/") }
@@ -106,6 +111,10 @@ dependencies {
     for (module in listOf("core", "entity", "level_events", "client_events", "transfer", "items")) {
         modImplementation("io.github.fabricators_of_create.Porting-Lib:$module:$portingLib")
     }
+
+    // Только для compat/tacz: у TaCZ признак хедшота живёт в его событии, а не в типе урона.
+    // В рантайме мод не обязателен, класс грузится под isModLoaded("tacz").
+    modCompileOnly("maven.modrinth:tacz-refabricated:sqMweCpe") // версия из mods/tacz-refabricated.pw.toml
 
     compileOnly("com.maydaymemory:mae:1.1.2") {
         exclude("com.google.code.findbugs", "jsr305")
