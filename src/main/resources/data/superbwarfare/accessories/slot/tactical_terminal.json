@@ -3,7 +3,7 @@
   "amount": 1,
   "operation": "set",
   "order": 810,
-  "icon": "superbwarfare:slot/tactical_terminal_slot",
+  "icon": "superbwarfare:gui/slot/tactical_terminal_slot",
   "validators": [
     "accessories:tag",
     "accessories:component"
