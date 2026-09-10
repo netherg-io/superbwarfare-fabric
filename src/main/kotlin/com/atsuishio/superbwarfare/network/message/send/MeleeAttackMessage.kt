@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message.send
 
 import com.atsuishio.superbwarfare.data.gun.GunData
+import com.atsuishio.superbwarfare.init.ModDamageTypes
 import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.item.gun.GunItem
 import com.atsuishio.superbwarfare.network.PayloadContext
@@ -72,7 +73,8 @@ data class MeleeAttackMessage(val uuidList: List<SerializedUUID>) : ServerPacket
             )
 
             val currentHealth = (target as? LivingEntity)?.health ?: 0.0F
-            val source = attacker.damageSources().playerAttack(attacker)
+            // Приклад игнорирует броню: bypasses_armor у damage type
+            val source = ModDamageTypes.causeMeleeAbsoluteDamage(attacker.level().registryAccess(), null, attacker)
             val canHurt = target.hurt(source, damage.toFloat())
             if (!canHurt) {
                 attacker.level().playSound(

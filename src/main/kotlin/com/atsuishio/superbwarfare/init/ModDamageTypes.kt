@@ -45,6 +45,7 @@ object ModDamageTypes {
     @JvmField val GRAPESHOT_HIT = registerDamageType("grapeshot_hit")
     @JvmField val PHOSPHORUS_FIRE = registerDamageType("phosphorus_fire")
     @JvmField val AMMO_CONSUMPTION = registerDamageType("ammo_consumption")
+    @JvmField val MELEE_ABSOLUTE = registerDamageType("melee_absolute")
     // @formatter:on
 
     // @formatter:off
@@ -185,6 +186,14 @@ object ModDamageTypes {
     @JvmStatic
     fun causeAmmoConsumptionDamage(registryAccess: RegistryAccess, attacker: Entity?): DamageSource {
         return DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(AMMO_CONSUMPTION), attacker)
+    }
+
+    /**
+     * Удар прикладом: игнорирует броню (bypasses_armor)
+     */
+    @JvmStatic
+    fun causeMeleeAbsoluteDamage(registryAccess: RegistryAccess, directEntity: Entity?, attacker: Entity?): DamageSource {
+        return DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(MELEE_ABSOLUTE), directEntity, attacker)
     }
     // @formatter:on
 

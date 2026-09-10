@@ -96,6 +96,7 @@ object ModClient : ClientModInitializer {
         ClickEventHandler.init()
         ClientMouseHandler.init()
         ClientEventHandler.init()
+        com.atsuishio.superbwarfare.client.util.PendingPlayerVariables.init()
         ModScreens.init()
         ModProperties.init()
         ModParticles.init()

@@ -9,7 +9,9 @@ object ProjectileConfig {
 
         comment("Set true to allow projectiles to destroy certain blocks")
         comment("是否允许子弹破坏方块")
-        define("allow_projectile_destroy_blocks", false)
+        // ponytail: дефолт апстрима false ломал геймплей сервера — стекло не билось пулями;
+        // серверам со старым serverconfig-файлом нужно вручную поднять значение в toml.
+        define("allow_projectile_destroy_blocks", true)
     }
 
     @JvmField

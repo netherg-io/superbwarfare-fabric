@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitBlock
 import com.atsuishio.superbwarfare.api.event.ProjectileHitEvent.HitEntity
 import com.atsuishio.superbwarfare.client.lighting.ClientLightingHandler
 import com.atsuishio.superbwarfare.client.particle.BulletDecalOption
+import com.atsuishio.superbwarfare.compat.create.CreateProjectileCompat
 import com.atsuishio.superbwarfare.config.server.ProjectileConfig
 import com.atsuishio.superbwarfare.entity.OBBEntity
 import com.atsuishio.superbwarfare.entity.getValue
@@ -356,6 +357,15 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
                 endVec = result.getLocation()
             }
 
+            // Create-контрапшены (поезда) невидимы для мирового рейкаста — проверяем их отдельно
+            var contraptionHit: CreateProjectileCompat.ContraptionHit? = null
+            if (!this.isPenetrating() && !this.isBeast()) {
+                contraptionHit = CreateProjectileCompat.rayTraceContraption(level, startVec, endVec, this.owner)
+                if (contraptionHit != null) {
+                    endVec = contraptionHit.location
+                }
+            }
+
             val entityResults = findEntitiesOnPath(startVec, endVec)
             if (this.owner != null) {
                 entityResults.sortBy { it.hitVec.distanceTo(this.owner!!.position()) }
@@ -389,8 +399,12 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
                     }
                 }
             }
-            if (entityResults.isEmpty() && result != null) {
-                this.onHit(result)
+            if (entityResults.isEmpty()) {
+                if (result != null) {
+                    this.onHit(result)
+                } else if (contraptionHit != null) {
+                    this.onHitContraption(contraptionHit)
+                }
             }
 
             this.onHitWater(fluidResult.getLocation(), fluidResult)
@@ -582,6 +596,42 @@ open class ProjectileEntity(entityType: EntityType<out ProjectileEntity>, level:
 
             this.discard()
         }
+    }
+
+    /**
+     * Попадание в блок Create-контрапшена (поезд). Вырезать блок из движущегося контрапшена без
+     * риска рассинхрона нельзя, поэтому стекло получает эффект разрушения и звук, но остаётся
+     * на составе; пуля всегда останавливается.
+     */
+    protected open fun onHitContraption(hit: CreateProjectileCompat.ContraptionHit) {
+        val level = this.level()
+        if (level !is ServerLevel) return
+        val location = hit.location
+        val pos = BlockPos.containing(location)
+        val state = hit.blockState
+
+        if (this.explosionDamageValue > 0) {
+            CustomExplosion.Builder(this)
+                .attacker(this.owner)
+                .damage(this.explosionDamageValue)
+                .radius(this.explosionRadiusValue)
+                .position(location)
+                .beast(this.isBeast())
+                .destroyBlock(this.explosionDestroyValue)
+                .explode()
+        }
+
+        if (state != null && ProjectileConfig.PROJECTILE_DESTROY_BLOCKS.get()
+            && state.`is`(ModTags.Blocks.BULLET_CAN_DESTROY)
+        ) {
+            // 2001 = ванильный event частиц разрушения блока (частицы + звук блока)
+            level.levelEvent(2001, pos, net.minecraft.world.level.block.Block.getId(state))
+        }
+
+        ParticleTool.sendParticle(level, ModParticleTypes.FIRE_STAR.get(), location.x, location.y, location.z, 2, 0.0, 0.0, 0.0, 0.2, false)
+        ParticleTool.sendParticle(level, ParticleTypes.SMOKE, location.x, location.y, location.z, 2, 0.0, 0.0, 0.0, 0.01, false)
+        level.playSound(null, pos, ModSounds.LAND.get(), SoundSource.BLOCKS, 1f, 1f)
+        this.discard()
     }
 
     open fun summonVectorParticle(serverLevel: ServerLevel, state: BlockState, pos: Vec3, dir: Vec3) {

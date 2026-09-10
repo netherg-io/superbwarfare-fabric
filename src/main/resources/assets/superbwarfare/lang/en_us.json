@@ -650,6 +650,9 @@
   "death.attack.ammo_consumption": "%1$s made the last shot",
   "death.attack.ammo_consumption.entity": "%1$s made the last shot",
   "death.attack.ammo_consumption.item": "%1$s made the last shot",
+  "death.attack.melee_absolute": "%1$s was beaten to death",
+  "death.attack.melee_absolute.entity": "%2$s beat %1$s to death with a rifle stock",
+  "death.attack.melee_absolute.item": "%2$s beat %1$s to death with %3$s",
 
   "entity.superbwarfare.projectile": "Bullet",
   "entity.superbwarfare.mortar_shell": "Mortar Shell",

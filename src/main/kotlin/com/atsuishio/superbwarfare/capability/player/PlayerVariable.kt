@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.capability.player
 
+import com.atsuishio.superbwarfare.Mod
 import com.atsuishio.superbwarfare.data.gun.Ammo
 import com.atsuishio.superbwarfare.init.ModAttachments
 import com.atsuishio.superbwarfare.init.getData
@@ -146,10 +147,21 @@ class PlayerVariable {
 
         private fun onPlayerLoggedIn(player: ServerPlayer) {
             player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate()))
+            // Пакет на JOIN может доехать до клиента раньше, чем там заспавнится сущность игрока,
+            // и молча выбрасывается — счётчик патронов остаётся нулевым до смены измерения.
+            // Повторная полная синхронизация с задержкой закрывает гонку.
+            Mod.queueServerWork(20) {
+                if (player.hasDisconnected()) return@queueServerWork
+                player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).forceUpdate()))
+            }
         }
 
         private fun onPlayerRespawn(player: ServerPlayer) {
             player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).compareAndUpdate()))
+            Mod.queueServerWork(20) {
+                if (player.hasDisconnected()) return@queueServerWork
+                player.sendPacket(PlayerVariablesSyncMessage(player.id, getOrDefault(player).forceUpdate()))
+            }
         }
 
         private fun onPlayerChangeDimension(player: ServerPlayer) {

@@ -16,7 +16,12 @@ data class PlayerVariablesSyncMessage(
 ) : ClientPacketPayload() {
 
     override fun PayloadContext.handler() {
-        val entity = clientLevel?.getEntity(target) ?: return
+        val entity = clientLevel?.getEntity(target)
+        if (entity == null) {
+            // Сущности ещё нет на клиенте (гонка JOIN/респавна) — откладываем до её появления
+            com.atsuishio.superbwarfare.client.util.PendingPlayerVariables.stash(target, data)
+            return
+        }
 
         val variables = entity.getData(ModAttachments.PLAYER_VARIABLE)
 
