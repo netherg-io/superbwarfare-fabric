@@ -4,23 +4,9 @@
   ],
   "passes": [
     {
-      "name": "color_convolve",
+      "name": "superbwarfare:nvg",
       "intarget": "minecraft:main",
-      "outtarget": "swap",
-      "uniforms": [
-        {
-          "name": "RedMatrix",
-          "values": [ 0.06, 0.16, 0.03 ]
-        },
-        {
-          "name": "GreenMatrix",
-          "values": [ 0.55, 1.35, 0.32 ]
-        },
-        {
-          "name": "BlueMatrix",
-          "values": [ 0.06, 0.16, 0.05 ]
-        }
-      ]
+      "outtarget": "swap"
     },
     {
       "name": "blit",
