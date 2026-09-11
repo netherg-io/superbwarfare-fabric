@@ -154,5 +154,4 @@ private fun registerPayloads() {
     playToServer<VehicleDisconnectTowingMessage>()
     playToServer<EntityClearMessage>()
     playToServer<EntityAreaClearMessage>()
-    playToServer<NightVisionMessage>()
 }

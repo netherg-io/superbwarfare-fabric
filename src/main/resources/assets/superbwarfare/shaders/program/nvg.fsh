@@ -21,7 +21,7 @@ void main() {
     float l = luma(scene);
 
     // Усилитель: тёмное вытягивается, яркое упирается в потолок трубки.
-    float gain = pow(clamp(l * 1.6, 0.0, 1.0), 0.6);
+    float gain = pow(clamp(l * 4.0, 0.0, 1.0), 0.7);
 
     // Засветка от ярких источников: размытая яркость соседей добавляет ореол.
     vec2 px = 1.0 / OutSize;
@@ -32,7 +32,7 @@ void main() {
         }
     }
     halo /= 25.0;
-    gain += smoothstep(0.55, 1.0, halo) * 0.6;
+    gain += smoothstep(0.3, 1.0, halo) * 0.7;
 
     // Зерно сильнее в темноте: трубка шумит, где нечего усиливать.
     float grain = random(floor(texCoord * OutSize * 0.5) + fract(Time * 60.0)) - 0.5;
