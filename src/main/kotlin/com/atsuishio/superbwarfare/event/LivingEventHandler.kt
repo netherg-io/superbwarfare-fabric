@@ -179,8 +179,10 @@ object LivingEventHandler {
     private fun reduceDamage(event: LivingHurtEvent) {
         val source = event.source
         val entity = event.entity
-        val sourceEntity = source.entity ?: return
-        if (sourceEntity.level().isClientSide) return
+        val sourceEntity = source.entity
+        if (entity.level().isClientSide) return
+        // Unattributed explosions still wear the plate; falls and other environmental damage do not.
+        if (sourceEntity == null && !source.`is`(DamageTypeTags.IS_EXPLOSION)) return
 
         val amount = event.amount.toDouble()
         var damage = amount
@@ -188,7 +190,7 @@ object LivingEventHandler {
         val stack = if (sourceEntity is LivingEntity) sourceEntity.mainHandItem else ItemStack.EMPTY
 
         // 距离衰减
-        if (isGunDamage(source) && stack.item is GunItem) {
+        if (sourceEntity != null && isGunDamage(source) && stack.item is GunItem) {
             val data = GunData.from(stack)
             val distance = entity.position().distanceTo(sourceEntity.position())
             damage = reduceDamageByDistance(amount, distance, data.damageReduceRate, data.damageReduceMinDistance)
@@ -201,15 +203,13 @@ object LivingEventHandler {
         // Пластина не спасает от попадания в голову: свои хедшоты помечены типом урона,
         // у TaCZ тип урона один на все попадания, флаг приходит отдельным событием.
         val headshot = isHeadshotDamage(source) || (CompatHolder.hasTacz && TaczHeadshotCompat.isHeadshot(source))
-        // Плита противопульная, а не противоосколочная: пока она съедала и взрывы, граната в упор
-        // не пробивала кит (30 очков плиты против ~26 урона гранаты в упор).
-        if (armor != ItemStack.EMPTY && tag.contains("ArmorPlate") && !headshot
-            && !source.`is`(DamageTypeTags.IS_EXPLOSION)
-        ) {
+        // Плита противопульная, а не противоосколочная: хедшот и взрыв проходят сквозь неё (граната
+        // в упор должна пробивать кит: 30 очков плиты против ~26 урона), но запас плиты они всё равно срезают.
+        if (!armor.isEmpty && tag.contains("ArmorPlate")) {
             val armorValue = tag.getDouble("ArmorPlate")
             tag.putDouble("ArmorPlate", max(armorValue - damage, 0.0))
             NBTTool.saveTag(armor, tag)
-            damage = max(damage - armorValue, 0.0)
+            if (!headshot && !source.`is`(DamageTypeTags.IS_EXPLOSION)) damage = max(damage - armorValue, 0.0)
         }
 
         // 计算防弹护具减伤
