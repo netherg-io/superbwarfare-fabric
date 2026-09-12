@@ -181,8 +181,10 @@ object LivingEventHandler {
         val entity = event.entity
         val sourceEntity = source.entity
         if (entity.level().isClientSide) return
-        // Unattributed explosions still wear the plate; falls and other environmental damage do not.
-        if (sourceEntity == null && !source.`is`(DamageTypeTags.IS_EXPLOSION)) return
+        // Unattributed explosions and fire (molotov burning has no attacker) still wear the plate;
+        // falls and other environmental damage do not.
+        val passesPlate = source.`is`(DamageTypeTags.IS_EXPLOSION) || source.`is`(DamageTypeTags.IS_FIRE)
+        if (sourceEntity == null && !passesPlate) return
 
         val amount = event.amount.toDouble()
         var damage = amount
@@ -205,11 +207,12 @@ object LivingEventHandler {
         val headshot = isHeadshotDamage(source) || (CompatHolder.hasTacz && TaczHeadshotCompat.isHeadshot(source))
         // Плита противопульная, а не противоосколочная: хедшот и взрыв проходят сквозь неё (граната
         // в упор должна пробивать кит: 30 очков плиты против ~26 урона), но запас плиты они всё равно срезают.
+        // Огонь (молотов) так же: жжёт сквозь плиту и срезает её запас.
         if (!armor.isEmpty && tag.contains("ArmorPlate")) {
             val armorValue = tag.getDouble("ArmorPlate")
             tag.putDouble("ArmorPlate", max(armorValue - damage, 0.0))
             NBTTool.saveTag(armor, tag)
-            if (!headshot && !source.`is`(DamageTypeTags.IS_EXPLOSION)) damage = max(damage - armorValue, 0.0)
+            if (!headshot && !passesPlate) damage = max(damage - armorValue, 0.0)
         }
 
         // 计算防弹护具减伤
