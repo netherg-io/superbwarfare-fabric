@@ -1,13 +1,11 @@
 package com.atsuishio.superbwarfare.item.misc
 
-import com.atsuishio.superbwarfare.entity.mixin.persistentData
-import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
+import com.atsuishio.superbwarfare.control.DroneControlAccess
 import com.atsuishio.superbwarfare.event.ClientEventHandler
 import com.atsuishio.superbwarfare.network.message.receive.ResetCameraTypeMessage
 import com.atsuishio.superbwarfare.tools.EntityFindUtil
 import com.atsuishio.superbwarfare.tools.FormatTool.format1D
 import com.atsuishio.superbwarfare.tools.NBTTool
-import com.atsuishio.superbwarfare.tools.mc
 import com.atsuishio.superbwarfare.tools.sendPacket
 import net.minecraft.ChatFormatting
 import net.minecraft.client.CameraType
@@ -35,49 +33,45 @@ import com.atsuishio.superbwarfare.item.StackAttributeItem
 import io.github.fabricators_of_create.porting_lib.item.extensions.ReequipAnimationItem
 
 open class MonitorItem : Item(Properties().stacksTo(1)), StackAttributeItem, ReequipAnimationItem {
-    private fun resetDroneData(drone: DroneEntity?) {
-        if (drone == null) return
+    @Environment(EnvType.CLIENT)
+    private fun beginCamera() {
+        ClientEventHandler.lastCameraType = Minecraft.getInstance().options.cameraType
+        Minecraft.getInstance().options.cameraType = CameraType.THIRD_PERSON_BACK
+    }
 
-        drone.persistentData.putBoolean("left", false)
-        drone.persistentData.putBoolean("right", false)
-        drone.persistentData.putBoolean("forward", false)
-        drone.persistentData.putBoolean("backward", false)
-        drone.persistentData.putBoolean("up", false)
-        drone.persistentData.putBoolean("down", false)
+    @Environment(EnvType.CLIENT)
+    private fun restoreCamera() {
+        Minecraft.getInstance().options.cameraType =
+            ClientEventHandler.lastCameraType ?: CameraType.FIRST_PERSON
     }
 
     @ParametersAreNonnullByDefault
     override fun use(level: Level, player: Player, hand: InteractionHand): InteractionResultHolder<ItemStack?> {
+        // Control packets use the main hand; an off-hand use must not toggle the other stack.
+        if (hand != InteractionHand.MAIN_HAND) return super.use(level, player, hand)
         val stack = player.mainHandItem
         val tag = NBTTool.getTag(stack)
+        val drone = EntityFindUtil.findDrone(level, tag.getString(LINKED_DRONE))
 
-        if (!tag.getBoolean(LINKED)) {
-            return super.use(level, player, hand)
-        }
-
-        if (tag.getBoolean("Using")) {
-            tag.putBoolean("Using", false)
-            if (level.isClientSide) {
-                val lastCameraType = ClientEventHandler.lastCameraType
-                if (lastCameraType != null) {
-                    Minecraft.getInstance().options.cameraType = lastCameraType
-                }
+        if (tag.getBoolean(USING)) {
+            // Always permit leaving the view, including after the entity disappeared.
+            tag.putBoolean(USING, false)
+            NBTTool.saveTag(stack, tag)
+            if (level.isClientSide) restoreCamera()
+            if (player is ServerPlayer) player.sendPacket(ResetCameraTypeMessage)
+            if (!level.isClientSide && drone != null && DroneControlAccess.owns(player, drone)) {
+                DroneControlAccess.resetIfUncontrolled(drone)
             }
         } else {
-            tag.putBoolean("Using", true)
-            if (level.isClientSide) {
-                ClientEventHandler.lastCameraType = Minecraft.getInstance().options.cameraType
-                Minecraft.getInstance().options.cameraType = CameraType.THIRD_PERSON_BACK
+            if (drone == null || !DroneControlAccess.canUse(player, drone, requireUsing = false)) {
+                if (player is ServerPlayer) player.sendPacket(ResetCameraTypeMessage)
+                return super.use(level, player, hand)
             }
+            tag.putBoolean(USING, true)
+            NBTTool.saveTag(stack, tag)
+            if (level.isClientSide) beginCamera()
+            else DroneControlAccess.resetInput(drone)
         }
-
-        NBTTool.saveTag(stack, tag)
-        val drone = EntityFindUtil.findDrone(
-            player.level(),
-            tag.getString(LINKED_DRONE)
-        )
-        this.resetDroneData(drone)
-
         return super.use(level, player, hand)
     }
 
@@ -146,33 +140,18 @@ open class MonitorItem : Item(Properties().stacksTo(1)), StackAttributeItem, Ree
     override fun inventoryTick(stack: ItemStack, world: Level, entity: Entity, slot: Int, selected: Boolean) {
         super.inventoryTick(stack, world, entity, slot, selected)
         val tag = NBTTool.getTag(stack)
-        val drone = EntityFindUtil.findDrone(
-            entity.level(),
-            tag.getString(LINKED_DRONE)
-        )
+        // Dormant monitor copies do not perform lookups or reset a different active monitor.
+        if (!tag.getBoolean(USING)) return
+        val player = entity as? Player
+        val drone = EntityFindUtil.findDrone(world, tag.getString(LINKED_DRONE))
+        if (selected && player != null && drone != null && DroneControlAccess.canUse(player, drone)) return
 
-        val lastCameraType = ClientEventHandler.lastCameraType
-        if (!selected) {
-            if (tag.getBoolean("Using")) {
-                tag.putBoolean("Using", false)
-                NBTTool.saveTag(stack, tag)
-                if (entity.level().isClientSide) {
-                    if (lastCameraType != null) {
-                        mc.options.cameraType = lastCameraType
-                    }
-                }
-            }
-            this.resetDroneData(drone)
-        } else if (drone == null) {
-            if (tag.getBoolean("Using")) {
-                tag.putBoolean("Using", false)
-                NBTTool.saveTag(stack, tag)
-                if (entity.level().isClientSide) {
-                    if (lastCameraType != null) {
-                        mc.options.cameraType = lastCameraType
-                    }
-                }
-            }
+        tag.putBoolean(USING, false)
+        NBTTool.saveTag(stack, tag)
+        if (world.isClientSide && (player == null || DroneControlAccess.resolve(player) == null)) restoreCamera()
+        if (player is ServerPlayer && selected) player.sendPacket(ResetCameraTypeMessage)
+        if (!world.isClientSide && player != null && drone != null && DroneControlAccess.owns(player, drone)) {
+            DroneControlAccess.resetIfUncontrolled(drone)
         }
     }
 
@@ -183,17 +162,23 @@ open class MonitorItem : Item(Properties().stacksTo(1)), StackAttributeItem, Ree
 
         @JvmStatic
         fun link(tag: CompoundTag, id: String) {
+            tag.putBoolean(USING, false)
             tag.putBoolean(LINKED, true)
             tag.putString(LINKED_DRONE, id)
         }
 
         @JvmStatic
         fun disLink(tag: CompoundTag, player: Player?) {
+            val wasUsing = tag.getBoolean(USING)
+            val drone = player?.let { EntityFindUtil.findDrone(it.level(), tag.getString(LINKED_DRONE)) }
+            tag.putBoolean(USING, false)
             tag.putBoolean(LINKED, false)
             tag.putString(LINKED_DRONE, "none")
-            if (player is ServerPlayer) {
-                player.sendPacket(ResetCameraTypeMessage)
+            if (player != null && !player.level().isClientSide && drone != null && DroneControlAccess.owns(player, drone)) {
+                DroneControlAccess.resetInput(drone)
             }
+            // A dormant linked stack must not reset the view of a different active drone.
+            if (wasUsing && player is ServerPlayer) player.sendPacket(ResetCameraTypeMessage)
         }
 
         @JvmStatic

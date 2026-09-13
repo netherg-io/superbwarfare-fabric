@@ -11,6 +11,10 @@
       {
         "adapter": "kotlin",
         "value": "com.atsuishio.superbwarfare.Mod"
+      },
+      {
+        "adapter": "kotlin",
+        "value": "com.atsuishio.superbwarfare.control.DroneControlEvents"
       }
     ],
     "client": [
