@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.network.message.send
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.entity.vehicle.canAcceptControl
 import com.atsuishio.superbwarfare.init.ModItems
+import com.atsuishio.superbwarfare.network.security.DroneControlPolicy
 import com.atsuishio.superbwarfare.network.PayloadContext
 import com.atsuishio.superbwarfare.network.ServerPacketPayload
 import com.atsuishio.superbwarfare.tools.EntityFindUtil
@@ -11,6 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MouseMoveMessage(val speedX: Double, val speedY: Double) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
+        if (!DroneControlPolicy.validMouse(speedX, speedY)) return
         val player = sender()
         val entity = player.vehicle
 
@@ -23,7 +26,7 @@ data class MouseMoveMessage(val speedX: Double, val speedY: Double) : ServerPack
 
         if (stack.`is`(ModItems.MONITOR.get()) && tag.getBoolean("Using") && tag.getBoolean("Linked")) {
             val drone = EntityFindUtil.findDrone(player.level(), tag.getString("LinkedDrone"))
-            if (drone != null) {
+            if (drone != null && drone.canAcceptControl(player)) {
                 drone.mouseInput(speedX, speedY)
             }
         }

@@ -180,6 +180,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
     }
 
     override fun baseTick() {
+        if (!this.level().isClientSide() && !canAcceptControl(getController())) clearOperatorInput()
         pitchO = this.bodyPitch
         setBodyXRot(this.bodyPitch * 0.9f)
 

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message.send
 
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
+import com.atsuishio.superbwarfare.entity.vehicle.canAcceptControl
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.network.PayloadContext
 import com.atsuishio.superbwarfare.network.ServerPacketPayload
@@ -22,7 +23,8 @@ data class VehicleMovementMessage(val keys: Short) : ServerPacketPayload() {
             && tag.getBoolean("Using")
             && tag.getBoolean("Linked")
         ) {
-            EntityFindUtil.findDrone(player.level(), tag.getString("LinkedDrone")) ?: return
+            EntityFindUtil.findDrone(player.level(), tag.getString("LinkedDrone"))
+                ?.takeIf { it.canAcceptControl(player) } ?: return
         } else return
 
         vehicle.processInput(keys)

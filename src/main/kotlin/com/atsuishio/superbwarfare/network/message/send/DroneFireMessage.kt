@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.network.message.send
 
+import com.atsuishio.superbwarfare.entity.vehicle.canAcceptControl
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModSounds
 import com.atsuishio.superbwarfare.item.misc.ArtilleryIndicatorItem
@@ -26,6 +27,7 @@ data class DroneFireMessage(val pos: SerializedVector3f) : ServerPacketPayload()
 
         if (stack.`is`(ModItems.MONITOR.get()) && mainTag.getBoolean("Using") && mainTag.getBoolean("Linked")) {
             val drone = EntityFindUtil.findDrone(player.level(), mainTag.getString("LinkedDrone")) ?: return
+            if (!drone.canAcceptControl(player)) return
             if (player.offhandItem.`is`(ModItems.FIRING_PARAMETERS, ModItems.ARTILLERY_INDICATOR)) {
                 val offStack = player.offhandItem
 
