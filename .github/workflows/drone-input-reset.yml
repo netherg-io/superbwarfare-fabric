@@ -1,0 +1,26 @@
+name: Drone input reset
+on:
+  pull_request:
+  push:
+    branches: [feat/drone-control-ownership]
+permissions:
+  contents: read
+concurrency:
+  group: drone-reset-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: bash dev/test-drone-control.sh
+      - run: DRONE_TEST_COMPILER=gradle bash dev/test-drone-input-reset.sh
+      - run: python3 dev/check-drone-input-reset.py
