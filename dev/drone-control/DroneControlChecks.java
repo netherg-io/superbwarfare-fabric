@@ -45,6 +45,14 @@ public final class DroneControlChecks {
         }
         check(DroneControlRules.finiteMouseInput(-1.25, 3.5), "normal mouse input");
         check(DroneControlRules.finiteMouseInput(0, 0), "neutral mouse input");
+        for (double overflow : new double[]{Double.MAX_VALUE, -Double.MAX_VALUE}) {
+            check(!DroneControlRules.finiteMouseInput(overflow, 0), "double-to-float overflow x");
+            check(!DroneControlRules.finiteMouseInput(0, overflow), "double-to-float overflow y");
+        }
+        check(DroneControlRules.finiteMouseInput(Float.MAX_VALUE, 0), "largest finite float x");
+        check(DroneControlRules.finiteMouseInput(0, -Float.MAX_VALUE), "largest finite float y");
+        check(DroneControlRules.finiteMouseInput(Double.MIN_VALUE, 0), "underflow to neutral x is finite");
+        check(DroneControlRules.finiteMouseInput(0, -Double.MIN_VALUE), "underflow to neutral y is finite");
         for (float invalid : new float[]{Float.NaN, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY}) {
             check(!DroneControlRules.finiteTarget(invalid, 0, 0), "invalid target x");
             check(!DroneControlRules.finiteTarget(0, invalid, 0), "invalid target y");

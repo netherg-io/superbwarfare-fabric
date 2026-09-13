@@ -21,7 +21,9 @@ public final class DroneControlRules {
     }
 
     public static boolean finiteMouseInput(double x, double y) {
-        return Double.isFinite(x) && Double.isFinite(y);
+        // VehicleEntity.mouseInput stores float values; a finite double can overflow there.
+        return Double.isFinite(x) && Double.isFinite(y)
+                && Float.isFinite((float) x) && Float.isFinite((float) y);
     }
 
     public static boolean finiteTarget(float x, float y, float z) {

@@ -12,9 +12,11 @@ link flags and the held monitor's USING state, and finite distance within the
 entity's own finite positive range. This does not force-load entities or chunks.
 FPV and Scout keep their existing 150/200 block limits. The Scout virtual fire
 setter remains in use, so this change does not arm reconnaissance drones.
-NaN/infinite mouse values and artillery-marker coordinates are rejected before
-mutation; finite marker coordinates still follow the existing marker feature.
-Invalid senders do not unlink or mutate another operator's drone.
+NaN/infinite mouse values, doubles that overflow the actual float storage in
+VehicleEntity.mouseInput, and non-finite artillery-marker coordinates are rejected
+before mutation; finite marker coordinates still follow the existing marker feature.
+Invalid senders do not unlink or mutate another operator's drone through these
+three remote-control handlers. This is not an audit of every other SBW packet.
 
 No wire format, camera, drone physics, inventory stock, class restriction,
 world data, dependency pin, release or repository visibility is changed.
@@ -41,7 +43,8 @@ jars to make CI green. No live Minecraft or two-client test is claimed here.
 - Reject input while USING or either Linked flag is false, after operator death,
   in spectator mode, after world change and when the drone is removed/unloaded.
 - Inspect normal vehicle driver/gunner controls for regressions.
-- Inject NaN/infinite mouse/marker inputs on a local test server and confirm no
+- Inject NaN/infinite and Double.MAX_VALUE mouse inputs, and non-finite marker
+  inputs on a local test server, and confirm no
   transform or marker mutation. Normal finite marker placement still works.
 
 ## Still unimplemented in issue #4
