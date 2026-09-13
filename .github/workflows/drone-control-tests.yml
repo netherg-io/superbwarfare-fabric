@@ -1,0 +1,23 @@
+name: Drone control contracts
+on:
+  pull_request:
+  push:
+    branches: [feat/drone-control-ownership]
+permissions:
+  contents: read
+concurrency:
+  group: drone-control-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew -p tools/drone-tests --no-daemon run
+      - run: python3 tools/drone-tests/check_wiring.py
