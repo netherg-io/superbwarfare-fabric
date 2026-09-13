@@ -1,0 +1,25 @@
+name: Drone control rules
+on:
+  pull_request:
+    paths:
+      - 'src/main/java/com/atsuishio/superbwarfare/tools/DroneControlRules.java'
+      - 'src/main/kotlin/com/atsuishio/superbwarfare/tools/DroneControlAccess.kt'
+      - 'src/main/kotlin/com/atsuishio/superbwarfare/network/message/send/**'
+      - 'dev/drone-control/**'
+      - 'dev/test-drone-control.sh'
+      - '.github/workflows/drone-control-tests.yml'
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: bash dev/test-drone-control.sh
