@@ -29,7 +29,6 @@ loom {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
     maven { url = uri("https://maven.parchmentmc.org") }
     // Только этот репозиторий отдаёт maven.modrinth: иначе gradle перебирает репозитории
@@ -74,11 +73,9 @@ dependencies {
     ksp(project(":ksp"))
     implementation(project(":ksp"))
 
-    // Fabric-порт SimpleBedrockModel 2.5.1 (Sh1roCu), пакеты те же, что у neoforge-версии, включая v2.
-    // Jar в git не лежит (*.gitignore на бинарники). Пересобрать:
-    //   git clone -b 1.21.1 https://github.com/Sh1roCu/SimpleBedrockModel-Fabric
-    //   cd SimpleBedrockModel-Fabric && ./gradlew build && cp build/libs/*[!s].jar ../superbwarfare-fabric/libs/
-    modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1-bf3.jar")) // см. libs/patch-simplebedrockmodel.sh
+    // Fabric-порт SimpleBedrockModel 2.5.1 (Sh1roCu, LGPL-3.0), пакеты те же, что у neoforge-версии, включая v2.
+    // Jar лежит в git; происхождение и sha256 -- в libs/README.md.
+    modImplementation(files("libs/simplebedrockmodel-fabric-2.5.1+mc1.21.1-bf3.jar"))
     // Только для dev-запуска: в проде MAE приезжает вложенным jar внутри SimpleBedrockModel,
     // а loom вложенные jar не разворачивает, и клиент падает на NoClassDefFoundError.
     modRuntimeOnly("com.maydaymemory:mae:1.1.4")

@@ -1,44 +1,48 @@
-# SuperbWarfare / 卓越前线
+# Superb Warfare — Fabric 1.21.1 port
 
-**[中文](./README.md)** | [English](./README-en.md)
+Unofficial port of [Superb Warfare](https://github.com/Mercurows/SuperbWarfare) (NeoForge 1.21.1,
+by Atsuishio, Roki27, Light_Quanta and contributors) to **Fabric 1.21.1**, maintained by
+[netherg-io](https://github.com/netherg-io) for the Blockfield server modpack.
+Not affiliated with or endorsed by the upstream authors.
 
-## 介绍
+Upstream READMEs: [中文](./README-zh.md) | [English](./README-en.md) (they describe the original
+Forge/NeoForge releases, not this port).
 
-“卓越”的武装主题 Minecraft Mod。
+## Base
 
-## 安装教程
+- Upstream snapshot: tag `upstream-0.8.9.1-1.21` (Superb Warfare 0.8.9.1 for 1.21.1).
+- Port branch: `main`. Porting notes: [PORT-BRIEF.md](./PORT-BRIEF.md).
+- Minecraft 1.21.1, Fabric Loader 0.19.3, Fabric API 0.116.15+1.21.1, Fabric Language Kotlin 1.13.7.
 
-1.  确保使用的Minecraft版本为 1.20.1；
-2.  确保你为Minecraft安装了 47.2.0 及以上版本的 Forge；
-3.  确保安装了 5.4.2-1.20.1 版本及以上的 Curios Api 模组；
-4. 确保安装了 4.7.1.2-1.20.1 版本及以上的 Geckolib 模组；(0.8.0前要求4.4.4)
-5.  将模组jar文件放进mods文件夹。
+Required mods (see `depends` in `fabric.mod.json`): Fabric API, Fabric Language Kotlin,
+Forge Config API Port, Accessories, GeckoLib, Porting Lib 3.1.0-beta.90 (core, entity, items,
+level_events, client_events, transfer) and SimpleBedrockModel-Fabric
+(see [libs/README.md](./libs/README.md)). Cloth Config and JEI are optional.
 
-## 游玩教程
+## Build
 
-[查看本视频](https://www.bilibili.com/video/BV1RPfaYiELB/)
+Requires JDK 21 (e.g. `mise use java@temurin-21`). No private repositories or tokens are needed;
+the two non-Maven inputs are committed under `libs/` with checksums.
 
-## 联动
+```sh
+git clone https://github.com/netherg-io/superbwarfare-fabric.git
+cd superbwarfare-fabric
+(cd libs && sha256sum -c SHA256SUMS)
+./gradlew build --no-daemon
+```
 
-安装 11.1.106-1.20.1 版本及以上的 Cloth Config 模组，即可在游戏内调整配置。
+The mod jar is written to `build/libs/superbwarfare-<version>-mc1.21.1.jar`. Release jars are
+attached to [GitHub Releases](https://github.com/netherg-io/superbwarfare-fabric/releases) and
+named after the release tag.
 
-## 协议
+## License
 
-本模组的代码部分使用 GPL-3.0 协议进行开源。
+Code is licensed under the **GNU LGPL-3.0-only** ([COPYING.LESSER](./COPYING.LESSER), which
+supplements the GPL-3.0 in [COPYING](./COPYING)), as in the upstream repository. These files are
+kept unchanged from upstream.
 
-模型、贴图等美术资源，制作组保留所有权利。
+The upstream README states that models, textures and other art assets are *all rights reserved*
+by the Superb Warfare team; they are included here exactly as published in the upstream public
+repository and remain the property of their authors.
 
-## 相关链接
-
-QQ群: 460300219
-
-[CurseForge](https://www.curseforge.com/minecraft/mc-mods/superb-warfare)
-
-[Modrinth](https://modrinth.com/mod/superb-warfare)
-
-[Github](https://github.com/Mercurows/SuperbWarfare)
-
-[Gitee](https://gitee.com/atsuishio/SuperbWarfare)
-
-
-[Discord](https://discord.gg/g7RVnHFDh9)
+Port changes are © netherg-io and contributors, under the same license.
