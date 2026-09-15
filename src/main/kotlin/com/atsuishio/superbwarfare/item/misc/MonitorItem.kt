@@ -70,7 +70,11 @@ open class MonitorItem : Item(Properties().stacksTo(1)), StackAttributeItem, Ree
             tag.putBoolean(USING, true)
             NBTTool.saveTag(stack, tag)
             if (level.isClientSide) beginCamera()
-            else DroneControlAccess.resetInput(drone)
+            else {
+                // Clear any leftover session before minting the new one for this activation.
+                DroneControlAccess.resetInput(drone)
+                drone.beginControlSession()
+            }
         }
         return super.use(level, player, hand)
     }

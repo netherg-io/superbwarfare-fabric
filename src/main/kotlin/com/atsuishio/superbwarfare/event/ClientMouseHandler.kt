@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.config.client.ControlConfig
 import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineType
 import com.atsuishio.superbwarfare.data.vehicle.subdata.VehicleType
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.init.ModMobEffects
@@ -95,10 +96,11 @@ object ClientMouseHandler {
             lerpSpeedX = Mth.lerp(0.3, lerpSpeedX, speedX)
             lerpSpeedY = Mth.lerp(0.3, lerpSpeedY, speedY)
 
+            val session = drone.entityData.get(DroneEntity.SESSION)
             if (notInGame) {
-                sendPacketToServer(MouseMoveMessage(0.0, 0.0))
+                sendPacketToServer(MouseMoveMessage(0.0, 0.0, session, drone.nextClientSequence()))
             } else {
-                sendPacketToServer(MouseMoveMessage(lerpSpeedX, lerpSpeedY))
+                sendPacketToServer(MouseMoveMessage(lerpSpeedX, lerpSpeedY, session, drone.nextClientSequence()))
             }
 
             return

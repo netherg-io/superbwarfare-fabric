@@ -18,11 +18,32 @@ open class DroneEntity(world: Level, id: String) : Entity(world, id) {
     var mouseY = 0.0
     open var fire = false
     var resets = 0
+    private var sessionSequence = -1L
+    private var sessionSeed = 0
     fun processInput(value: Short) { keys = value; if (value == 0.toShort()) resets++ }
     fun mouseInput(x: Double, y: Double) { mouseX = x; mouseY = y }
     fun getController() = level().players[entityData.get(CONTROLLER)]
+    fun beginControlSession(): String {
+        sessionSeed++
+        val id = "session-$sessionSeed"
+        entityData.set(SESSION, id)
+        sessionSequence = -1
+        return id
+    }
+    fun endControlSession() {
+        entityData.set(SESSION, "none")
+        sessionSequence = -1
+    }
+    fun acceptControlSequence(sessionId: String, sequence: Long): Boolean {
+        if (entityData.get(SESSION) == "none" || sessionId != entityData.get(SESSION)
+            || sequence < 0 || sequence <= sessionSequence
+        ) return false
+        sessionSequence = sequence
+        return true
+    }
     companion object {
         val CONTROLLER = Key("")
         val LINKED = Key(false)
+        val SESSION = Key("none")
     }
 }

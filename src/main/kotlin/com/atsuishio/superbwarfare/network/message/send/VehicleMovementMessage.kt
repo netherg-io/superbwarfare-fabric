@@ -7,16 +7,22 @@ import com.atsuishio.superbwarfare.network.ServerPacketPayload
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VehicleMovementMessage(val keys: Short) : ServerPacketPayload() {
+data class VehicleMovementMessage(
+    val keys: Short,
+    // Unused on the plain-vehicle path; only the drone/monitor path is replay-sensitive.
+    val session: String = "none",
+    val sequence: Long = 0,
+) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         val player = sender()
         if (!player.isAlive || player.isRemoved || player.isSpectator) return
         val entity = player.vehicle
-        val vehicle = if (entity is VehicleEntity && entity.getFirstPassenger() === player) {
-            entity
-        } else {
-            DroneControlAccess.resolve(player) ?: return
+        if (entity is VehicleEntity && entity.getFirstPassenger() === player) {
+            entity.processInput(keys)
+            return
         }
-        vehicle.processInput(keys)
+        val drone = DroneControlAccess.resolve(player) ?: return
+        if (!DroneControlAccess.acceptsSequence(drone, session, sequence)) return
+        drone.processInput(keys)
     }
 }

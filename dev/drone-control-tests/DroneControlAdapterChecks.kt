@@ -130,5 +130,22 @@ fun main() {
     ServerLifecycleEvents.SERVER_STOPPED.listeners.forEach { it(server) }
     tick()
     expect(!cleared(), "stopped server no longer retained")
+
+    // Control-session anti-replay wired through the same resetInput/resolve choke points above.
+    player.mainHandItem = monitor()
+    val sessionA = drone.beginControlSession()
+    expect(DroneControlAccess.acceptsSequence(drone, sessionA, 0), "fresh session accepts sequence 0")
+    expect(!DroneControlAccess.acceptsSequence(drone, sessionA, 0), "replayed sequence rejected")
+    expect(!DroneControlAccess.acceptsSequence(drone, "stale-session", 1), "packet naming a foreign session rejected")
+    expect(DroneControlAccess.acceptsSequence(drone, sessionA, 1), "next sequence in the same session accepted")
+    DroneControlAccess.resetInput(drone)
+    expect(!DroneControlAccess.acceptsSequence(drone, sessionA, 2), "resetInput invalidates the session")
+    val sessionB = drone.beginControlSession()
+    expect(sessionB != sessionA, "reactivation mints a new session id")
+    expect(!DroneControlAccess.acceptsSequence(drone, sessionA, 2), "old session id never accepted again, even with a fresh sequence")
+    expect(DroneControlAccess.acceptsSequence(drone, sessionB, 0), "new session starts its own sequence at 0")
+    DroneControlAccess.stopMonitor(player, drone)
+    expect(!DroneControlAccess.acceptsSequence(drone, sessionB, 1), "stopMonitor ends the session too")
+
     println("Adapter/lifecycle checks (test doubles): $count passed")
 }

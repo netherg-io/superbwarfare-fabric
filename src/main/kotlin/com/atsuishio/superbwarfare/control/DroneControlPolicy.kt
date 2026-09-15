@@ -38,3 +38,18 @@ object DroneControlPolicy {
         value.isFinite() && value.toDouble() >= Int.MIN_VALUE.toDouble() &&
             value.toDouble() <= Int.MAX_VALUE.toDouble()
 }
+
+/** Anti-replay for VehicleMovementMessage/MouseMoveMessage/DroneFireMessage: minted once per
+ * monitor activation (DroneEntity.beginControlSession). A packet naming an old session, or an
+ * old/duplicate sequence within the current session, must not move the drone. Never constructed
+ * from client-supplied fields; only the id is echoed back to the client via synced entity data.
+ */
+class DroneControlSession(val id: String = java.util.UUID.randomUUID().toString()) {
+    private var sequence: Long = -1
+
+    fun accept(sessionId: String, candidate: Long): Boolean {
+        if (sessionId != id || candidate < 0 || candidate <= sequence) return false
+        sequence = candidate
+        return true
+    }
+}
