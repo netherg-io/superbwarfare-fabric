@@ -14,6 +14,7 @@ import com.atsuishio.superbwarfare.data.gun.GunData
 import com.atsuishio.superbwarfare.data.gun.GunProp
 import com.atsuishio.superbwarfare.data.gun.SeekType
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineType
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
 import com.atsuishio.superbwarfare.entity.vehicle.MortarEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.init.*
@@ -730,7 +731,9 @@ object ClickEventHandler {
                 pos = lookingEntity.position()
             }
 
-            sendPacketToServer(DroneFireMessage(pos.toVector3f()))
+            sendPacketToServer(
+                DroneFireMessage(pos.toVector3f(), drone.entityData.get(DroneEntity.SESSION), drone.nextClientSequence())
+            )
         }
     }
 }

@@ -8,7 +8,13 @@ import com.atsuishio.superbwarfare.network.ServerPacketPayload
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MouseMoveMessage(val speedX: Double, val speedY: Double) : ServerPacketPayload() {
+data class MouseMoveMessage(
+    val speedX: Double,
+    val speedY: Double,
+    // Unused on the plain-vehicle path; only the drone/monitor path is replay-sensitive.
+    val session: String = "none",
+    val sequence: Long = 0,
+) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         if (!DroneControlPolicy.validMouseInput(speedX, speedY)) return
         val player = sender()
@@ -19,6 +25,8 @@ data class MouseMoveMessage(val speedX: Double, val speedY: Double) : ServerPack
             entity.mouseInput(speedX, speedY)
             return
         }
-        DroneControlAccess.resolve(player)?.mouseInput(speedX, speedY)
+        val drone = DroneControlAccess.resolve(player) ?: return
+        if (!DroneControlAccess.acceptsSequence(drone, session, sequence)) return
+        drone.mouseInput(speedX, speedY)
     }
 }

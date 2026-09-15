@@ -48,3 +48,61 @@ Use the existing project toolchain/cache for the full build; `PORT-BRIEF.md` res
 - Angle/Acro physics, inertia/payload/battery model, EW/fiber/signal rendering, collision zones, advanced sound, chunk-ticket budgets and addon stock integration.
 
 No main-branch change, merge, tag, jar release, modpack pin, deployment or production restart belongs to this PR.
+
+## Follow-up: control-session anti-replay (this stage)
+
+Refs netherg-io/blockfield-releases#4, in-game finding from 2026-09-15: `VehicleMovementMessage`,
+`MouseMoveMessage` and `DroneFireMessage` were authorised only by the currently-held monitor/linked
+drone (the check this doc describes above), with no session/sequence binding. A packet queued
+while one activation was live could still be applied after the player switched drones or
+reactivated, because `resolve()`/`canUse()` only look at *current* state.
+
+This closes that gap **inside superbwarfare-fabric itself**, not by depending on
+blockfield-mod's `DroneControlSessions` (that class stays private-repo-only; this mod is the one
+going public per the owner's 2026-09-14 decision, so it must not gain a build dependency on the
+private mod). The model is a much smaller, purpose-built anti-replay counter:
+
+- `DroneControlSession` (`control/DroneControlPolicy.kt`): a pure, Minecraft-free id + strictly
+  increasing sequence, unit-tested standalone (`dev/drone-control-tests/DroneControlSessionChecks.kt`).
+- `DroneEntity.SESSION`: synced entity data holding the current session id (`"none"` when
+  uncontrolled) — server-authoritative, readable by clients, never writable by them.
+- `DroneEntity.beginControlSession()` / `endControlSession()` / `acceptControlSequence(...)`:
+  minted once per monitor activation (`MonitorItem.use()`, server side, right after
+  `DroneControlAccess.resetInput`), and invalidated by `resetInput` itself — the single choke
+  point every existing teardown path (unload, `stopMonitor`, `resetIfUncontrolled`, disconnect)
+  already routed through, so no new teardown call sites were needed.
+- `DroneControlAccess.acceptsSequence(...)`: the one check the three packet handlers call after
+  `resolve()`/ownership already passed. A stale session id, or a duplicate/out-of-order sequence
+  within the live session, is dropped with no side effect (the rest of the packet still no-ops).
+- Client side: `DroneEntity.nextClientSequence()` is a plain per-entity counter that resets
+  whenever the synced session id changes underneath it; the three send sites
+  (`ClientEventHandler.handleControlVehicle`, `ClientMouseHandler.handleClientTick`,
+  `ClickEventHandler.droneLeftClick`) read the drone's current session id and next sequence when
+  they already resolve the drone for other reasons. Plain vehicle control (non-drone) is
+  unaffected; the new packet fields default to `"none"`/`0` and are ignored on that path.
+
+### Tests run
+
+```sh
+bash dev/test-drone-control.sh
+```
+
+- Policy checks: 198 passed (unchanged).
+- Adapter/lifecycle checks: 44 passed (9 new: fresh session accepts, replay rejected, foreign
+  session rejected, next sequence in-session accepted, `resetInput` invalidates the session,
+  reactivation mints a new id, the old id is never accepted again even with a fresh sequence,
+  a new session restarts its own sequence at 0, `stopMonitor` ends the session too).
+- Session checks (new): 11 passed — wrong session id, negative sequence, duplicate/replayed
+  sequence (including idempotent double-rejection), stale/other-session sequence, sequence gaps
+  are fine, no rewinding after a gap, auto-generated ids are distinct.
+
+Full Gradle build (`./gradlew build`) passed. In-game: normal monitor/drone control end-to-end
+(link, activate, move/look/fire, deactivate) verified on the rig with two clients against the
+built jar — see the PR body for the evidence log. Reconnect/death/dimension-change and looping
+motor sound teardown are the next stage (control-session **teardown gaps**), not this one; this
+stage only adds the anti-replay pinning, it does not change when a session ends.
+
+### Still open for this epic
+
+Everything listed under "Epic work not implemented by this PR" above still applies **except**
+"Protocol session IDs/generations and sequence rejection", which this stage implements.

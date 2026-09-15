@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle
 
+import com.atsuishio.superbwarfare.control.DroneControlSession
 import com.atsuishio.superbwarfare.data.CustomData
 import com.atsuishio.superbwarfare.data.drone_attachment.DroneAttachmentData
 import com.atsuishio.superbwarfare.entity.getValue
@@ -80,6 +81,13 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
 
     private var ammoCount by AMMO
 
+    // Server-side anti-replay state for control packets; never saved/synced beyond the session id.
+    private var controlSession: DroneControlSession? = null
+
+    // Client-side-only sequence source; resets whenever the synced session id changes underneath it.
+    private var clientSequenceSession: String = "none"
+    private var clientSequenceCounter: Long = 0
+
     /** Дальность связи с оператором: дальше -- обрыв, взрыв и списание дрона. */
     open val maxControlDistance: Double get() = 150.0
 
@@ -119,7 +127,39 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
             define(DISPLAY_ENTITY_TAG, CompoundTag())
             define(AMMO, 0)
             define(MAX_AMMO, 1)
+            define(SESSION, "none")
         }
+    }
+
+    /** Mints a new control session, minted server-side only when a monitor activates. Callers
+     * must reset input (see DroneControlAccess.resetInput) first so the previous session's
+     * counter cannot leak into the new one.
+     */
+    fun beginControlSession(): String {
+        val session = DroneControlSession()
+        controlSession = session
+        entityData.set(SESSION, session.id)
+        return session.id
+    }
+
+    /** Invalidates the current session so any packet still naming it is rejected. Idempotent. */
+    fun endControlSession() {
+        controlSession = null
+        entityData.set(SESSION, "none")
+    }
+
+    /** Server-side check: sessionId/sequence must match the live session and strictly advance it. */
+    fun acceptControlSequence(sessionId: String, sequence: Long): Boolean =
+        controlSession?.accept(sessionId, sequence) ?: false
+
+    /** Client-only: next sequence number for the currently synced session; resets on session change. */
+    fun nextClientSequence(): Long {
+        val current = entityData.get(SESSION)
+        if (clientSequenceSession != current) {
+            clientSequenceSession = current
+            clientSequenceCounter = 0
+        }
+        return clientSequenceCounter++
     }
 
     override fun causeFallDamage(l: Float, d: Float, source: DamageSource): Boolean {
@@ -938,6 +978,11 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         @JvmField
         val MAX_AMMO: EntityDataAccessor<Int> =
             SynchedEntityData.defineId(DroneEntity::class.java, EntityDataSerializers.INT)
+
+        /** Current control-session id ("none" when uncontrolled); server-authoritative, read-only to clients. */
+        @JvmField
+        val SESSION: EntityDataAccessor<String> =
+            SynchedEntityData.defineId(DroneEntity::class.java, EntityDataSerializers.STRING)
 
         @JvmStatic
         fun getItemId(stack: ItemStack): String {

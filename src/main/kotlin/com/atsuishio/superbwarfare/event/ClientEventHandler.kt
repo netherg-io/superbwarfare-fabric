@@ -16,12 +16,14 @@ import com.atsuishio.superbwarfare.config.server.MiscConfig
 import com.atsuishio.superbwarfare.data.gun.*
 import com.atsuishio.superbwarfare.data.gun.value.AttachmentType
 import com.atsuishio.superbwarfare.data.vehicle.subdata.EngineType
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
 import com.atsuishio.superbwarfare.entity.vehicle.base.VehicleEntity
 import com.atsuishio.superbwarfare.fabric.ModEventBus
 import com.atsuishio.superbwarfare.init.*
 import com.atsuishio.superbwarfare.item.gun.GunItem
 import com.atsuishio.superbwarfare.item.gun.launcher.SuperStarShooterItem
 import com.atsuishio.superbwarfare.item.misc.MonitorItem
+import com.atsuishio.superbwarfare.tools.EntityFindUtil
 import com.atsuishio.superbwarfare.network.message.send.*
 import com.atsuishio.superbwarfare.perk.Perk
 import com.atsuishio.superbwarfare.resource.gun.GunResource
@@ -788,7 +790,15 @@ object ClientEventHandler {
                     && vehicle.loiterActive
                     && vehicle.computed().engineType == EngineType.AIRCRAFT
             if (!blockLoiter) {
-                sendPacketToServer(VehicleMovementMessage(keys))
+                val drone = if (stack.`is`(ModItems.MONITOR.get()))
+                    EntityFindUtil.findDrone(player.level(), tag.getString(MonitorItem.LINKED_DRONE)) else null
+                if (drone != null) {
+                    sendPacketToServer(
+                        VehicleMovementMessage(keys, drone.entityData.get(DroneEntity.SESSION), drone.nextClientSequence())
+                    )
+                } else {
+                    sendPacketToServer(VehicleMovementMessage(keys))
+                }
             } else {
                 // 检测双击前进键(W)在0.5s(10tick)内夺回操控权
                 val forwardBit = 0b000000100

@@ -18,10 +18,15 @@ import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 
 @Serializable
-data class DroneFireMessage(val pos: SerializedVector3f) : ServerPacketPayload() {
+data class DroneFireMessage(
+    val pos: SerializedVector3f,
+    val session: String = "none",
+    val sequence: Long = 0,
+) : ServerPacketPayload() {
     override fun PayloadContext.handler() {
         val player = sender()
         val drone = DroneControlAccess.resolve(player) ?: return
+        if (!DroneControlAccess.acceptsSequence(drone, session, sequence)) return
         if (player.offhandItem.`is`(ModItems.FIRING_PARAMETERS, ModItems.ARTILLERY_INDICATOR)) {
             if (!DroneControlPolicy.validBlockTarget(pos.x, pos.y, pos.z)) return
             val offStack = player.offhandItem

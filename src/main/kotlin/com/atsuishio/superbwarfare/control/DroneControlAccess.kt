@@ -52,7 +52,17 @@ object DroneControlAccess {
         drone.processInput(0)
         drone.mouseInput(0.0, 0.0)
         drone.fire = false
+        // Every existing teardown path (unload, stopMonitor, resetIfUncontrolled) routes through
+        // here, so this is the single choke point that invalidates a control session too.
+        drone.endControlSession()
     }
+
+    /** Anti-replay: sessionId/sequence must name the drone's current session and strictly
+     * advance it. Call once per VehicleMovementMessage/MouseMoveMessage/DroneFireMessage,
+     * after resolve()/canUse() already confirmed live ownership.
+     */
+    fun acceptsSequence(drone: DroneEntity, sessionId: String, sequence: Long): Boolean =
+        drone.acceptControlSequence(sessionId, sequence)
 
     /** Only touches this owner's active main-hand monitor; dormant copies cannot stop another drone. */
     fun stopMonitor(player: Player, drone: DroneEntity, notifyClient: Boolean = true) {
