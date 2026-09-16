@@ -1,3 +1,5 @@
+> **Blockfield:** этот форк попадает в пак так: закоммитить в `main`, затем в `blockfield-modpack` выполнить `scripts/bump-fork.sh superbwarfare`. Скрипт сам ставит тег `bfN`, ждёт сборку и закрепляет релиз. Версию руками не менять.
+
 # Superb Warfare — Fabric 1.21.1 port
 
 Unofficial port of [Superb Warfare](https://github.com/Mercurows/SuperbWarfare) (NeoForge 1.21.1,
