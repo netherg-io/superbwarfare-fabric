@@ -1,5 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle
 
+import com.atsuishio.superbwarfare.control.DroneControlAccess
+import com.atsuishio.superbwarfare.control.DroneControlPolicy
 import com.atsuishio.superbwarfare.control.DroneControlSession
 import com.atsuishio.superbwarfare.data.CustomData
 import com.atsuishio.superbwarfare.data.drone_attachment.DroneAttachmentData
@@ -244,6 +246,9 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         if (controller != null && this.level() is ServerLevel && this.entityData.get(LINKED)
             && controller.level() === this.level()
         ) {
+            // Монитор, выданный набором позже (респавн, доснабжение), сам подхватывает дрон.
+            if (this.tickCount % 5 == 0) linkMonitors(controller, onlyFree = true)
+
             val distance = this.position().distanceTo(controller.position())
             if (distance > maxControlDistance) {
                 signalLost()
@@ -949,6 +954,43 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
     // sees "no controller" instead of "controller now in another world" and never calls
     // stopMonitor/sends the camera reset packet, leaving the operator's camera stuck.
     open fun getController(): Player? = EntityFindUtil.findPlayerAnywhere(this.level(), this.entityData.get(CONTROLLER))
+
+    /**
+     * Автопривязка при установке: поставленный дрон сразу становится своим для оператора,
+     * его мониторы переключаются на него, а прежний дрон теряет управление.
+     */
+    fun claimBy(player: Player) {
+        this.entityData.set(LINKED, true)
+        this.entityData.set(CONTROLLER, player.getStringUUID())
+        linkMonitors(player, onlyFree = false)
+    }
+
+    /**
+     * Мониторы оператора берут этот дрон: при установке -- все, на тике -- только свободные
+     * (без дрона или с более старым дроном того же оператора), чтобы монитор из набора после
+     * респавна сам нашёл последний живой дрон. Мониторы чужих игроков не трогаем никогда.
+     */
+    private fun linkMonitors(player: Player, onlyFree: Boolean) {
+        val id = this.getStringUUID()
+        for (stack in player.inventory.items) {
+            if (stack.item !== ModItems.MONITOR.get()) continue
+            val tag = NBTTool.getTag(stack)
+            if (tag.getString(MonitorItem.LINKED_DRONE) == id) continue
+            val current = EntityFindUtil.findDrone(player.level(), tag.getString(MonitorItem.LINKED_DRONE))
+            if (onlyFree && !DroneControlPolicy.adoptsMonitor(
+                    monitorUsing = tag.getBoolean(MonitorItem.USING),
+                    linkedDroneAlive = current != null,
+                    linkedDroneSameOperator = current != null && DroneControlAccess.owns(player, current),
+                    linkedDroneOlder = current != null && current.tickCount > this.tickCount
+                )
+            ) continue
+            link(tag, id)
+            NBTTool.saveTag(stack, tag)
+            // Прежний дрон остаётся в воздухе без монитора: снимаем ввод и сессию, иначе он
+            // продолжит лететь по последней команде.
+            if (current != null && current !== this) DroneControlAccess.resetInput(current)
+        }
+    }
 
     companion object {
         @JvmField

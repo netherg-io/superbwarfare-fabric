@@ -53,5 +53,11 @@ fun main() {
         expect(!DroneControlPolicy.validBlockTarget(0f, 0f, v), "invalid Z target $v")
     }
     expect(DroneControlPolicy.validBlockTarget(Int.MIN_VALUE.toFloat(), 0f, 0f), "negative int boundary")
+    // Автопривязка: берём только свободный монитор или монитор более старого своего дрона.
+    expect(DroneControlPolicy.adoptsMonitor(false, false, false, false), "fresh monitor adopted")
+    expect(DroneControlPolicy.adoptsMonitor(false, true, true, true), "older own drone yields monitor")
+    expect(!DroneControlPolicy.adoptsMonitor(true, false, false, false), "active view kept")
+    expect(!DroneControlPolicy.adoptsMonitor(false, true, true, false), "newer own drone keeps monitor")
+    expect(!DroneControlPolicy.adoptsMonitor(false, true, false, true), "another operator's drone untouched")
     println("Policy checks: $count passed")
 }

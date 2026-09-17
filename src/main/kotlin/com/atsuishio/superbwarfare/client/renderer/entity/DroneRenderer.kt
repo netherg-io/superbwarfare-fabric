@@ -42,7 +42,6 @@ class DroneRenderer(renderManager: EntityRendererProvider.Context) :
         poseStack.mulPose(Axis.YP.rotationDegrees(-entityIn.getYaw(partialTicks)))
         poseStack.mulPose(Axis.XP.rotationDegrees(entityIn.getBodyPitch(partialTicks)))
         poseStack.mulPose(Axis.ZP.rotationDegrees(entityIn.getRoll(partialTicks)))
-        super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn)
 
         var flag = true
         val player = localPlayer
@@ -59,7 +58,11 @@ class DroneRenderer(renderManager: EntityRendererProvider.Context) :
             }
         }
 
+        // Своя же модель загораживает вид: CameraMixin ставит камеру внутрь корпуса (у разведчика
+        // ещё и за блоком подвеса камеры). В этих двух режимах камера принадлежит дрону, так что
+        // оператор не должен видеть ни корпус, ни подвесы -- так же, как в кабине транспорта.
         if (flag) {
+            super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn)
             renderAttachments(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn)
         }
 
