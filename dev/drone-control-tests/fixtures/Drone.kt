@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle
 
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 
@@ -22,7 +23,9 @@ open class DroneEntity(world: Level, id: String) : Entity(world, id) {
     private var sessionSeed = 0
     fun processInput(value: Short) { keys = value; if (value == 0.toShort()) resets++ }
     fun mouseInput(x: Double, y: Double) { mouseX = x; mouseY = y }
-    fun getController() = level().players[entityData.get(CONTROLLER)]
+    // Cross-dimension: looks the operator up server-wide (like MinecraftServer.getPlayerList()),
+    // not just among this drone's own level's players -- see EntityFindUtil.findPlayerAnywhere.
+    fun getController() = (level() as? ServerLevel)?.server?.players?.get(entityData.get(CONTROLLER))
     fun beginControlSession(): String {
         sessionSeed++
         val id = "session-$sessionSeed"

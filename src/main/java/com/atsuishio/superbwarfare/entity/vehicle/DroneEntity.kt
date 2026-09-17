@@ -19,8 +19,8 @@ import com.atsuishio.superbwarfare.item.misc.MonitorItem
 import com.atsuishio.superbwarfare.item.misc.MonitorItem.Companion.disLink
 import com.atsuishio.superbwarfare.item.misc.MonitorItem.Companion.link
 import com.atsuishio.superbwarfare.tools.DamageHandler.doDamage
+import com.atsuishio.superbwarfare.tools.EntityFindUtil
 import com.atsuishio.superbwarfare.tools.EntityFindUtil.findEntity
-import com.atsuishio.superbwarfare.tools.EntityFindUtil.findPlayer
 import com.atsuishio.superbwarfare.tools.NBTTool
 import com.atsuishio.superbwarfare.tools.TagDataParser
 import com.atsuishio.superbwarfare.tools.getMaxZoom
@@ -234,9 +234,16 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
             collisionCoolDown--
         }
 
-        val controller = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+        val controller = getController()
 
-        if (controller != null && this.level() is ServerLevel && this.entityData.get(LINKED)) {
+        // controller.level() can now differ from this.level() (getController() looks the operator
+        // up across every dimension). Positions from two different dimensions are not comparable
+        // distances, so a raw distanceTo() here would be meaningless -- do not explode on that,
+        // leave dimension-mismatch teardown to DroneControlAccess.resetIfUncontrolled/canUse's
+        // existing sameWorld check on the next tick, which cleanly stops+resets without a blast.
+        if (controller != null && this.level() is ServerLevel && this.entityData.get(LINKED)
+            && controller.level() === this.level()
+        ) {
             val distance = this.position().distanceTo(controller.position())
             if (distance > maxControlDistance) {
                 signalLost()
@@ -680,7 +687,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
             )
         )
 
-        val controller = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+        val controller = getController()
         if (controller != null) {
             val stack = controller.mainHandItem
             if (stack.`is`(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
@@ -753,7 +760,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
             return 0f
         }
 
-        val player = findPlayer(this.level(), this.entityData.get(CONTROLLER)) ?: return power
+        val player = getController() ?: return power
 
         val stack = player.mainHandItem
         if (stack.`is`(ModItems.MONITOR.get())
@@ -767,7 +774,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
 
     override fun move(movementType: MoverType, movement: Vec3) {
         super.move(movementType, movement)
-        val controller = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+        val controller = getController()
 
         if (lastTickSpeed < 0.2 || collisionCoolDown > 0) return
 
@@ -800,7 +807,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
     }
 
     override fun destroy() {
-        val controller = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+        val controller = getController()
         if (controller != null) {
             if (controller.mainHandItem.`is`(ModItems.MONITOR.get())) {
                 val item = controller.mainHandItem
@@ -829,20 +836,20 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
             }
         }
 
-        val id = this.entityData.get(CONTROLLER)
-        val uuid: UUID?
         try {
-            uuid = UUID.fromString(id)
+            UUID.fromString(this.entityData.get(CONTROLLER))
         } catch (_: IllegalArgumentException) {
             this.discard()
             return
         }
 
-        val player = this.level().getPlayerByUUID(uuid)
-        player?.inventory?.items?.filter { it.item === ModItems.MONITOR.get() }?.forEach {
+        // Reuse the cross-dimension-safe lookup from the top of this method instead of a second,
+        // level-scoped one: a controller who dimension-changed away from this drone before it was
+        // destroyed must still get their monitor unlinked here.
+        controller?.inventory?.items?.filter { it.item === ModItems.MONITOR.get() }?.forEach {
             val tag = NBTTool.getTag(it)
             if (tag.getString(MonitorItem.LINKED_DRONE) == this.getStringUUID()) {
-                disLink(tag, player)
+                disLink(tag, controller)
                 NBTTool.saveTag(it, tag)
             }
         }
@@ -852,7 +859,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
 
     private fun kamikazeExplosion() {
         val attacker = findEntity(this.level(), lastAttackerUUID)
-        if (findPlayer(this.level(), this.entityData.get(CONTROLLER)) == null) return
+        if (getController() == null) return
 
         // 挂载实体的数据
         val attachedEntity = this.entityData.get<String>(DISPLAY_ENTITY)
@@ -900,7 +907,7 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         cloud.duration = duration
         cloud.radius = radius
 
-        val controller = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+        val controller = getController()
         if (controller != null) {
             cloud.owner = controller
         }
@@ -937,7 +944,11 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
         return getMaxZoom(transform, maxCameraPosition)
     }
 
-    open fun getController() = findPlayer(this.level(), this.entityData.get(CONTROLLER))
+    // Cross-dimension: an operator who changed dimension away from the drone must still be
+    // found here, or the single teardown choke point (DroneControlAccess.resetIfUncontrolled)
+    // sees "no controller" instead of "controller now in another world" and never calls
+    // stopMonitor/sends the camera reset packet, leaving the operator's camera stuck.
+    open fun getController(): Player? = EntityFindUtil.findPlayerAnywhere(this.level(), this.entityData.get(CONTROLLER))
 
     companion object {
         @JvmField

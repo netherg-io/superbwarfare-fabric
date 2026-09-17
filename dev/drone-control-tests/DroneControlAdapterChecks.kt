@@ -25,8 +25,8 @@ fun main() {
     val otherWorld = ServerLevel(server)
     val player = ServerPlayer(world, "owner")
     val other = ServerPlayer(world, "other")
-    world.players["owner"] = player
-    world.players["other"] = other
+    server.players["owner"] = player
+    server.players["other"] = other
     val drone = DroneEntity(world, "drone")
     world.drones["drone"] = drone
     drone.entityData.set(DroneEntity.LINKED, true)
@@ -64,7 +64,16 @@ fun main() {
     player.isRemoved = false
     player.moveWorld(otherWorld)
     expect(!DroneControlAccess.canUse(player, drone), "different world rejected")
+    // Dimension-change teardown: the operator is in another world entirely (not just too far in
+    // the same world). getController() must still find them server-wide so the drone's tick loop
+    // (resetIfUncontrolled) actually calls stopMonitor/sends the camera reset, instead of seeing
+    // "no controller" and silently leaving the operator's monitor stuck on Using=true.
+    armed()
+    DroneControlAccess.resetIfUncontrolled(drone)
+    expect(cleared(), "dimension change clears drone input")
+    expect(!player.mainHandItem.data.getBoolean(MonitorItem.USING), "dimension change stops the operator's monitor")
     player.moveWorld(world)
+    player.mainHandItem = monitor()
     player.pos = Vec3(150.0, 0.0, 0.0)
     expect(DroneControlAccess.resolve(player) === drone, "configured range inclusive")
     player.pos = Vec3(150.01, 0.0, 0.0)
@@ -100,10 +109,10 @@ fun main() {
     DroneControlAccess.stopMonitor(player, otherDrone)
     expect(player.mainHandItem.data.getBoolean(MonitorItem.USING), "old drone cannot stop another monitor")
     expect(!cleared(), "dormant binding does not cancel active drone")
-    world.players.remove("owner")
+    server.players.remove("owner")
     DroneControlAccess.resetIfUncontrolled(drone)
     expect(cleared(), "missing/disconnected owner clears inputs")
-    world.players["owner"] = player
+    server.players["owner"] = player
 
     // Run the actual production callback bodies with a minimal event-bus test double.
     DroneControlEvents.onInitialize()

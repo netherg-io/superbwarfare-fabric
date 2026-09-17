@@ -106,3 +106,68 @@ stage only adds the anti-replay pinning, it does not change when a session ends.
 
 Everything listed under "Epic work not implemented by this PR" above still applies **except**
 "Protocol session IDs/generations and sequence rejection", which this stage implements.
+
+## Follow-up: control-session teardown gaps (netherg-io/blockfield-releases#4, stage 2)
+
+Root cause for the dimension-change gap: `DroneEntity.getController()` (and seven duplicate
+call sites doing the same lookup inline) resolved the controller via
+`EntityFindUtil.findPlayer(this.level(), CONTROLLER)` -- a **level-scoped** lookup. A `Player`
+entity is only tracked by the `Level` it currently occupies, so the instant an operator changed
+dimension away from their drone, this returned `null`. That silently broke the single teardown
+choke point: `DroneControlAccess.resetIfUncontrolled` reads `val player = drone.getController()`
+and only calls `stopMonitor` (camera reset + `Using=false`) `if (player != null)` -- with the old
+lookup, a dimension-changed operator looked exactly like "no controller at all", so `resetInput`
+ran but `stopMonitor` never did, leaving the operator's monitor stuck on `Using=true` and no
+`ResetCameraTypeMessage` ever sent.
+
+Fix: `EntityFindUtil.findPlayerAnywhere` (`tools/EntityFindUtil.kt`) looks the player up via
+`ServerLevel.getServer().playerList` -- authoritative across every dimension, like vanilla's own
+`/tp`-across-dimensions support -- instead of the current level's entity tracker.
+`DroneEntity.getController()` and every inline duplicate of the same lookup now route through it
+(one shared fix instead of patching each call site). `baseTick()`'s distance-based signal-loss
+explosion now also checks `controller.level() === this.level()` first: positions from two
+different dimensions are not a meaningful distance, so a cross-dimension controller no longer
+risks a bogus explosion -- dimension-mismatch teardown is left entirely to the existing
+`resetIfUncontrolled`/`canUse` `sameWorld` check on the next world tick, which ends the session
+cleanly (camera reset, `Using=false`) without a blast. The existing same-world out-of-range
+signal-loss explosion is unchanged.
+
+Chunk unload and reconnect were re-verified against the *existing* (unmodified this stage) code
+and found already correct: `DroneControlEvents.ENTITY_UNLOAD` already calls
+`getController()?.let { stopMonitor(it, entity) }` + `resetInput(entity)` and drops the entity
+from the per-world `loaded` set; `ServerPlayConnectionEvents.DISCONNECT` already ends the session
+and clears `Using` for every drone the disconnecting player owns. Both routes reuse the same
+`resetInput`/`stopMonitor` choke point as the dimension-change fix, so no second call site was
+added for them.
+
+### Tests run
+
+```sh
+mise exec kotlin@2.1.21 -- bash dev/test-drone-control.sh
+JAVA_HOME=~/.local/share/mise/installs/java/temurin-21.0.12+101.0.LTS ./gradlew build --no-daemon -q
+```
+
+- Policy checks: 198 passed (unchanged).
+- Adapter/lifecycle checks: 46 passed (44 from stage 1 + 2 new: dimension-change teardown clears
+  input and stops the monitor when `getController()` must search another `ServerLevel`; fixtures
+  gained a server-wide `TestServer.players` registry mirroring `MinecraftServer.getPlayerList()`,
+  replacing the old level-scoped `Level.players` map that could not reproduce this bug).
+- Sanity check: temporarily forcing the fixture `getController()` back to `null` made the new
+  dimension-change assertions fail to compile clean (`-Werror` flagged the `resetIfUncontrolled`
+  guards as "condition is always false"), confirming the new test actually exercises the fix.
+- Full Gradle build: passed.
+- In-game (rig, server + two clients, this stage's jar on all three): dimension-change teardown,
+  chunk-unload teardown, and disconnect/reconnect-with-one-drone all verified -- see the PR body
+  and `/var/tmp/bf-jobs/impl-4-s2/evidence/` for logs, RCON transcripts and screenshots.
+- NOT done in-game: replaying a stale/pre-disconnect control packet against a live server socket
+  (no packet-injection tool available via the rig's bot interface). The anti-replay logic itself
+  is unit-tested (stage 1, unchanged, still green) but this specific live-replay scenario needs
+  either a custom test client or owner-provided tooling.
+- NOT verified: the looping motor sound (`VehicleSoundInstance.EngineSound`) teardown on every
+  exit path. Code reading shows it already stops generically via `mobileVehicle.isRemoved()` (drone
+  destroyed/discarded) or `!engineRunning()` (`abs(power) <= 0.05`, reached once `resetInput` zeroes
+  the throttle and drone deceleration brings power down) -- the same two conditions cover manual
+  stop, death, disconnect, dimension change and chunk unload without any dedicated per-path
+  handling, so no code change looked warranted. This is reasoning from source, not an audible or
+  instrumented check (this is a headless rig; no audio device, and no debug hook was added/removed
+  for it this stage) -- needs owner confirmation with real audio output.
