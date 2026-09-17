@@ -38,17 +38,21 @@ object EntityFindUtil {
      * @param uuidString 目标实体UUID字符串
      * @return 目标实体或null
      */
-    @JvmStatic
-    fun findEntity(level: Level, uuidString: String?): Entity? {
+    private fun parseUuid(uuidString: String?): UUID? {
         // Fast rejection: a valid UUID is always exactly 36 chars.
         // This filters "undefined", "", and other non-UUID sentinels
         // without entering the try/catch + stack-trace-fill path.
         if (uuidString == null || uuidString.length != 36) return null
-        val uuid = try {
+        return try {
             UUID.fromString(uuidString)
         } catch (_: IllegalArgumentException) {
-            return null
+            null
         }
+    }
+
+    @JvmStatic
+    fun findEntity(level: Level, uuidString: String?): Entity? {
+        val uuid = parseUuid(uuidString) ?: return null
 
         return if (level is ServerLevel) {
             level.getEntity(uuid)
@@ -60,6 +64,25 @@ object EntityFindUtil {
     @JvmStatic
     fun findPlayer(level: Level, uuidString: String): Player? {
         return findEntity(level, uuidString) as? Player
+    }
+
+    /**
+     * Same as [findPlayer], but a player who changed dimension is still found: a Player entity
+     * is only tracked by the [Level] it currently occupies, so a drone's controller lookup using
+     * the drone's own level silently returns null the instant the operator dimension-changes away
+     * from it (this was the dimension-change teardown gap: the tick loop then saw "no controller"
+     * instead of "controller in another dimension" and skipped stopMonitor/camera reset).
+     * Server-side, [ServerLevel.getServer]'s player list is authoritative across all dimensions.
+     */
+    @JvmStatic
+    fun findPlayerAnywhere(level: Level, uuidString: String?): Player? {
+        val uuid = parseUuid(uuidString) ?: return null
+        val server = (level as? ServerLevel)?.server
+        return if (server != null) {
+            server.playerList.getPlayer(uuid)
+        } else {
+            getEntities(level)?.get(uuid) as? Player
+        }
     }
 
     @JvmStatic
