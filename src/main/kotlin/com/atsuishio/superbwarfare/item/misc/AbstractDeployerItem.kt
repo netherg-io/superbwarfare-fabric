@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.item.misc
 
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.server.level.ServerLevel
@@ -47,6 +48,7 @@ abstract class AbstractDeployerItem(properties: Properties) : Item(properties) {
                 this.getYOffset(level, pos, clickedPos != pos && direction == Direction.UP, entity.boundingBox)
             entity.moveTo(pos.x.toDouble() + 0.5, pos.y + yOffset, pos.z.toDouble() + 0.5)
             level.addFreshEntity(entity)
+            (entity as? DroneEntity)?.claimBy(player)
 
             if (!player.abilities.instabuild) {
                 stack.shrink(1)
@@ -78,6 +80,7 @@ abstract class AbstractDeployerItem(properties: Properties) : Item(properties) {
                     blockpos.z.toDouble() + 0.5
                 )
                 level.addFreshEntity(entity)
+                (entity as? DroneEntity)?.claimBy(player)
 
                 if (!player.abilities.instabuild) {
                     itemstack.shrink(1)

@@ -27,6 +27,17 @@ object DroneControlPolicy {
             maxDistance.isFinite() && maxDistance > 0.0 && distance <= maxDistance
     }
 
+    /** Автопривязка на тике: свободный монитор (или монитор более старого дрона того же
+     * оператора) переходит к этому дрону. Активный вид (`monitorUsing`) не перебиваем, чужой
+     * дрон не отбираем -- вызывающая сторона перебирает только инвентарь своего оператора. */
+    fun adoptsMonitor(
+        monitorUsing: Boolean,
+        linkedDroneAlive: Boolean,
+        linkedDroneSameOperator: Boolean,
+        linkedDroneOlder: Boolean
+    ): Boolean = !monitorUsing &&
+        (!linkedDroneAlive || (linkedDroneSameOperator && linkedDroneOlder))
+
     // VehicleEntity.mouseInput narrows doubles to floats; finite doubles alone are insufficient.
     fun validMouseInput(x: Double, y: Double): Boolean =
         x.isFinite() && y.isFinite() && x.toFloat().isFinite() && y.toFloat().isFinite()

@@ -31,7 +31,19 @@ object RedTriangleOverlay : CommonOverlay("red_triangle") {
 
         val stack = player.mainHandItem
         if (stack.`is`(ModItems.RPG.get()) && from(stack).selectedAmmoType.get() == 0) {
-            val idf = SeekTool.seekLivingEntity(player, 128.0, 6.0) ?: return
+            // Маркер захвата -- про технику: обе наши ракеты РПГ неуправляемые, и треугольник над
+            // игроком/мобом/мишенью только вводил в заблуждение. Ищем именно технику, а не ближайшее
+            // живое существо, иначе игрок перед танком забирал бы захват себе.
+            val idf = SeekTool.seekQuery(player) {
+                withinRange(128.0)
+                withinAngle(6.0)
+                baseFilter()
+                smokeFilter()
+                notFriendly()
+                isNotOwner()
+                noClip()
+                custom(java.util.function.Predicate { it is VehicleEntity })
+            }.buildWithClosest() ?: return
 
             val distance = idf.position().distanceTo(cameraPos)
             val pos = Vec3(

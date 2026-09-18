@@ -19,7 +19,13 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
+import com.mojang.blaze3d.platform.NativeImage
+import net.minecraft.client.renderer.texture.DynamicTexture
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
+import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
@@ -36,6 +42,95 @@ object DroneHudOverlay : CommonOverlay("drone_hud") {
 
     private val INDICATOR = loc("textures/overlay/spyglass/indicator.png")
 
+    /**
+     * Доля помех 0..1: последняя пятая часть дальности связи. 0 на 80% дистанции, 1 на пределе.
+     */
+    private fun signalNoise(distance: Double, drone: DroneEntity): Float {
+        val max = drone.maxControlDistance
+        val start = 0.8 * max
+        if (max <= start || distance <= start) return 0f
+        return Mth.clamp(((distance - start) / (max - start)).toFloat(), 0f, 1f)
+    }
+
+    /** Шумовая текстура 64x64 генерируется один раз в рантайме: ассет в пак тащить не за чем. */
+    private fun noiseTexture(): ResourceLocation {
+        if (noiseTextureReady) return NOISE
+        noiseTextureReady = true
+        val image = NativeImage(NOISE_SIZE, NOISE_SIZE, false)
+        val random = RandomSource.create(0x5EED)
+        for (y in 0 until NOISE_SIZE) for (x in 0 until NOISE_SIZE) {
+            val v = 30 + random.nextInt(226)
+            // NativeImage хранит ABGR; шум серый, так что порядок каналов роли не играет.
+            image.setPixelRGBA(x, y, (0xFF shl 24) or (v shl 16) or (v shl 8) or v)
+        }
+        mc.textureManager.register(NOISE, DynamicTexture(image))
+        return NOISE
+    }
+
+    /**
+     * Телевизионные помехи: шумовая текстура тайлами со случайным сдвигом каждый кадр, поверх --
+     * разрывы строк, а выше 90% ещё и вспышки сплошного шума. Треск идёт UI-звуком: Player.playSound
+     * уходит в level.playSound(this, ...), а клиент глушит звук, источник которого -- он сам.
+     */
+    private fun RenderContext.renderSignalNoise(strength: Float) {
+        if (strength <= 0f) return
+        val random = RandomSource.create()
+        val texture = noiseTexture()
+        val flicker = strength > 0.9f && random.nextFloat() < 0.15f
+        val alpha = if (flicker) 1f else Mth.clamp(0.9f * strength, 0f, 0.9f)
+
+        RenderSystem.enableBlend()
+        RenderSystem.setShaderColor(1f, 1f, 1f, alpha)
+        val tile = NOISE_SIZE * NOISE_SCALE
+        val offsetX = random.nextInt(tile)
+        val offsetY = random.nextInt(tile)
+        var x = -offsetX
+        while (x < screenWidth) {
+            var y = -offsetY
+            while (y < screenHeight) {
+                RenderHelper.preciseBlit(
+                    guiGraphics, texture, x.toFloat(), y.toFloat(),
+                    0f, 0f, tile.toFloat(), tile.toFloat(),
+                    NOISE_SIZE.toFloat(), NOISE_SIZE.toFloat()
+                )
+                y += tile
+            }
+            x += tile
+        }
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
+
+        // Разрыв строк: срезы кадра, сдвинутые вбок, как у сорванной развёртки.
+        repeat(2 + (2 * strength).toInt()) {
+            val bandY = random.nextInt(screenHeight)
+            val bandH = 1 + random.nextInt(3)
+            val shift = random.nextInt(40) - 20
+            val bandAlpha = (120 + 120 * strength).toInt().coerceIn(0, 255)
+            guiGraphics.fill(shift, bandY, screenWidth + shift, bandY + bandH, (bandAlpha shl 24) or 0xDCDCDC)
+        }
+
+        val level = mc.level ?: return
+        val now = level.gameTime
+        val interval = (8 - 6 * strength).toLong().coerceAtLeast(2L)
+        if (now - lastNoiseSound < interval) return
+        lastNoiseSound = now
+        mc.soundManager.play(
+            SimpleSoundInstance.forUI(
+                SoundEvents.FIRE_EXTINGUISH,
+                1.3f + 0.7f * random.nextFloat(),
+                0.6f + 0.4f * strength
+            )
+        )
+    }
+
+    private const val LOSS_STATIC_TICKS = 10L
+    private const val NOISE_SIZE = 64
+    private const val NOISE_SCALE = 3
+    private val NOISE = loc("dynamic/drone_signal_static")
+    private var noiseTextureReady = false
+    private var lastNoiseSound = 0L
+    private var lastStrength = 0f
+    private var lastDroneTick = 0L
+
     val maxDistance: Int
         get() {
             return (mc.level?.serverSimulationDistance ?: 16) * 16
@@ -46,6 +141,19 @@ object DroneHudOverlay : CommonOverlay("drone_hud") {
         val stack = player.mainHandItem
 
         poseStack.pushPose()
+
+        // Обрыв связи на грани: дрон уже исчез (подрыв, отвязка монитора), но полсекунды экран
+        // держит сплошной шум -- иначе картинка просто мгновенно возвращается к рукам оператора.
+        val gameTime = mc.level?.gameTime ?: 0L
+        if (lastStrength >= 0.5f) {
+            val sinceDrone = gameTime - lastDroneTick
+            if (sinceDrone in 1..LOSS_STATIC_TICKS) {
+                renderSignalNoise(1f)
+                poseStack.popPose()
+                return
+            }
+            if (sinceDrone > LOSS_STATIC_TICKS) lastStrength = 0f
+        }
 
         RenderSystem.disableDepthTest()
         RenderSystem.depthMask(false)
@@ -129,6 +237,11 @@ object DroneHudOverlay : CommonOverlay("drone_hud") {
                     }
 
                     var color = -1
+
+                    // Помехи связи: шум и разрывы строк тем плотнее, чем ближе граница связи.
+                    lastStrength = signalNoise(distance, entity)
+                    lastDroneTick = mc.level?.gameTime ?: 0L
+                    renderSignalNoise(lastStrength)
 
                     // 超出距离警告
                     if (distance > maxDistance - 48) {
