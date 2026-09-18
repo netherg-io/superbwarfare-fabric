@@ -19,7 +19,10 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.util.Mth
+import net.minecraft.util.RandomSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.phys.Vec3
@@ -35,6 +38,60 @@ object DroneHudOverlay : CommonOverlay("drone_hud") {
     private val DRONE_FOV_MOVE = loc("textures/overlay/drone/drone_fov_move.png")
 
     private val INDICATOR = loc("textures/overlay/spyglass/indicator.png")
+
+    /**
+     * Доля помех 0..1: до порога слабого сигнала картинка чистая, к пределу связи -- сплошной шум.
+     */
+    private fun signalNoise(distance: Double, drone: DroneEntity): Float {
+        val weak = drone.weakSignalDistance
+        val max = drone.maxControlDistance
+        if (max <= weak || distance <= weak) return 0f
+        return Mth.clamp(((distance - weak) / (max - weak)).toFloat(), 0f, 1f)
+    }
+
+    /**
+     * Шум рисуется прямоугольниками, а не текстурой: ни одного нового ассета и меньше вызовов,
+     * чем у прокручиваемого шумового слоя. Треск играем раз в несколько тиков, громкость -- по помехам.
+     */
+    private fun RenderContext.renderSignalNoise(strength: Float) {
+        if (strength <= 0f) return
+        val random = RandomSource.create()
+        val specks = (120 * strength).toInt()
+        repeat(specks) {
+            val x = random.nextInt(screenWidth)
+            val y = random.nextInt(screenHeight)
+            val w = 2 + random.nextInt(24)
+            val h = 1 + random.nextInt(2)
+            val grey = 120 + random.nextInt(136)
+            val alpha = (40 + 150 * strength * random.nextFloat()).toInt().coerceIn(0, 255)
+            guiGraphics.fill(x, y, x + w, y + h, (alpha shl 24) or (grey shl 16) or (grey shl 8) or grey)
+        }
+        // Разрыв строк: пара широких полос со смещением, как у сорванной развёртки.
+        repeat((1 + 3 * strength).toInt()) {
+            val y = random.nextInt(screenHeight)
+            val h = 2 + random.nextInt((2 + 10 * strength).toInt())
+            val shift = random.nextInt(24) - 12
+            val alpha = (30 + 90 * strength).toInt().coerceIn(0, 255)
+            guiGraphics.fill(shift, y, screenWidth + shift, y + h, (alpha shl 24) or 0xC8C8C8)
+        }
+
+        val level = mc.level ?: return
+        val now = level.gameTime
+        val interval = (14 - 10 * strength).toLong().coerceAtLeast(2L)
+        if (now - lastNoiseSound < interval) return
+        lastNoiseSound = now
+        // Именно UI-звук: Player.playSound уходит в level.playSound(this, ...), а клиент глушит
+        // звук, источник которого -- он сам, так что оператор бы ничего не услышал.
+        mc.soundManager.play(
+            SimpleSoundInstance.forUI(
+                SoundEvents.FIRE_EXTINGUISH,
+                1.4f + 0.6f * random.nextFloat(),
+                0.15f + 0.45f * strength
+            )
+        )
+    }
+
+    private var lastNoiseSound = 0L
 
     val maxDistance: Int
         get() {
@@ -129,6 +186,9 @@ object DroneHudOverlay : CommonOverlay("drone_hud") {
                     }
 
                     var color = -1
+
+                    // Помехи связи: шум и разрывы строк тем плотнее, чем ближе граница связи.
+                    renderSignalNoise(signalNoise(distance, entity))
 
                     // 超出距离警告
                     if (distance > maxDistance - 48) {
