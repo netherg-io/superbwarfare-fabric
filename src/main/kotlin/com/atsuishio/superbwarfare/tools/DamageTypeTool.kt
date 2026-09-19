@@ -8,9 +8,13 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.damagesource.DamageType
 
 object DamageTypeTool {
+    fun isKnifeDamage(damageType: ResourceKey<DamageType>) =
+        damageType == DamageTypes.PLAYER_ATTACK || damageType.location().toString() == "blockfield:knife"
+
     @JvmStatic
     fun isGunDamage(source: DamageSource) = source.`is`(ModTags.DamageTypes.GUN_DAMAGE)
 

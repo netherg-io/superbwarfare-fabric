@@ -3,24 +3,24 @@ package com.atsuishio.superbwarfare.compat.tacz
 import com.tacz.guns.api.event.common.EntityHurtByGunEvent
 import net.minecraft.world.damagesource.DamageSource
 
-/**
- * У TaCZ попадание в голову приходит обычным уроном tacz:bullet, отдельного типа урона нет:
- * признак хедшота есть только в EntityHurtByGunEvent.Pre, который вызывается синхронно
- * прямо перед hurt(). Запоминаем id пули и сверяем его с directEntity урона, поэтому
- * сбрасывать флаг не нужно (Post не приходит, если цель умерла, а id сущностей в рамках
- * сессии не переиспользуются).
- *
- * Класс трогает классы TaCZ, поэтому грузить его можно только под isModLoaded("tacz").
- */
+/** PRE вызывается перед hurt(), включая смертельное попадание. Только серверный результат:
+ * в одиночной игре клиентские события не должны перезаписывать состояние серверного потока.
+ * Класс грузится только под isModLoaded("tacz"). */
 object TaczHeadshotCompat {
     private var headshotBulletId = -1
 
     fun init() {
         EntityHurtByGunEvent.PRE.register { event ->
-            if (event.isHeadShot) headshotBulletId = event.bullet.id
+            if (event.logicalSide.isServer) recordHit(event.bullet.id, event.isHeadShot)
         }
     }
 
-    fun isHeadshot(source: DamageSource) =
-        headshotBulletId != -1 && source.directEntity?.id == headshotBulletId
+    internal fun recordHit(bulletId: Int, headshot: Boolean) {
+        // Одна пробивающая пуля может после головы попасть в тело другой цели.
+        headshotBulletId = if (headshot) bulletId else -1
+    }
+
+    internal fun isHeadshot(bulletId: Int?) = headshotBulletId != -1 && bulletId == headshotBulletId
+
+    fun isHeadshot(source: DamageSource) = isHeadshot(source.directEntity?.id)
 }

@@ -344,7 +344,7 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
                     || record.damageType === ModDamageTypes.CUSTOM_EXPLOSION
                 ) {
                     icon = EXPLOSION
-                } else if (record.damageType === DamageTypes.PLAYER_ATTACK) {
+                } else if (DamageTypeTool.isKnifeDamage(record.damageType)) {
                     icon = KNIFE
                 } else if (record.damageType === ModDamageTypes.BEAST) {
                     icon = BEAST

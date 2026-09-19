@@ -539,7 +539,7 @@ object LivingEventHandler {
         }
 
         if (MiscConfig.SEND_KILL_FEEDBACK.get()) {
-            if (isHeadshotDamage(source)) {
+            if (isHeadshotDamage(source) || (CompatHolder.hasTacz && TaczHeadshotCompat.isHeadshot(source))) {
                 sendPacketToAll(
                     LivingGunKillMessage(
                         attacker.id,

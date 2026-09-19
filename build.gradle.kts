@@ -173,3 +173,13 @@ idea {
         isDownloadJavadoc = true
     }
 }
+
+
+tasks.register<JavaExec>("killFeedCheck") {
+    group = "verification"
+    dependsOn(tasks.testClasses)
+    classpath = sourceSets.test.get().runtimeClasspath + sourceSets.main.get().compileClasspath
+    mainClass.set("com.atsuishio.superbwarfare.KillFeedChecksKt")
+}
+
+tasks.named("check") { dependsOn("killFeedCheck") }
