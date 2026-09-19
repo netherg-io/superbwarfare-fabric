@@ -9,7 +9,8 @@ import net.minecraft.core.particles.ParticleType
 
 @GenerateMapCodec
 @Serializable
-class CustomSmokeOption(val red: Float, val green: Float, val blue: Float) : ParticleOptions {
+/** [age] is in CustomSmokeParticle age units (it ages 2 per tick); 0 for a freshly emitted puff. */
+class CustomSmokeOption(val red: Float, val green: Float, val blue: Float, val age: Int) : ParticleOptions {
     override fun getType(): ParticleType<*> = ModParticleTypes.CUSTOM_SMOKE.get()
 
     companion object {

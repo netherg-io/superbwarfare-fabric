@@ -18,7 +18,8 @@ open class CustomSmokeParticle protected constructor(
     private val spriteSet: SpriteSet,
     rCol: Float,
     gCol: Float,
-    bCol: Float
+    bCol: Float,
+    startAge: Int
 ) : TextureSheetParticle(level, x, y, z) {
     init {
         this.setSize(0.4f, 0.4f)
@@ -33,6 +34,10 @@ open class CustomSmokeParticle protected constructor(
         this.rCol = rCol
         this.gCol = gCol
         this.bCol = bCol
+        // Blockfield: a cloud replayed to a returning player must fade together with the original one.
+        this.age = startAge
+        val fading = startAge - (this.lifetime - 60)
+        if (fading > 0) this.alpha = maxOf(0.02f, 1f - 0.015f * (fading / 2))
     }
 
     @Environment(EnvType.CLIENT)
@@ -58,7 +63,8 @@ open class CustomSmokeParticle protected constructor(
                 this.spriteSet,
                 pType.red,
                 pType.green,
-                pType.blue
+                pType.blue,
+                pType.age
             )
         }
     }

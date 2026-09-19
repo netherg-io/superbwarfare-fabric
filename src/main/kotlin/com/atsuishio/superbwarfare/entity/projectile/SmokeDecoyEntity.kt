@@ -19,6 +19,8 @@ import net.minecraft.world.phys.Vec3
 open class SmokeDecoyEntity : Entity {
     var life: Int = 400
     var igniteTime: Int = 4
+    /** Blockfield: lets the M18 remember where its cloud actually opened, to replay it to returning players. */
+    var onPuff: ((Vec3) -> Unit)? = null
     var releaseSmoke: Boolean = true
     var red: Float = 1.0f
         private set
@@ -81,8 +83,9 @@ open class SmokeDecoyEntity : Entity {
             if (releaseSmoke) {
                 val level = this.level()
                 if (level is ServerLevel) {
+                    onPuff?.invoke(Vec3(this.xo, this.yo, this.zo))
                     ParticleTool.sendParticle(
-                        level, CustomSmokeOption(this.red, this.green, this.blue), this.xo, this.yo, this.zo,
+                        level, CustomSmokeOption(this.red, this.green, this.blue, 0), this.xo, this.yo, this.zo,
                         50, 0.0, 0.0, 0.0, 0.07, true
                     )
                     ParticleTool.sendParticle(

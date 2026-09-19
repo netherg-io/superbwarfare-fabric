@@ -9,6 +9,7 @@ val CustomSmokeOption.Companion.CODEC: MapCodec<CustomSmokeOption> get() = Recor
     builder.group(
         com.mojang.serialization.Codec.FLOAT.fieldOf("red").forGetter { it.red },
         com.mojang.serialization.Codec.FLOAT.fieldOf("green").forGetter { it.green },
-        com.mojang.serialization.Codec.FLOAT.fieldOf("blue").forGetter { it.blue }
+        com.mojang.serialization.Codec.FLOAT.fieldOf("blue").forGetter { it.blue },
+        com.mojang.serialization.Codec.INT.fieldOf("age").forGetter { it.age }
     ).apply(builder, ::CustomSmokeOption)
 }

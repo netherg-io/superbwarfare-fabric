@@ -158,7 +158,7 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
             if (level is ServerLevel) {
                 ParticleTool.sendParticle(
                     level,
-                    CustomSmokeOption(this.red, this.green, this.blue),
+                    CustomSmokeOption(this.red, this.green, this.blue, 0),
                     this.x,
                     this.y + bbHeight,
                     this.z,
@@ -181,24 +181,47 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
     }
 
     /**
-     * Blockfield: the cloud is nothing but long-lived client particles (600-800 ticks) emitted during the first
-     * [EMIT_TICKS]. A player whose client world was rebuilt meanwhile (death -> respawn room in another dimension ->
-     * back) lost them and saw no smoke at all while everyone else still did. The grenade now outlives its cloud and
-     * hands every newly seen player one burst shaped like the already spread cloud.
+     * Blockfield: the cloud is nothing but client particles emitted during [EMIT_TICKS] that then live on the client
+     * (lifetime 600-800 age units, 2 units per tick = 300-400 ticks). A player whose client world was rebuilt
+     * meanwhile (death -> respawn room in another dimension -> back) lost them and saw no smoke while everyone else
+     * still did. The grenade outlives its cloud and replays it to every newly seen player, each batch carrying the
+     * age its original puffs have by now, so the replayed cloud thins and dies together with everyone else's.
      */
     private val served = HashSet<Int>()
+    private val decoyPuffs = ArrayList<Vec3>()
+    private var decoyPuffTick = 0
+    private var emitStart = -1
 
     private fun replayCloudToNewcomers(level: ServerLevel) {
+        if (emitStart < 0) emitStart = tickCount
         for (player in level.players()) {
             // A respawned player is a new entity with a new id, which is exactly who needs the replay.
             if (player.distanceToSqr(this) > 256.0 * 256.0 || !served.add(player.id)) continue
             if (tickCount <= EMIT_TICKS) continue
-            // ponytail: replayed particles start a fresh lifetime, so this player keeps the smoke up to
-            // (tickCount - EMIT_TICKS) ticks longer than the others; an age field in CustomSmokeOption fixes that.
-            level.sendParticles(
-                player, CustomSmokeOption(this.red, this.green, this.blue), true,
-                this.x, this.y + bbHeight + 1.5, this.z, 250, 2.5, 1.2, 2.5, 0.01
-            )
+            val decoyAge = 2 * (tickCount - decoyPuffTick)
+            if (decoyAge < MAX_PARTICLE_AGE) {
+                val drift = 0.5 + 1.0 * decoyAge / MAX_PARTICLE_AGE
+                for (pos in decoyPuffs) {
+                    level.sendParticles(
+                        player, CustomSmokeOption(this.red, this.green, this.blue, decoyAge), true,
+                        pos.x, pos.y, pos.z, DECOY_PUFFS, drift, drift * 0.5, drift, 0.01
+                    )
+                }
+            }
+            val emitted = EMIT_TICKS - emitStart
+            for (batch in 0 until REPLAY_BATCHES) {
+                val born = emitStart + emitted * batch / REPLAY_BATCHES
+                val age = 2 * (tickCount - born)
+                if (age >= MAX_PARTICLE_AGE) continue
+                // Older puffs have drifted further from the grenade.
+                val spread = 1.0 + 1.5 * age / MAX_PARTICLE_AGE
+                level.sendParticles(
+                    player, CustomSmokeOption(this.red, this.green, this.blue, age), true,
+                    // The floor stops puffs from sinking, so the original cloud piles up into a ~3 block column.
+                    this.x, this.y + bbHeight + 1.7, this.z,
+                    4 * emitted / REPLAY_BATCHES, spread, 0.8, spread, 0.01
+                )
+            }
         }
     }
 
@@ -208,6 +231,7 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
         for (i in 0..<this.count) {
             val decoy = SmokeDecoyEntity(ModEntities.SMOKE_DECOY.get(), this.level(), false)
             decoy.setPos(this.x, this.y + bbHeight, this.z)
+            decoy.onPuff = { pos -> decoyPuffs.add(pos); decoyPuffTick = tickCount }
             decoy.decoyShoot(this, vec3.yRot(i * (360f / this.count) * Mth.DEG_TO_RAD), 1.5f, 5f)
             this.level().addFreshEntity(decoy)
         }
@@ -229,9 +253,14 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
     }
 
     companion object {
-        /** Upstream lifetime: smoke is emitted until this tick. */
+        /** Upstream lifetime: smoke is emitted until this tick (8 puffs every 2 ticks = 4 per tick). */
         private const val EMIT_TICKS = 200
-        /** Emission plus the longest CustomSmokeParticle lifetime. */
-        private const val CLOUD_TICKS = EMIT_TICKS + 800
+        /** Longest CustomSmokeParticle lifetime, in its age units. */
+        private const val MAX_PARTICLE_AGE = 800
+        /** Emission plus the longest particle life in ticks: after that nobody has any smoke left to replay. */
+        private const val CLOUD_TICKS = EMIT_TICKS + MAX_PARTICLE_AGE / 2
+        private const val REPLAY_BATCHES = 5
+        /** SmokeDecoyEntity releases this many puffs when it ignites. */
+        private const val DECOY_PUFFS = 50
     }
 }
