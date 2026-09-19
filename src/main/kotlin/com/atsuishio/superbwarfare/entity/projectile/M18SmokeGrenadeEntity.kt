@@ -139,7 +139,7 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
         super.tick()
         --this.fuse
 
-        if (tickCount > 200) {
+        if (tickCount > CLOUD_TICKS) {
             this.discard()
         }
 
@@ -152,7 +152,9 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
             level.playSound(null, this, ModSounds.SM0KE_GRENADE_RELEASE.get(), this.soundSource, 2f, 1f)
         }
 
-        if (fuse <= 0 && tickCount % 2 == 0) {
+        if (level is ServerLevel && fuse <= 0 && tickCount % 10 == 0) replayCloudToNewcomers(level)
+
+        if (fuse <= 0 && tickCount <= EMIT_TICKS && tickCount % 2 == 0) {
             if (level is ServerLevel) {
                 ParticleTool.sendParticle(
                     level,
@@ -174,6 +176,28 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
             ParticleTool.sendParticle(
                 level, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                 1, 0.0, 0.0, 0.0, 0.01, true
+            )
+        }
+    }
+
+    /**
+     * Blockfield: the cloud is nothing but long-lived client particles (600-800 ticks) emitted during the first
+     * [EMIT_TICKS]. A player whose client world was rebuilt meanwhile (death -> respawn room in another dimension ->
+     * back) lost them and saw no smoke at all while everyone else still did. The grenade now outlives its cloud and
+     * hands every newly seen player one burst shaped like the already spread cloud.
+     */
+    private val served = HashSet<Int>()
+
+    private fun replayCloudToNewcomers(level: ServerLevel) {
+        for (player in level.players()) {
+            // A respawned player is a new entity with a new id, which is exactly who needs the replay.
+            if (player.distanceToSqr(this) > 256.0 * 256.0 || !served.add(player.id)) continue
+            if (tickCount <= EMIT_TICKS) continue
+            // ponytail: replayed particles start a fresh lifetime, so this player keeps the smoke up to
+            // (tickCount - EMIT_TICKS) ticks longer than the others; an age field in CustomSmokeOption fixes that.
+            level.sendParticles(
+                player, CustomSmokeOption(this.red, this.green, this.blue), true,
+                this.x, this.y + bbHeight + 1.5, this.z, 250, 2.5, 1.2, 2.5, 0.01
             )
         }
     }
@@ -202,5 +226,12 @@ open class M18SmokeGrenadeEntity : BounceProjectile, BasicGeoProjectileEntity {
 
     override fun isFastMoving(): Boolean {
         return false
+    }
+
+    companion object {
+        /** Upstream lifetime: smoke is emitted until this tick. */
+        private const val EMIT_TICKS = 200
+        /** Emission plus the longest CustomSmokeParticle lifetime. */
+        private const val CLOUD_TICKS = EMIT_TICKS + 800
     }
 }
