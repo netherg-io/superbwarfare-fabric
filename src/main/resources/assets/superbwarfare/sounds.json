@@ -2258,7 +2258,7 @@
   "drone_engine": {
     "sounds": [
       {
-        "attenuation_distance": 48,
+        "attenuation_distance": 128,
         "stream": false,
         "name": "superbwarfare:vehicle/drone/drone_engine"
       }

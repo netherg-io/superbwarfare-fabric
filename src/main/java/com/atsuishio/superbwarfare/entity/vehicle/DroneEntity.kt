@@ -765,16 +765,8 @@ open class DroneEntity(type: EntityType<out DroneEntity>, world: Level) : GeoVeh
             return 0f
         }
 
-        val player = getController() ?: return power
-
-        val stack = player.mainHandItem
-        if (stack.`is`(ModItems.MONITOR.get())
-            && stack.getOrCreateTag().getBoolean("Using")
-            && stack.getOrCreateTag().getBoolean("Linked")
-        ) {
-            return power * 0.5f
-        }
-        return power * 2f
+        // Controller/monitor state must not attenuate the engine for nearby listeners.
+        return abs(power) * 3f
     }
 
     override fun move(movementType: MoverType, movement: Vec3) {

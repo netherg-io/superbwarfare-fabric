@@ -67,7 +67,8 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
 
             KillMessagePosition.RIGHT_TOP -> {
                 posX = screenWidth - KillMessageConfig.KILL_MESSAGE_MARGIN_X.get()
-                posY = KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get().toFloat()
+                // Blockfield's credit badge occupies y=6..26; keep the feed below it.
+                posY = KillMessageConfig.KILL_MESSAGE_MARGIN_Y.get().coerceAtLeast(32).toFloat()
             }
 
             KillMessagePosition.LEFT_BOTTOM -> {
