@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.init.ModDamageTypes
 import com.atsuishio.superbwarfare.init.ModItems
 import com.atsuishio.superbwarfare.item.curio.DogTagItem
 import com.atsuishio.superbwarfare.item.gun.GunItem
+import com.atsuishio.superbwarfare.item.misc.MonitorItem
 import com.atsuishio.superbwarfare.tools.DamageTypeTool
 import com.atsuishio.superbwarfare.tools.LivingKillRecord
 import com.mojang.blaze3d.platform.GlStateManager
@@ -44,6 +45,8 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
     private val SHOCK = loc("textures/overlay/damage_types/shock.png")
     private val BURN = loc("textures/overlay/damage_types/burn.png")
     private val DRONE = loc("textures/overlay/damage_types/drone.png")
+    private val GRENADE = loc("textures/overlay/damage_types/grenade.png")
+    private val MOLOTOV = loc("textures/overlay/damage_types/molotov.png")
     private val LASER = loc("textures/overlay/damage_types/laser.png")
     private val VEHICLE = loc("textures/overlay/damage_types/vehicle_strike.png")
 
@@ -343,7 +346,17 @@ object KillMessageOverlay : CommonOverlay("kill_message") {
                     || record.damageType === ModDamageTypes.PROJECTILE_EXPLOSION || record.damageType === DamageTypes.FIREWORKS
                     || record.damageType === ModDamageTypes.CUSTOM_EXPLOSION
                 ) {
-                    icon = EXPLOSION
+                    // Blockfield: the explosion alone does not say what blew up, the attacker's hand does.
+                    // Drone bombs are flown from the monitor; a vanilla explosion is a thrown grenade (LR Tactical).
+                    // Launcher rockets never get here: gun damage out of a gun shows the weapon silhouette instead.
+                    icon = when {
+                        item.item is MonitorItem -> DRONE
+                        record.damageType === DamageTypes.EXPLOSION || record.damageType === DamageTypes.PLAYER_EXPLOSION -> GRENADE
+                        else -> EXPLOSION
+                    }
+                } else if (record.attacker is Player && (record.damageType === DamageTypes.IN_FIRE || record.damageType === DamageTypes.ON_FIRE)) {
+                    // Blockfield: world fire has no killer, so an attributed fire kill is a molotov.
+                    icon = MOLOTOV
                 } else if (DamageTypeTool.isKnifeDamage(record.damageType)) {
                     icon = KNIFE
                 } else if (record.damageType === ModDamageTypes.BEAST) {

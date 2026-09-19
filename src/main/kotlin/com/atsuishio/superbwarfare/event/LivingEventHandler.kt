@@ -532,6 +532,11 @@ object LivingEventHandler {
             }
         }
 
+        // Blockfield: burning carries no entity; the server marks the molotov thrower as the kill credit.
+        if (attacker == null && source.`is`(net.minecraft.tags.DamageTypeTags.IS_FIRE)) {
+            attacker = entity.killCredit as? ServerPlayer
+        }
+
         if (attacker == null) return
 
         if (postEvent(SendKillMessage(attacker, source, entity)).isCanceled()) {
